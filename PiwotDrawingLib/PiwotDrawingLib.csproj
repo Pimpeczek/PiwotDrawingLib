@@ -42,6 +42,9 @@
     <Reference Include="PiwotLib">
       <HintPath>..\..\PiwotLib\PiwotLib\bin\Release\PiwotLib.dll</HintPath>
     </Reference>
+    <Reference Include="PiwotToolsLib">
+      <HintPath>..\..\PiwotToolsLib\PiwotLib\bin\Release\PiwotToolsLib.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
