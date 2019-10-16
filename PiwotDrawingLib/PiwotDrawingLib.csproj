@@ -39,11 +39,9 @@
     <Reference Include="Pastel, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Pastel.1.3.0\lib\netstandard2.0\Pastel.dll</HintPath>
     </Reference>
-    <Reference Include="PiwotLib">
-      <HintPath>..\..\PiwotLib\PiwotLib\bin\Release\PiwotLib.dll</HintPath>
-    </Reference>
-    <Reference Include="PiwotToolsLib">
-      <HintPath>..\..\PiwotToolsLib\PiwotLib\bin\Release\PiwotToolsLib.dll</HintPath>
+    <Reference Include="PiwotToolsLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\LIBS\PiwotToolsLib.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -56,9 +54,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Misc\Boxes.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rendering\Renderer.cs" />
+    <Compile Include="Rendering\Requests\RenderRequest.cs" />
+    <Compile Include="Rendering\Requests\TimedTextRequest.cs" />
+    <Compile Include="UI\Containers\Menu.cs" />
+    <Compile Include="UI\Controls\CheckBoxControl.cs" />
+    <Compile Include="UI\Controls\IntSwitcherControl.cs" />
+    <Compile Include="UI\Controls\LabelControl.cs" />
+    <Compile Include="UI\Controls\LineSeparatorControl.cs" />
+    <Compile Include="UI\Controls\MenuControl.cs" />
+    <Compile Include="UI\Controls\StringSwitcherControl.cs" />
+    <Compile Include="UI\Controls\SwitcherControl.cs" />
+    <Compile Include="UI\Events\IntSwitcherEvent.cs" />
+    <Compile Include="UI\Events\MenuBindingEvent.cs" />
+    <Compile Include="UI\Events\MenuControllEvent.cs" />
+    <Compile Include="UI\Events\MenuEvent.cs" />
+    <Compile Include="UI\Exceptions\IdentificatorNotFoundException.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
