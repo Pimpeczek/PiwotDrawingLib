@@ -124,7 +124,7 @@ namespace PiwotDrawingLib.UI.Containers
         /// <param name="control">The control to be added.</param>
         /// <param name="action">The action to be performed if ENTER was pressed when control was selected.</param>
         /// <returns></returns>
-        public Controls.MenuControl AddControl(Controls.MenuControl control, Func<Events.MenuEvent, bool> action)
+        public Controls.MenuControl AddControl(Controls.MenuControl control)
         {
             for (int i = 0; i < controls.Count; i++)
             {
@@ -137,25 +137,11 @@ namespace PiwotDrawingLib.UI.Containers
             control.SetParent(this);
             controls.Add(control);
 
-            if(action != null)
-            {
-                control.AddAction(action);
-            }
-
             if (verticalTextWrapping == Wrapping.wrapping)
             {
                 Size = new Int2(Size.X, controls.Count + 2);
             }
             return control;
-        }
-
-        /// <summary>
-        /// Adds new control to the list of controls.
-        /// </summary>
-        /// <param name="control">The control to be added.</param>
-        public void AddControl(Controls.MenuControl control)
-        {
-            AddControl(control, null);
         }
 
         /// <summary>
@@ -187,6 +173,10 @@ namespace PiwotDrawingLib.UI.Containers
             return true;
         }
 
+
+        /// <summary>
+        /// Waits for inputs from keyboard and acts accordingly to defined actions.
+        /// </summary>
         public void WaitForInput()
         {
             waitForInput = true;
@@ -212,7 +202,8 @@ namespace PiwotDrawingLib.UI.Containers
                     case ConsoleKey.LeftArrow:
                         if (hPoint < controls.Count)
                         {
-                            controls[hPoint].SwitchLeft();
+                            if (controls[hPoint] is Controls.Switchable)
+                                ((Controls.Switchable)controls[hPoint]).SwitchLeft();
                         }
                         else
                             LoopToAccesable(-1);
@@ -220,7 +211,8 @@ namespace PiwotDrawingLib.UI.Containers
                     case ConsoleKey.RightArrow:
                         if (hPoint < controls.Count)
                         {
-                            controls[hPoint].SwitchRight();
+                            if(controls[hPoint] is Controls.Switchable)
+                                ((Controls.Switchable)controls[hPoint]).SwitchRight();
                         }
                         else
                             LoopToAccesable(1);
@@ -228,7 +220,8 @@ namespace PiwotDrawingLib.UI.Containers
                     case ConsoleKey.Enter:
                         if (hPoint < controls.Count)
                         {
-                            controls[hPoint].Enter();
+                            if (controls[hPoint] is Controls.Pressable)
+                                ((Controls.Pressable)controls[hPoint]).Press();
                         }
                         else
                             LoopToAccesable(1);
@@ -244,6 +237,10 @@ namespace PiwotDrawingLib.UI.Containers
             Erase();
         }
 
+        /// <summary>
+        /// Moves highlight to the next or previous selectable control. 
+        /// </summary>
+        /// <param name="direction"></param>
         void LoopToAccesable(int direction)
         {
             direction = Arit.Clamp(direction, -1, 1);
@@ -269,6 +266,10 @@ namespace PiwotDrawingLib.UI.Containers
                 hPoint = 0;
         }
 
+        /// <summary>
+        /// Performs actions assigned to pressed button.
+        /// </summary>
+        /// <param name="key"></param>
         void RunBindings(ConsoleKey key)
         {
             for (int i = 0; i < bindings.Count; i++)
@@ -278,20 +279,32 @@ namespace PiwotDrawingLib.UI.Containers
             }
         }
 
+
+        /// <summary>
+        /// Draws menu window and controls.
+        /// </summary>
         public void Draw()
         {
             DrawWindow();
             DrawControls();
         }
 
+
+        /// <summary>
+        /// Draws menu window.
+        /// </summary>
         public void DrawWindow()
         {
             IsVIsable = true;
             Console.ForegroundColor = ConsoleColor.White;
             Misc.Boxes.DrawBox(boxType, Position.X, Position.Y, Size.X, Size.Y);
-            PiwotDrawingLib.Rendering.Renderer.Write(Name, Position.X + (Size.X - Name.Length) / 2, Position.Y);
+            Rendering.Renderer.Write(Name, Position.X + (Size.X - Name.Length) / 2, Position.Y);
 
         }
+
+        /// <summary>
+        /// Erases menu window and its content.
+        /// </summary>
         public void Erase()
         {
             IsVIsable = false;
@@ -299,13 +312,15 @@ namespace PiwotDrawingLib.UI.Containers
 
             for(int y = 0; y < Size.Y; y++)
             {
-                PiwotDrawingLib.Rendering.Renderer.Write(fullEmptyLine, Position.X, Position.Y + y);
+                Rendering.Renderer.Write(fullEmptyLine, Position.X, Position.Y + y);
             }
             
 
         }
 
-
+        /// <summary>
+        /// Draws only controls.
+        /// </summary>
         void DrawControls()
         {
             int startHeight = Arit.Clamp((Size.Y - 2 - controls.Count) / 2, 0, Size.Y);
@@ -317,21 +332,26 @@ namespace PiwotDrawingLib.UI.Containers
                 {
                     printText = controls[i + scrollPoint].PrintableText;
                     pos = new Int2(Position.X + 1, Position.Y + startHeight + i + 1);
-                    PiwotDrawingLib.Rendering.Renderer.Write(emptyLine, pos);
+                    Rendering.Renderer.Write(emptyLine, pos);
                     pos = new Int2(Position.X + (Size.X - printText.Length) / 2, Position.Y + startHeight + i + 1);
                     if (hPoint == i)
                     {
-                        PiwotDrawingLib.Rendering.Renderer.Write(printText.PastelBg(Color.Gray), pos);
+                        Rendering.Renderer.Write(printText.PastelBg(Color.Gray), pos);
                     }
                     else
                     {
-                        PiwotDrawingLib.Rendering.Renderer.Write(printText, pos);
+                        Rendering.Renderer.Write(printText, pos);
                     }
                 }
             }
 
         }
 
+        /// <summary>
+        /// Returns control with the given identificator. If nothing was found returns null.
+        /// </summary>
+        /// <param name="identificator">Identificator of a control to be found.</param>
+        /// <returns></returns>
         public Controls.MenuControl GetControll(string identificator)
         {
             for(int i = 0; i < controls.Count; i++)

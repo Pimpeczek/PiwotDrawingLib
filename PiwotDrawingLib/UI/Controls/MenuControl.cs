@@ -3,9 +3,18 @@ using System.Collections.Generic;
 
 namespace PiwotDrawingLib.UI.Controls
 {
+
+    /// <summary>
+    /// Represents a basic menu control used to display one line of text..
+    /// </summary>
     class MenuControl
     {
+        #region Variables
         protected string name;
+
+        /// <summary>
+        /// Control name as well as its display text.
+        /// </summary>
         public virtual string Name
         {
             get
@@ -21,60 +30,51 @@ namespace PiwotDrawingLib.UI.Controls
         }
         public string Identificator { get; protected set; }
         public string PrintableText { get; protected set; }
+
+        /// <summary>
+        /// Menu that this control belongs to.
+        /// </summary>
         public Containers.Menu parentMenu { get; protected set; }
-        public List<Func<Events.MenuEvent, bool>> actions;
+
+        /// <summary>
+        /// Tells if this control can be highlighted.
+        /// </summary>
         public bool accessable;
+
+        /// <summary>
+        /// Tells if this control is shown on the menu.
+        /// </summary>
         public bool visable;
+
+        /// <summary>
+        /// Tells if this control must be redrawn.
+        /// </summary>
         public bool NeedsRedraw { get; set; }
+        #endregion
+
         public MenuControl(string name, string identificator)
         {
             NeedsRedraw = true;
             visable = true;
             accessable = true;
-            actions = new List<Func<Events.MenuEvent, bool>>();
             Name = name;
             Identificator = identificator;
 
         }
 
-        public virtual void AddAction(Func<Events.MenuEvent, bool> action)
-        {
-            actions.Add(action);
-        }
-        public virtual void AddAction(IEnumerable<Func<Events.MenuEvent, bool>> action)
-        {
-            actions.AddRange(action);
-        }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="menu">The new parent</param>
         public virtual void SetParent(Containers.Menu menu)
         {
             parentMenu = menu;
         }
 
-        public virtual void SwitchLeft()
-        {
-            NeedsRedraw = true;
-            //RunActions();
-        }
-        public virtual void SwitchRight()
-        {
-            NeedsRedraw = true;
-            //RunActions();
-        }
-        public virtual void Enter()
-        {
-            NeedsRedraw = true;
-            RunActions();
-        }
-
-        protected virtual void RunActions()
-        {
-            for (int i = 0; i < actions.Count; i++)
-            {
-                actions[i].Invoke(new Events.MenuControllEvent(parentMenu, this));
-            }
-        }
-
+        /// <summary>
+        /// Returns value of this control.
+        /// </summary>
+        /// <returns></returns>
         public virtual int GetValue()
         {
             return 0;

@@ -47,20 +47,18 @@ namespace PiwotDrawingLib.UI.Controls
         override public void SwitchLeft()
         {
             PerformStep(-1);
-            RunActions();
+            RunActions(new Events.IntSwitcherEvent(parentMenu, this, value));
         }
         override public void SwitchRight()
         {
             PerformStep(1);
-            RunActions();
+            RunActions(new Events.IntSwitcherEvent(parentMenu, this, value));
         }
 
         override protected void PerformStep(int direction)
         {
             Value += step * oryginalStep;
         }
-
-        public override void Enter() { return; }
 
         override public int GetValue()
         {

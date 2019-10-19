@@ -8,10 +8,6 @@
             accessable = false;
         }
 
-        override public void SwitchLeft() { }
-        override public void SwitchRight() { }
-        override public void Enter() { }
-
         override public int GetValue() { return 0; }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace PiwotDrawingLib.UI.Controls
 {
-    abstract class SwitcherControl : MenuControl
+    abstract class SwitcherControl : ActionControl, Switchable
     {
 
         protected string LAS;
@@ -10,6 +10,9 @@ namespace PiwotDrawingLib.UI.Controls
         protected string LNS;
         protected string RNS;
         
+        /// <summary>
+        /// Symbol(string) used on the left side while the shown value is greater than the minimal value.
+        /// </summary>
         public string LeftAvlaiableSymbol
         {
             get
@@ -23,6 +26,9 @@ namespace PiwotDrawingLib.UI.Controls
             }
         }
 
+        /// <summary>
+        /// Symbol(string) used on the right side while the shown value is greater than the minimal value.
+        /// </summary>
         public string RightAvaliableSymbol
         {
             get
@@ -36,6 +42,9 @@ namespace PiwotDrawingLib.UI.Controls
             }
         }
 
+        /// <summary>
+        /// Symbol(string) used on the left side while the shown value is equal or less than the minimal value.
+        /// </summary>
         public string LeftNonavaliableSymbol
         {
             get
@@ -48,7 +57,9 @@ namespace PiwotDrawingLib.UI.Controls
                 SetPrintableText();
             }
         }
-
+        /// <summary>
+        /// Symbol(string) used on the right side while the shown value is equal or less than the minimal value.
+        /// </summary>
         public string RightNonavaliableSymbol
         {
             get
@@ -63,13 +74,74 @@ namespace PiwotDrawingLib.UI.Controls
         }
 
         protected int fastSwitchCounter;
-        public int FastStepTime { get; set; }
-        public int FastStepMultiplier { get; set; }
-        public int FastStepsToMultiply { get; set; }
 
+
+        int fastStepTime;
+
+        /// <summary>
+        /// Maximal time between value switches required for step multiplication to activate.
+        /// </summary>
+        public int FastStepTime
+        {
+            get
+            {
+                return fastStepTime;
+            }
+            set
+            {
+                if(value < 0)
+                {
+                    throw new System.ArgumentOutOfRangeException();
+                }
+                fastStepTime = value;
+            }
+        }
+        public int fastStepMultiplier;
+
+        /// <summary>
+        /// Multiplier applied to step each time the fast steps counter reaches value of FastStepsToMultiply.
+        /// </summary>
+        public int FastStepMultiplier
+        {
+            get
+            {
+                return fastStepMultiplier;
+            }
+            set
+            {
+                if (value < 2)
+                {
+                    throw new System.ArgumentOutOfRangeException();
+                }
+                fastStepMultiplier = value;
+            }
+        }
+        public int fastStepsToMultiply;
+        /// <summary>
+        /// Represents how many times value must be switched faster than FastStepTime for FastStepMultiplier to be applied.
+        /// </summary>
+        public int FastStepsToMultiply
+        {
+            get
+            {
+                return fastStepsToMultiply;
+            }
+            set
+            {
+                if (value < 1)
+                {
+                    throw new System.ArgumentOutOfRangeException();
+                }
+                fastStepsToMultiply = value;
+            }
+        }
 
         protected int oryginalStep;
         protected int step;
+
+        /// <summary>
+        /// Magnitude of value increments.
+        /// </summary>
         public int Step
         {
             get
@@ -84,6 +156,10 @@ namespace PiwotDrawingLib.UI.Controls
         }
 
         protected int min = 0;
+
+        /// <summary>
+        /// The minimal possible value.
+        /// </summary>
         public int Min
         {
             get
@@ -92,12 +168,16 @@ namespace PiwotDrawingLib.UI.Controls
             }
             set
             {
-                this.min = PiwotToolsLib.PMath.Arit.Clamp(value, int.MinValue, max);
+                min = PiwotToolsLib.PMath.Arit.Clamp(value, int.MinValue, max);
                 SetPrintableText();
             }
         }
 
         protected int max = 10;
+
+        /// <summary>
+        /// The maximal possible value.
+        /// </summary>
         public int Max
         {
             get
@@ -106,7 +186,7 @@ namespace PiwotDrawingLib.UI.Controls
             }
             set
             {
-                this.max = PiwotToolsLib.PMath.Arit.Clamp(value, min, int.MaxValue);
+                max = PiwotToolsLib.PMath.Arit.Clamp(value, min, int.MaxValue);
                 SetPrintableText();
             }
         }
@@ -125,7 +205,18 @@ namespace PiwotDrawingLib.UI.Controls
             FastStepsToMultiply = 10;
             stopwatch = new Stopwatch();
             stopwatch.Start();
+            accessable = true;
         }
+
+        /// <summary>
+        /// Action invoked when left arrow is pressed over this control.
+        /// </summary>
+        public abstract void SwitchLeft();
+
+        /// <summary>
+        /// Action invoked when right arrow is pressed over this control.
+        /// </summary>
+        public abstract void SwitchRight();
 
         abstract protected void PerformStep(int direction);
 

@@ -75,13 +75,13 @@
         {
             if (value > min)
                 PerformStep(-1);
-            RunActions();
+            RunActions(new Events.IntSwitcherEvent(parentMenu, this, value));
         }
         override public void SwitchRight()
         {
-            if( value < max)
+            if (value < max)
                 PerformStep(1);
-            RunActions();
+            RunActions(new Events.IntSwitcherEvent(parentMenu, this, value));
         }
 
         override protected void PerformStep(int direction)
@@ -109,8 +109,6 @@
             Value += step * direction;
         }
 
-        public override void Enter() { return; }
-
         override public int GetValue()
         {
             return Value;
@@ -134,14 +132,6 @@
             }
 
             PrintableText = $"{name}: {(value > min ? LAS : LNS)} {valueText} {(value < max ? RAS : RNS)}";
-        }
-
-        override protected void RunActions()
-        {
-            for (int i = 0; i < actions.Count; i++)
-            {
-                actions[i].Invoke(new Events.IntSwitcherEvent(parentMenu, this, value));
-            }
         }
     }
 }
