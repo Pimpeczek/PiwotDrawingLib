@@ -40,13 +40,8 @@ namespace PiwotDrawingLib.UI.Controls
                 Value = this.value;
             }
         }
-        protected new readonly int min;
-        protected new int max;
-
-        private new int Min = 0;
-        private new int Max = 0;
-
-        private new int Step;
+        protected int min;
+        protected int max;
 
         public StringSwitcherControl(string name, string identificator, string options) : base(name, identificator)
         {
@@ -54,7 +49,6 @@ namespace PiwotDrawingLib.UI.Controls
             max = min = 0;
             SetOptions(options);
             Value = value;
-            Step = 1;
         }
 
         /// <summary>
@@ -76,7 +70,7 @@ namespace PiwotDrawingLib.UI.Controls
         {
             if (value > min)
                 PerformStep(-1);
-            RunActions(new Events.IntSwitcherEvent(parentMenu, this, value));
+            RunActions(new Events.StringSwitcherEvent(parentMenu, this, value));
         }
         /// <summary>
         /// Switches value by one step up.
@@ -85,13 +79,13 @@ namespace PiwotDrawingLib.UI.Controls
         {
             if (value < max)
                 PerformStep(1);
-            RunActions(new Events.IntSwitcherEvent(parentMenu, this, value));
+            RunActions(new Events.StringSwitcherEvent(parentMenu, this, value));
         }
 
         override protected void PerformStep(int direction)
         {
-            Value += step * oryginalStep;
-            SetPrintableText();
+            UpdateFastMultiplier();
+            Value += direction * CurrentFastMultiplier;
         }
 
         protected override void SetPrintableText()

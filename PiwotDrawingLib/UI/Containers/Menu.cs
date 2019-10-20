@@ -145,23 +145,6 @@ namespace PiwotDrawingLib.UI.Containers
         }
 
         /// <summary>
-        /// Returns value of a controll as a integer. If no control was found throws IdentificatorNotFoundException
-        /// </summary>
-        /// <param name="identificator"></param>
-        /// <returns></returns>
-        public int GetValue(string identificator)
-        {
-            for (int i = 0; i < controls.Count; i++)
-            {
-                if (controls[i].Identificator == identificator)
-                {
-                    return controls[i].GetValue();
-                }
-            }
-            throw new Exceptions.IdentificatorNotFoundException();
-        }
-
-        /// <summary>
         /// Method used to exit WaitForInput loop.
         /// </summary>
         /// <param name="e"></param>

@@ -1,13 +1,13 @@
 ﻿namespace PiwotDrawingLib.UI.Controls
 {
-    class IntSwitcherControl : SwitcherControl
+    class FloatSwitcherControl : SwitcherControl
     {
-        private int value = 0;
+        private float value = 0;
 
         /// <summary>
         /// The value of this control.
         /// </summary>
-        public int Value
+        public float Value
         {
             get
             {
@@ -15,12 +15,12 @@
             }
             set
             {
-                this.value = PiwotToolsLib.PMath.Arit.Clamp(value, min, max);
+                this.value = (float) System.Math.Round(PiwotToolsLib.PMath.Arit.Clamp(value, min, max), roundingDigits);
                 SetPrintableText();
             }
         }
 
-        
+
 
         private string minSpecialText = "";
 
@@ -58,14 +58,12 @@
             }
         }
 
-
-        protected int oryginalStep;
-        protected int step;
+        protected float step = 1;
 
         /// <summary>
         /// Magnitude of value increments.
         /// </summary>
-        public int Step
+        public float Step
         {
             get
             {
@@ -74,16 +72,15 @@
             set
             {
                 step = value;
-                oryginalStep = step;
             }
         }
 
-        protected int min = 0;
+        protected float min = 0;
 
         /// <summary>
         /// The minimal possible value.
         /// </summary>
-        public int Min
+        public float Min
         {
             get
             {
@@ -92,16 +89,17 @@
             set
             {
                 min = PiwotToolsLib.PMath.Arit.Clamp(value, int.MinValue, max);
+                Value = this.value;
                 SetPrintableText();
             }
         }
 
-        protected int max = 10;
+        protected float max = 10;
 
         /// <summary>
         /// The maximal possible value.
         /// </summary>
-        public int Max
+        public float Max
         {
             get
             {
@@ -110,24 +108,48 @@
             set
             {
                 max = PiwotToolsLib.PMath.Arit.Clamp(value, min, int.MaxValue);
+                Value = this.value;
                 SetPrintableText();
             }
         }
 
 
+        protected string printFormat = "0.00";
+        protected int roundingDigits = 2;
+
+        /// <summary>
+        /// How many fractional digist should be accounted for.
+        /// </summary>
+        public int RoundingDigits
+        {
+            get
+            {
+                return roundingDigits;
+            }
+            set
+            {
+                if(value < 1)
+                {
+                    throw new System.ArgumentOutOfRangeException();
+                }
+                roundingDigits = value;
+                printFormat = $"0.{PiwotToolsLib.Data.Stringer.GetFilledString(roundingDigits, '0')}";
+                SetPrintableText();
+            }
+        }
 
 
-        public IntSwitcherControl(string name, string identificator) : base(name, identificator)
+        public FloatSwitcherControl(string name, string identificator) : base(name, identificator)
         {
 
         }
 
-        public IntSwitcherControl(string name, string identificator, int value, int min, int max, int step) : base(name, identificator)
+        public FloatSwitcherControl(string name, string identificator, float value, float min, float max, float step) : base(name, identificator)
         {
             Setup(value, min, max, step);
         }
 
-        void Setup(int value, int min, int max, int step)
+        void Setup(float value, float min, float max, float step)
         {
             if (min > max)
                 min = max;
@@ -136,7 +158,6 @@
 
             Value = value;
             this.step = step;
-            this.oryginalStep = step;
         }
 
         /// <summary>
@@ -146,7 +167,7 @@
         {
             if (value > min)
                 PerformStep(-1);
-            RunActions(new Events.IntSwitcherEvent(parentMenu, this, value));
+            RunActions(new Events.FloatSwitcherEvent(parentMenu, this, value));
         }
         /// <summary>
         /// Switches value by one step up.
@@ -155,7 +176,7 @@
         {
             if (value < max)
                 PerformStep(1);
-            RunActions(new Events.IntSwitcherEvent(parentMenu, this, value));
+            RunActions(new Events.FloatSwitcherEvent(parentMenu, this, value));
         }
 
         override protected void PerformStep(int direction)
@@ -166,19 +187,16 @@
 
         protected override void SetPrintableText()
         {
-            string valueText;
+            string valueText = value.ToString(printFormat);
+
 
             if (value == max)
             {
-                valueText = (maxSpecialText == "" ? value.ToString() : maxSpecialText);
+                valueText = (maxSpecialText == "" ? valueText : maxSpecialText);
             }
             else if (value == min)
             {
-                valueText = (minSpecialText == "" ? value.ToString() : minSpecialText);
-            }
-            else
-            {
-                valueText = value.ToString();
+                valueText = (minSpecialText == "" ? valueText : minSpecialText);
             }
 
             PrintableText = $"{(hideName ? "" : $"{name}: ")}{(value > min ? LAS : LNS)} {valueText} {(value < max ? RAS : RNS)}";

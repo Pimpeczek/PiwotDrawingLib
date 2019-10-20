@@ -8,7 +8,7 @@ namespace PiwotDrawingLib.UI.Events
 {
     class ButtonEvent: MenuControllEvent
     {
-        public ButtonEvent(Containers.Menu menu, Controls.MenuControl controll) : base(menu, controll)
+        public ButtonEvent(Containers.Menu menu, Controls.ButtonControl controll) : base(menu, controll)
         {
         }
     }

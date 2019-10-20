@@ -39,7 +39,7 @@ namespace PiwotDrawingLib
             };
             mainMenu.AddControl(cb);
 
-            UI.Controls.IntSwitcherControl isc = new UI.Controls.IntSwitcherControl("CB", "_CB", 0, 0, 10000000, 1)
+            UI.Controls.IntSwitcherControl isc = new UI.Controls.IntSwitcherControl("ICS", "_ICS", 0, 0, 10000000, 1)
             {
                 MinSpecialText = "ZERO",
                 MaxSpecialText = "DUŻO",
@@ -49,6 +49,18 @@ namespace PiwotDrawingLib
                 HideName = true
             };
             mainMenu.AddControl(isc);
+
+            UI.Controls.FloatSwitcherControl fsc = new UI.Controls.FloatSwitcherControl("FCS", "_FCS", 0, 0, 10000000, 0.5f)
+            {
+                MinSpecialText = "ZERO",
+                MaxSpecialText = "DUŻO",
+                FastStepMultiplier = 10,
+                FastStepsToMultiply = 10,
+                FastStepTime = 200,
+                HideName = true,
+                RoundingDigits = 5
+            };
+            mainMenu.AddControl(fsc);
 
             mainMenu.WaitForInput();
 

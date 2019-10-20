@@ -136,60 +136,8 @@ namespace PiwotDrawingLib.UI.Controls
             }
         }
 
-        protected int oryginalStep;
-        protected int step;
+        protected int CurrentFastMultiplier { get; private set; }
 
-        /// <summary>
-        /// Magnitude of value increments.
-        /// </summary>
-        public int Step
-        {
-            get
-            {
-                return step;
-            }
-            set
-            {
-                step = value;
-                oryginalStep = step;
-            }
-        }
-
-        protected int min = 0;
-
-        /// <summary>
-        /// The minimal possible value.
-        /// </summary>
-        public int Min
-        {
-            get
-            {
-                return min;
-            }
-            set
-            {
-                min = PiwotToolsLib.PMath.Arit.Clamp(value, int.MinValue, max);
-                SetPrintableText();
-            }
-        }
-
-        protected int max = 10;
-
-        /// <summary>
-        /// The maximal possible value.
-        /// </summary>
-        public int Max
-        {
-            get
-            {
-                return max;
-            }
-            set
-            {
-                max = PiwotToolsLib.PMath.Arit.Clamp(value, min, int.MaxValue);
-                SetPrintableText();
-            }
-        }
 
         protected bool hideName = false;
 
@@ -225,6 +173,7 @@ namespace PiwotDrawingLib.UI.Controls
             stopwatch = new Stopwatch();
             stopwatch.Start();
             accessable = true;
+            CurrentFastMultiplier = 1;
         }
 
         abstract protected void PerformStep(int direction);
@@ -239,5 +188,28 @@ namespace PiwotDrawingLib.UI.Controls
         /// Action invoked when right arrow is pressed over this control.
         /// </summary>
         abstract public void SwitchRight();
+
+        protected void UpdateFastMultiplier()
+        {
+            if (FastStepTime > 0)
+            {
+                long timeFromLastSwitch = stopwatch.ElapsedMilliseconds;
+                if (timeFromLastSwitch < FastStepTime)
+                {
+                    fastSwitchCounter++;
+                    if (fastSwitchCounter >= FastStepsToMultiply)
+                    {
+                        fastSwitchCounter = 0;
+                        CurrentFastMultiplier *= FastStepMultiplier;
+                    }
+                }
+                else
+                {
+                    fastSwitchCounter = 0;
+                    CurrentFastMultiplier = 1;
+                }            
+            }
+            stopwatch.Restart();
+        }
     }
 }

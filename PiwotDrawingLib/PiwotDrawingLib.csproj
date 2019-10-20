@@ -64,6 +64,7 @@
     <Compile Include="UI\Containers\Menu.cs" />
     <Compile Include="UI\Controls\ButtonControl.cs" />
     <Compile Include="UI\Controls\CheckBoxControl.cs" />
+    <Compile Include="UI\Controls\FloatSwitcherControl.cs" />
     <Compile Include="UI\Controls\IntSwitcherControl.cs" />
     <Compile Include="UI\Controls\LabelControl.cs" />
     <Compile Include="UI\Controls\LineSeparatorControl.cs" />
@@ -74,10 +75,12 @@
     <Compile Include="UI\Controls\SwitcherControl.cs" />
     <Compile Include="UI\Events\ButtonEvent.cs" />
     <Compile Include="UI\Events\CheckBoxEvent.cs" />
+    <Compile Include="UI\Events\FloatSwitcherEvent.cs" />
     <Compile Include="UI\Events\IntSwitcherEvent.cs" />
     <Compile Include="UI\Events\MenuBindingEvent.cs" />
     <Compile Include="UI\Events\MenuControllEvent.cs" />
     <Compile Include="UI\Events\MenuEvent.cs" />
+    <Compile Include="UI\Events\StringSwitcherEvent.cs" />
     <Compile Include="UI\Exceptions\IdentificatorNotFoundException.cs" />
   </ItemGroup>
   <ItemGroup>
