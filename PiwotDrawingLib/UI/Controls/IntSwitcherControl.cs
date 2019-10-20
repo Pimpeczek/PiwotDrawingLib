@@ -3,6 +3,10 @@
     class IntSwitcherControl : SwitcherControl
     {
         private int value = 0;
+
+        /// <summary>
+        /// The value of this control.
+        /// </summary>
         public int Value
         {
             get
@@ -11,7 +15,6 @@
             }
             set
             {
-
                 this.value = PiwotToolsLib.PMath.Arit.Clamp(value, min, max);
                 SetPrintableText();
             }
@@ -20,6 +23,10 @@
         
 
         private string minSpecialText = "";
+
+        /// <summary>
+        /// Text displayed insted of the value, when it reaches the lower border.
+        /// </summary>
         public string MinSpecialText
         {
             get
@@ -34,6 +41,10 @@
         }
 
         private string maxSpecialText = "";
+
+        /// <summary>
+        /// Text displayed insted of the value, when it reaches the upper border.
+        /// </summary>
         public string MaxSpecialText
         {
             get
@@ -69,14 +80,21 @@
 
             Value = value;
             base.step = step;
+            base.oryginalStep = step;
         }
 
+        /// <summary>
+        /// Switches value by one step down.
+        /// </summary>
         override public void SwitchLeft()
         {
             if (value > min)
                 PerformStep(-1);
             RunActions(new Events.IntSwitcherEvent(parentMenu, this, value));
         }
+        /// <summary>
+        /// Switches value by one step up.
+        /// </summary>
         override public void SwitchRight()
         {
             if (value < max)
@@ -102,16 +120,13 @@
                 if (fastSwitchCounter >= FastStepsToMultiply)
                 {
                     fastSwitchCounter = 0;
+                    Value -= step * direction;
                     step *= FastStepMultiplier;
+
                 }
                 stopwatch.Restart();
             }
             Value += step * direction;
-        }
-
-        override public int GetValue()
-        {
-            return Value;
         }
 
         protected override void SetPrintableText()
@@ -131,7 +146,7 @@
                 valueText = value.ToString();
             }
 
-            PrintableText = $"{name}: {(value > min ? LAS : LNS)} {valueText} {(value < max ? RAS : RNS)}";
+            PrintableText = $"{(hideName ? "" : $"{name}: ")}{(value > min ? LAS : LNS)} {valueText} {(value < max ? RAS : RNS)}";
         }
     }
 }

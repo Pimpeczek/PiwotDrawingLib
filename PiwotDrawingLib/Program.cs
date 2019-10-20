@@ -39,6 +39,17 @@ namespace PiwotDrawingLib
             };
             mainMenu.AddControl(cb);
 
+            UI.Controls.IntSwitcherControl isc = new UI.Controls.IntSwitcherControl("CB", "_CB", 0, 0, 10000000, 1)
+            {
+                MinSpecialText = "ZERO",
+                MaxSpecialText = "DUŻO",
+                FastStepMultiplier = 10,
+                FastStepsToMultiply = 10,
+                FastStepTime = 200,
+                HideName = true
+            };
+            mainMenu.AddControl(isc);
+
             mainMenu.WaitForInput();
 
             //Renderer.AbortAsyncThread();

@@ -1,5 +1,8 @@
 ﻿namespace PiwotDrawingLib.UI.Controls
 {
+    /// <summary>
+    /// Represents a control that is not accesable nor visable. Used to separate other controls.
+    /// </summary>
     class LineSeparatorControl : MenuControl
     {
 
@@ -21,8 +24,5 @@
             accessable = false;
             visable = false;
         }
-
-
-        override public int GetValue() { return 0; }
     }
 }

@@ -5,9 +5,9 @@ namespace PiwotDrawingLib.UI.Controls
 {
 
     /// <summary>
-    /// Represents a basic menu control used to display one line of text..
+    /// Represents a basic menu control used to display one line of text.
     /// </summary>
-    class MenuControl
+    abstract class MenuControl
     {
         #region Variables
         protected string name;
@@ -71,14 +71,7 @@ namespace PiwotDrawingLib.UI.Controls
             parentMenu = menu;
         }
 
-        /// <summary>
-        /// Returns value of this control.
-        /// </summary>
-        /// <returns></returns>
-        public virtual int GetValue()
-        {
-            return 0;
-        }
+
 
     }
 }

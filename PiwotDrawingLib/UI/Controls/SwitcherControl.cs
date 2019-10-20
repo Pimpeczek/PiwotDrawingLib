@@ -191,6 +191,25 @@ namespace PiwotDrawingLib.UI.Controls
             }
         }
 
+        protected bool hideName = false;
+
+        /// <summary>
+        /// If set to 'true' only the value will be shown.
+        /// </summary>
+        public bool HideName
+        {
+            get
+            {
+                return hideName;
+            }
+            set
+            {
+                hideName = value;
+                SetPrintableText();
+            }
+        }
+
+
         protected Stopwatch stopwatch;
 
         public SwitcherControl(string name, string identificator) : base(name, identificator)
@@ -208,18 +227,17 @@ namespace PiwotDrawingLib.UI.Controls
             accessable = true;
         }
 
+        abstract protected void PerformStep(int direction);
+
+        abstract protected void SetPrintableText();
         /// <summary>
         /// Action invoked when left arrow is pressed over this control.
         /// </summary>
-        public abstract void SwitchLeft();
+        abstract public void SwitchLeft();
 
         /// <summary>
         /// Action invoked when right arrow is pressed over this control.
         /// </summary>
-        public abstract void SwitchRight();
-
-        abstract protected void PerformStep(int direction);
-
-        abstract protected void SetPrintableText();
+        abstract public void SwitchRight();
     }
 }

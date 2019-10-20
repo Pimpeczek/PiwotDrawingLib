@@ -7,14 +7,14 @@ namespace PiwotDrawingLib.UI.Controls
     /// </summary>
     class CheckBoxControl : ActionControl, Switchable, Pressable 
     {
-        private int value;
+        private bool value;
 
         /// <summary>
         /// The value of this controll. 
         /// <para>1 = true</para> 
         /// <para>0 = false</para> 
         /// </summary>
-        public int Value
+        public bool Value
         {
             get
             {
@@ -22,8 +22,8 @@ namespace PiwotDrawingLib.UI.Controls
             }
             set
             {
-                this.value = PiwotToolsLib.PMath.Arit.Clamp(value, 0, 1);
-                PrintableText = GetPrintableText();
+                this.value = value;
+                SetPrintableText();
             }
         }
         protected string trueValue = "+";
@@ -40,7 +40,7 @@ namespace PiwotDrawingLib.UI.Controls
             set
             {
                 trueValue = value;
-                PrintableText = GetPrintableText();
+                SetPrintableText();
             }
         }
 
@@ -58,7 +58,7 @@ namespace PiwotDrawingLib.UI.Controls
             set
             {
                 falseValue = value;
-                PrintableText = GetPrintableText();
+                SetPrintableText();
             }
         }
 
@@ -76,14 +76,14 @@ namespace PiwotDrawingLib.UI.Controls
             set
             {
                 hideName = value;
-                PrintableText = GetPrintableText();
+                SetPrintableText();
             }   
         }
 
         public CheckBoxControl(string name, string identificator, bool startValue) : base(name, identificator)
         {
-            Value = (startValue ? 1 : 0);
-            PrintableText = GetPrintableText();
+            Value = startValue;
+            SetPrintableText();
         }
 
         /// <summary>
@@ -109,25 +109,12 @@ namespace PiwotDrawingLib.UI.Controls
         /// </summary>
         void Toggle()
         {
-            if (value == 0)
-                Value = 1;
-            else
-                Value = 0;
+            Value = !value;
         }
 
-        string GetPrintableText()
+        protected void SetPrintableText()
         {
-            return $"{(hideName ? "" : $"{name}: ")}[{(value == 0 ? falseValue : trueValue)}]";
-        }
-
-        /// <summary>
-        /// The value of this controll. 
-        /// <para>1 = true</para> 
-        /// <para>0 = false</para> 
-        /// </summary>
-        override public int GetValue()
-        {
-            return Value;
+            PrintableText = $"{(hideName ? "" : $"{name}: ")}[{(value ? trueValue : falseValue)}]";
         }
 
         /// <summary>

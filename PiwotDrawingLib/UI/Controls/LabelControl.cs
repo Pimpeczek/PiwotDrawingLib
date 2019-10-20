@@ -1,5 +1,8 @@
 ﻿namespace PiwotDrawingLib.UI.Controls
 {
+    /// <summary>
+    /// Represents a Control used to display text.
+    /// </summary>
     class LabelControl : MenuControl
     {
 
@@ -7,7 +10,5 @@
         {
             accessable = false;
         }
-
-        override public int GetValue() { return 0; }
     }
 }

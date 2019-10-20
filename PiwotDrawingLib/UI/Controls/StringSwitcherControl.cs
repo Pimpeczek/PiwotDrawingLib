@@ -4,6 +4,10 @@ namespace PiwotDrawingLib.UI.Controls
     class StringSwitcherControl : SwitcherControl
     {
         private int value;
+
+        /// <summary>
+        /// The index of current option.
+        /// </summary>
         public int Value
         {
             get
@@ -18,14 +22,31 @@ namespace PiwotDrawingLib.UI.Controls
                 SetPrintableText();
             }
         }
-        string[] options;
+        protected string[] options;
+        public string[] Options
+        {
+            get
+            {
+                return options;
+            }
+            set
+            {
+                if(value.Length == 0)
+                {
+                    throw new System.ArgumentException();
+                }
+
+                options = value;
+                Value = this.value;
+            }
+        }
         protected new readonly int min;
         protected new int max;
 
-        protected new int Min;
-        protected new int Max;
+        private new int Min = 0;
+        private new int Max = 0;
 
-        protected new int Step;
+        private new int Step;
 
         public StringSwitcherControl(string name, string identificator, string options) : base(name, identificator)
         {
@@ -36,6 +57,10 @@ namespace PiwotDrawingLib.UI.Controls
             Step = 1;
         }
 
+        /// <summary>
+        /// Loads options using string, where each option is separated by a new line symbol.
+        /// </summary>
+        /// <param name="options"></param>
         public void SetOptions(string options)
         {
             this.options = options.Split('\n');
@@ -44,25 +69,29 @@ namespace PiwotDrawingLib.UI.Controls
 
         }
 
+        /// <summary>
+        /// Switches value by one step down.
+        /// </summary>
         override public void SwitchLeft()
         {
-            PerformStep(-1);
+            if (value > min)
+                PerformStep(-1);
             RunActions(new Events.IntSwitcherEvent(parentMenu, this, value));
         }
+        /// <summary>
+        /// Switches value by one step up.
+        /// </summary>
         override public void SwitchRight()
         {
-            PerformStep(1);
+            if (value < max)
+                PerformStep(1);
             RunActions(new Events.IntSwitcherEvent(parentMenu, this, value));
         }
 
         override protected void PerformStep(int direction)
         {
             Value += step * oryginalStep;
-        }
-
-        override public int GetValue()
-        {
-            return Value;
+            SetPrintableText();
         }
 
         protected override void SetPrintableText()
