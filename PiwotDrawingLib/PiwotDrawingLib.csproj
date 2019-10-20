@@ -60,6 +60,8 @@
     <Compile Include="Rendering\Renderer.cs" />
     <Compile Include="Rendering\Requests\RenderRequest.cs" />
     <Compile Include="Rendering\Requests\TimedTextRequest.cs" />
+    <Compile Include="UI\Containers\Container.cs" />
+    <Compile Include="UI\Containers\FunctionDisplay.cs" />
     <Compile Include="UI\Controls\ActionControl.cs" />
     <Compile Include="UI\Containers\Menu.cs" />
     <Compile Include="UI\Controls\ButtonControl.cs" />

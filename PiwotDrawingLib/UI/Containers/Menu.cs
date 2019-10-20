@@ -10,19 +10,10 @@ namespace PiwotDrawingLib.UI.Containers
     /// <summary>
     /// Container that can store MenuControls and read inputs.
     /// </summary>
-    class Menu
+    class Menu : Container
     {
         #region Variables
-        /// <summary>
-        /// Position of the container.
-        /// </summary>
-        public Int2 Position { get; protected set; }
-
-        /// <summary>
-        /// Size of the container.
-        /// </summary>
-        public Int2 Size { get; protected set; }
-
+        
         public enum Wrapping { scrolling, wrapping, none };
         protected Wrapping verticalTextWrapping;
 
@@ -48,24 +39,7 @@ namespace PiwotDrawingLib.UI.Containers
                 DrawWindow();
             }
         }
-        protected string name;
-        public string Name
-        {
-            get
-            {
-                return name;
-            }
-            set
-            {
-                name = value;
-
-                if(IsVIsable)
-                {
-                    DrawWindow();
-                }
-
-            }
-        }
+       
         protected bool waitForInput;
 
         /// <summary>
@@ -73,46 +47,42 @@ namespace PiwotDrawingLib.UI.Containers
         /// </summary>
         public bool WaitingForInput{ get { return waitForInput; } protected set { } }
 
-        Misc.Boxes.BoxType boxType;
+        
 
         List<Controls.MenuControl> controls;
 
         int hPoint;
         int scrollPoint;
 
-        string emptyLine;
+        
 
         List<(ConsoleKey, Func<Events.MenuEvent, bool>)> bindings;
 
-        public bool IsVIsable { get; protected set; }
+        
         #endregion
 
         #region Setup
 
-        public Menu()
+        public Menu():base(new Int2(), new Int2(10, 10), "Menu", Misc.Boxes.BoxType.doubled)
         {
             IsVIsable = false;
-            Setup(new Int2(), new Int2(10, 10), "Menu", Misc.Boxes.BoxType.doubled);
+            Setup();
             IsVIsable = true;
         }
 
-        public Menu(Int2 position, Int2 size, string name, Misc.Boxes.BoxType boxType)
+        public Menu(Int2 position, Int2 size, string name, Misc.Boxes.BoxType boxType):base(position, size, name, boxType)
         {
-            Setup(position, size, name, boxType);
+            Setup();
         }
 
-        void Setup(Int2 position, Int2 size, string name, Misc.Boxes.BoxType boxType)
+        void Setup()
         {
             waitForInput = false;
             controls = new List<Controls.MenuControl>();
             bindings = new List<(ConsoleKey, Func<Events.MenuEvent, bool>)>();
             hPoint = 0;
             scrollPoint = 0;
-            Position = position;
-            Size = size;
-            Name = name;
-            emptyLine = Stringer.GetFilledString(size.X - 2, ' ');
-            this.boxType = boxType;
+           
         }
 
         #endregion
@@ -167,7 +137,7 @@ namespace PiwotDrawingLib.UI.Containers
             DrawWindow();
             hPoint = -1;
             LoopToAccesable(1);
-            DrawControls();
+            DrawContent();
 
             
             do
@@ -213,7 +183,7 @@ namespace PiwotDrawingLib.UI.Containers
 
 
 
-                DrawControls();
+                DrawContent();
 
             } while (waitForInput);
 
@@ -263,53 +233,32 @@ namespace PiwotDrawingLib.UI.Containers
         }
 
 
-        /// <summary>
-        /// Draws menu window and controls.
-        /// </summary>
-        public void Draw()
-        {
-            DrawWindow();
-            DrawControls();
-        }
-
-
+      
         /// <summary>
         /// Draws menu window.
         /// </summary>
-        public void DrawWindow()
+        override protected void DrawWindow()
         {
             IsVIsable = true;
             Console.ForegroundColor = ConsoleColor.White;
-            Misc.Boxes.DrawBox(boxType, Position.X, Position.Y, Size.X, Size.Y);
+            if (boxType != Misc.Boxes.BoxType.none)
+                Misc.Boxes.DrawBox(boxType, Position.X, Position.Y, Size.X, Size.Y);
             Rendering.Renderer.Write(Name, Position.X + (Size.X - Name.Length) / 2, Position.Y);
 
         }
 
-        /// <summary>
-        /// Erases menu window and its content.
-        /// </summary>
-        public void Erase()
-        {
-            IsVIsable = false;
-            string fullEmptyLine = emptyLine + "  ";
-
-            for(int y = 0; y < Size.Y; y++)
-            {
-                Rendering.Renderer.Write(fullEmptyLine, Position.X, Position.Y + y);
-            }
-            
-
-        }
+        
 
         /// <summary>
         /// Draws only controls.
         /// </summary>
-        void DrawControls()
+        override protected void DrawContent()
         {
-            int startHeight = Arit.Clamp((Size.Y - 2 - controls.Count) / 2, 0, Size.Y);
+            int borderWidth = (boxType == Misc.Boxes.BoxType.none ? 0 : 1);
+            int startHeight = Arit.Clamp((Size.Y - 2 - controls.Count) / 2, 1, Size.Y - borderWidth * 2);
             string printText;
             Int2 pos;
-            for (int i = 0; i < controls.Count && i < Size.Y - 2; i++)
+            for (int i = 0; i < controls.Count && i < Size.Y -  borderWidth; i++)
             {
                 if (controls[i + scrollPoint].visable)
                 {
@@ -345,7 +294,4 @@ namespace PiwotDrawingLib.UI.Containers
             return null;
         }
     }
-
-
-    
 }

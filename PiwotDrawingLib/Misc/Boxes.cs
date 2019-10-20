@@ -8,7 +8,7 @@ namespace PiwotDrawingLib.Misc
 {
     class Boxes
     {
-        public enum BoxType { light, round, normal, doubled, dashed, dashedLight };
+        public enum BoxType { light, round, normal, doubled, dashed, dashedLight, none };
         public static readonly Char cor_b_lu = '╔';
         public static readonly Char cor_b_ru = '╗';
         public static readonly Char cor_b_rl = '╝';
@@ -108,8 +108,11 @@ namespace PiwotDrawingLib.Misc
                 case BoxType.round:
                     bs = roundBoxChars;
                     break;
-                default:
+                case BoxType.normal:
                     bs = boxChars;
+                    break;
+                default:
+                    bs = null;
                     break;
             }
             return bs;
@@ -122,6 +125,8 @@ namespace PiwotDrawingLib.Misc
 
         public static void DrawBox(Char[] bs, int x, int y, int sx, int sy)
         {
+            if (bs == null)
+                throw new ArgumentNullException();
             Rendering.Renderer.Write($"{bs[3]}{"".PadLeft(sx - 2, bs[2])}{bs[0]}", x, y);
             string midBorder = $"{bs[7]}{"".PadLeft(sx - 2)}{bs[7]}";
             for (int i = 1; i < sy - 1; i++)
@@ -140,6 +145,8 @@ namespace PiwotDrawingLib.Misc
 
         public static string GetBoxName(string name, Char[] boxes)
         {
+            if (boxes == null)
+                throw new ArgumentNullException();
             return $"{boxes[8]}{name}{boxes[11]}";
         }
     }
