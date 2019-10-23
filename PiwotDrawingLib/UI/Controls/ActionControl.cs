@@ -9,7 +9,7 @@ namespace PiwotDrawingLib.UI.Controls
     /// <summary>
     /// Abstract class representing a MenuControl that can invoke actions.
     /// </summary>
-    abstract class ActionControl: MenuControl
+    abstract class ActionControl: AccessableControl
     {
         /// <summary>
         /// List of actions performed when that control is selected.
@@ -29,18 +29,30 @@ namespace PiwotDrawingLib.UI.Controls
         }
 
         /// <summary>
-        /// Removes an existing action to this control.
+        /// Removes an existing action. Returns true if removal was succesfull.
         /// </summary>
-        /// /// <param name="identificator">Identificator of the action bo be added.</param>
-        /// <param name="action">The action bo be added.</param>
+        /// <param name="identificator">Identificator of the action bo be removed.</param>
         public bool RemoveAction(string identificator)
         {
-            if(actions.ContainsKey(identificator))
+            if (actions.ContainsKey(identificator))
             {
                 actions.Remove(identificator);
                 return true;
             }
             return false;
+        }
+
+        /// <summary>
+        /// Returns an existing action.
+        /// </summary>
+        /// /// <param name="identificator">Identificator of the action bo be found.</param>
+        public Func<Events.MenuEvent, bool> GetAction(string identificator)
+        {
+            if (actions.ContainsKey(identificator))
+            {
+                return actions[identificator];
+            }
+            return null;
         }
 
         /// <summary>

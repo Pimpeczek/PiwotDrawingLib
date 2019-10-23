@@ -9,6 +9,7 @@ namespace PiwotDrawingLib.UI.Containers
 {
     abstract class Container
     {
+        #region Variables
         /// <summary>
         /// Position of the container.
         /// </summary>
@@ -40,6 +41,9 @@ namespace PiwotDrawingLib.UI.Containers
         public bool IsVIsable { get; protected set; }
         protected string emptyLine;
         protected Misc.Boxes.BoxType boxType;
+        #endregion
+
+
         public Container(Int2 position, Int2 size, string name, Misc.Boxes.BoxType boxType)
         {
             Position = position;

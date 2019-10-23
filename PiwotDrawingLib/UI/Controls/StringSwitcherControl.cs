@@ -84,8 +84,7 @@ namespace PiwotDrawingLib.UI.Controls
 
         override protected void PerformStep(int direction)
         {
-            UpdateFastMultiplier();
-            Value += direction * CurrentFastMultiplier;
+            Value += direction * UpdateFastMultiplier();
         }
 
         protected override void SetPrintableText()

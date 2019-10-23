@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PiwotDrawingLib.UI.Controls
 {
-    interface Pressable
+    interface IPressable
     {
         void Press();
     }

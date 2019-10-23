@@ -8,7 +8,7 @@
 
         public LabelControl(string name, string identificator) : base(name, identificator)
         {
-            accessable = false;
+
         }
     }
 }

@@ -21,7 +21,6 @@
 
         public LineSeparatorControl(string name, string identificator) : base(name, identificator)
         {
-            accessable = false;
             visable = false;
         }
     }

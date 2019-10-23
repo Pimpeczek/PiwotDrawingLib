@@ -5,10 +5,9 @@ namespace PiwotDrawingLib.UI.Controls
     /// <summary>
     /// Represents pressable and switchable control with true/false value range. If the value was changed while this crontrol was highlighted an action will be performed.
     /// </summary>
-    class CheckBoxControl : ActionControl, Switchable, Pressable 
+    class CheckBoxControl : ActionControl, ISwitchable, IPressable
     {
         private bool value;
-
         /// <summary>
         /// The value of this controll. 
         /// <para>1 = true</para> 

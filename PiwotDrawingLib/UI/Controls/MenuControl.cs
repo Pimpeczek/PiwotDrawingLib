@@ -37,11 +37,6 @@ namespace PiwotDrawingLib.UI.Controls
         public Containers.Menu parentMenu { get; protected set; }
 
         /// <summary>
-        /// Tells if this control can be highlighted.
-        /// </summary>
-        public bool accessable;
-
-        /// <summary>
         /// Tells if this control is shown on the menu.
         /// </summary>
         public bool visable;
@@ -56,7 +51,6 @@ namespace PiwotDrawingLib.UI.Controls
         {
             NeedsRedraw = true;
             visable = true;
-            accessable = true;
             Name = name;
             Identificator = identificator;
 

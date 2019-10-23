@@ -47,7 +47,7 @@ namespace PiwotDrawingLib
                 MaxSpecialText = "DUŻO",
                 FastStepMultiplier = 10,
                 FastStepsToMultiply = 10,
-                FastStepTime = 200,
+                FastStepTime = 1000,
                 HideName = true
             };
             mainMenu.AddControl(isc);

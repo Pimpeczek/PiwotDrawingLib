@@ -2,7 +2,7 @@
 
 namespace PiwotDrawingLib.UI.Controls
 {
-    abstract class SwitcherControl : ActionControl, Switchable
+    abstract class SwitcherControl : ActionControl, ISwitchable
     {
 
         protected string LAS;
@@ -157,6 +157,8 @@ namespace PiwotDrawingLib.UI.Controls
             }
         }
 
+        public bool Accessable { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+        public bool Selected { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
 
         protected Stopwatch stopwatch;
 
@@ -189,7 +191,7 @@ namespace PiwotDrawingLib.UI.Controls
         /// </summary>
         abstract public void SwitchRight();
 
-        protected void UpdateFastMultiplier()
+        protected int UpdateFastMultiplier()
         {
             if (FastStepTime > 0)
             {
@@ -210,6 +212,22 @@ namespace PiwotDrawingLib.UI.Controls
                 }            
             }
             stopwatch.Restart();
+            return CurrentFastMultiplier;
+        }
+
+        public void Select()
+        {
+            if (Selected)
+                return;
+            Selected = true;
+        }
+
+        public void Unselect()
+        {
+            if (!Selected)
+                return;
+            Selected = false;
+            NeedsRedraw = true;
         }
     }
 }
