@@ -133,7 +133,7 @@ namespace PiwotDrawingLib.Misc
                 }
             }
         }
-
+        
         protected static int TryAddColor(string hex)
         {
             colorPoint++;
@@ -176,7 +176,6 @@ namespace PiwotDrawingLib.Misc
                 else if (str[pos + 2] == 'b')
                 {
                     isBackground = true;
-
                 }
                 else
                 {

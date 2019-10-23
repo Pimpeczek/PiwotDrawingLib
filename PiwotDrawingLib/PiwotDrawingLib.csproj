@@ -86,6 +86,7 @@
     <Compile Include="UI\Events\MenuEvent.cs" />
     <Compile Include="UI\Events\StringSwitcherEvent.cs" />
     <Compile Include="UI\Exceptions\IdentificatorNotFoundException.cs" />
+    <Compile Include="UI\Exceptions\InvalidFormatException.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

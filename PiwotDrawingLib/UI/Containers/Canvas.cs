@@ -71,9 +71,102 @@ namespace PiwotDrawingLib.UI.Containers
             }
         }
 
-        public void Draw()
+        public void Draw(string str, int x, int y)
         {
+            str = str.Replace("</cf>", defFHexTag);
+            str = str.Replace("</cb>", defBHexTag);
+            string curFHex = "FFFFFF";
+            string curBHex = "000000";
+            string retStr = "";
+            string tStr;
+            int pos = str.IndexOf("<c");
+            int prevPos = 0;
+            bool isBackground = false;
+            int xOffset = 0;
+            while (pos >= 0)
+            {
+                if (str[pos + 9] != '>')
+                {
+                    continue;
+                }
 
+                if (str[pos + 2] == 'f')
+                {
+                    isBackground = false;
+
+                }
+                else if (str[pos + 2] == 'b')
+                {
+                    isBackground = true;
+                }
+                else
+                {
+                    throw new Exceptions.InvalidFormatException();
+                }
+
+                if (pos >= prevPos && pos != prevPos)
+                {
+
+                    retStr += str.Substring(prevPos, pos - prevPos).Pastel(curFHex).PastelBg(curBHex);
+                    //Console.WriteLine(str.Substring(prevPos, str.Length - prevPos));
+                    WriteOnCanvas(str.Substring(prevPos, pos - prevPos), curFHex, curBHex, x + xOffset, y);
+                    xOffset += pos - prevPos;
+                }
+
+                if (isBackground)
+                {
+                    curBHex = str.Substring(pos + 3, 6);
+                    TryAddColor(curBHex);
+                }
+                else
+                {
+                    curFHex = str.Substring(pos + 3, 6);
+                    TryAddColor(curFHex);
+                }
+
+                prevPos = pos + 10;
+                pos = str.IndexOf("<c", prevPos);
+            }
+            if (str.Length >= prevPos && pos != prevPos)
+            {
+                retStr += str.Substring(prevPos, str.Length - prevPos).Pastel(curFHex).PastelBg(curBHex);
+                //Console.WriteLine(str.Substring(prevPos, str.Length - prevPos));
+                WriteOnCanvas(str.Substring(prevPos, str.Length - prevPos), curFHex, curBHex, x + xOffset, y);
+            }
+            //Console.WriteLine(retStr);
+        }
+
+        protected void WriteOnCanvas(string text, string fHex, string bHex, int x, int y)
+        {
+            int tCol = 0;
+            bool tRef;
+            for (int i = 0; i < text.Length && x < canvasSize.X; i++)
+            {
+                tRef = false;
+                if (charMap[y][x] != text[i])
+                {
+                    charMap[y][x] = text[i];
+                    tRef = true;
+                }
+                tCol = TryAddColor(fHex);
+                if (frontColorMap[y, x] != tCol)
+                {
+                    frontColorMap[y, x] = tCol;
+                    tRef = true;
+                }
+                tCol = TryAddColor(bHex);
+                if (backColorMap[y, x] != tCol)
+                {
+                    backColorMap[y, x] = tCol;
+                    tRef = true;
+                }
+                refreshMap[y, x] = tRef;
+                if (tRef)
+                {
+                    refreshMap[y, xSize] = true;
+                }
+                x++;
+            }
         }
 
         protected override void DrawContent()
