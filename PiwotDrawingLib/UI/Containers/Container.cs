@@ -72,7 +72,15 @@ namespace PiwotDrawingLib.UI.Containers
             }
         }
 
-        protected abstract void DrawWindow();
+        protected virtual void DrawWindow()
+        {
+            IsVIsable = true;
+            Console.ForegroundColor = ConsoleColor.White;
+            if (boxType != Misc.Boxes.BoxType.none)
+                Misc.Boxes.DrawBox(boxType, Position.X, Position.Y, Size.X, Size.Y);
+            //Rendering.Renderer.Write(Name, Position.X + (Size.X - Name.Length) / 2, Position.Y);
+
+        }
         protected abstract void DrawContent();
 
     }

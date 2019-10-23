@@ -18,7 +18,7 @@ namespace PiwotDrawingLib
             //Renderer.AsyncMode = true;
             Renderer.AsyncFrameLenght = 30;
             Int2 menuSize = new Int2(40, 20);
-            UI.Containers.Menu mainMenu = new UI.Containers.Menu(new Int2((Renderer.WindowSize.X - menuSize.X) / 2, (Renderer.WindowSize.Y - menuSize.X) / 2), menuSize, "Main menu", Misc.Boxes.BoxType.none);
+            UI.Containers.Menu mainMenu = new UI.Containers.Menu(new Int2((Renderer.WindowSize.X - menuSize.X) / 2, (Renderer.WindowSize.Y - menuSize.X) / 2), menuSize, "Main menu", Misc.Boxes.BoxType.round);
             //mainMenu.VerticalTextWrapping = UI.Containers.Menu.Wrapping.scrolling;
 
             UI.Controls.ButtonControl bc = new UI.Controls.ButtonControl("b0", "b0");

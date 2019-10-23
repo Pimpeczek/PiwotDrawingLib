@@ -239,10 +239,7 @@ namespace PiwotDrawingLib.UI.Containers
         /// </summary>
         override protected void DrawWindow()
         {
-            IsVIsable = true;
-            Console.ForegroundColor = ConsoleColor.White;
-            if (boxType != Misc.Boxes.BoxType.none)
-                Misc.Boxes.DrawBox(boxType, Position.X, Position.Y, Size.X, Size.Y);
+            base.DrawWindow();
             Rendering.Renderer.Write(Name, Position.X + (Size.X - Name.Length) / 2, Position.Y);
 
         }
