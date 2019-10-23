@@ -155,8 +155,8 @@ namespace PiwotDrawingLib.UI.Containers
                     case ConsoleKey.LeftArrow:
                         if (hPoint < controls.Count)
                         {
-                            if (controls[hPoint] is Controls.Switchable)
-                                ((Controls.Switchable)controls[hPoint]).SwitchLeft();
+                            if (controls[hPoint] is Controls.ISwitchable)
+                                ((Controls.ISwitchable)controls[hPoint]).SwitchLeft();
                         }
                         else
                             LoopToAccesable(-1);
@@ -164,8 +164,8 @@ namespace PiwotDrawingLib.UI.Containers
                     case ConsoleKey.RightArrow:
                         if (hPoint < controls.Count)
                         {
-                            if(controls[hPoint] is Controls.Switchable)
-                                ((Controls.Switchable)controls[hPoint]).SwitchRight();
+                            if(controls[hPoint] is Controls.ISwitchable)
+                                ((Controls.ISwitchable)controls[hPoint]).SwitchRight();
                         }
                         else
                             LoopToAccesable(1);
@@ -173,8 +173,8 @@ namespace PiwotDrawingLib.UI.Containers
                     case ConsoleKey.Enter:
                         if (hPoint < controls.Count)
                         {
-                            if (controls[hPoint] is Controls.Pressable)
-                                ((Controls.Pressable)controls[hPoint]).Press();
+                            if (controls[hPoint] is Controls.IPressable)
+                                ((Controls.IPressable)controls[hPoint]).Press();
                         }
                         else
                             LoopToAccesable(1);
@@ -214,7 +214,7 @@ namespace PiwotDrawingLib.UI.Containers
                     hPoint = 0;
                 }
                 overflowCounter++;
-            } while (!controls[hPoint].accessable && overflowCounter < controls.Count);
+            } while (CheckControlAccessability(controls[hPoint]) && overflowCounter < controls.Count);
             if (overflowCounter >= controls.Count)
                 hPoint = 0;
         }
@@ -254,10 +254,12 @@ namespace PiwotDrawingLib.UI.Containers
             int borderWidth = (boxType == Misc.Boxes.BoxType.none ? 0 : 1);
             int startHeight = Arit.Clamp((Size.Y - 2 - controls.Count) / 2, 1, Size.Y - borderWidth * 2);
             string printText;
+            Controls.MenuControl tControl;
             Int2 pos;
             for (int i = 0; i < controls.Count && i < Size.Y -  borderWidth; i++)
             {
-                if (controls[i + scrollPoint].visable)
+                tControl = controls[i + scrollPoint];
+                if (tControl.visable && tControl.NeedsRedraw)
                 {
                     printText = controls[i + scrollPoint].PrintableText;
                     pos = new Int2(Position.X + 1, Position.Y + startHeight + i + 1);
@@ -289,6 +291,11 @@ namespace PiwotDrawingLib.UI.Containers
                     return controls[i];
             }
             return null;
+        }
+
+        protected bool CheckControlAccessability(Controls.MenuControl control)
+        {
+            return !(control is Controls.AccessableControl && ((Controls.AccessableControl)control).Accessable);
         }
     }
 }

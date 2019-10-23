@@ -181,8 +181,8 @@
 
         override protected void PerformStep(int direction)
         {
-            UpdateFastMultiplier();
-            Value += step * direction * CurrentFastMultiplier;
+            
+            Value += step * direction * UpdateFastMultiplier();
         }
 
         protected override void SetPrintableText()

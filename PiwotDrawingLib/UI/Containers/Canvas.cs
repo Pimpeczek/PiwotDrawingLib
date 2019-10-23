@@ -25,7 +25,7 @@ namespace PiwotDrawingLib.UI.Containers
         protected Int2 canvasSize;
 
 
-        public Canvas() : base(new Int2(), new Int2(10, 10), "Menu", Misc.Boxes.BoxType.doubled)
+        public Canvas() : base(new Int2(), new Int2(10, 10), "Canvas", Misc.Boxes.BoxType.doubled)
         {
             IsVIsable = false;
             Setup();

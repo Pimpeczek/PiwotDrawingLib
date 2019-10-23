@@ -64,6 +64,7 @@
     <Compile Include="UI\Containers\Canvas.cs" />
     <Compile Include="UI\Containers\Container.cs" />
     <Compile Include="UI\Containers\FunctionDisplay.cs" />
+    <Compile Include="UI\Controls\AccessableControl.cs" />
     <Compile Include="UI\Controls\ActionControl.cs" />
     <Compile Include="UI\Containers\Menu.cs" />
     <Compile Include="UI\Controls\ButtonControl.cs" />
@@ -73,9 +74,9 @@
     <Compile Include="UI\Controls\LabelControl.cs" />
     <Compile Include="UI\Controls\LineSeparatorControl.cs" />
     <Compile Include="UI\Controls\MenuControl.cs" />
-    <Compile Include="UI\Controls\Pressable.cs" />
+    <Compile Include="UI\Controls\Interfaces\IPressable.cs" />
     <Compile Include="UI\Controls\StringSwitcherControl.cs" />
-    <Compile Include="UI\Controls\Switchable.cs" />
+    <Compile Include="UI\Controls\Interfaces\ISwitchable.cs" />
     <Compile Include="UI\Controls\SwitcherControl.cs" />
     <Compile Include="UI\Events\ButtonEvent.cs" />
     <Compile Include="UI\Events\CheckBoxEvent.cs" />

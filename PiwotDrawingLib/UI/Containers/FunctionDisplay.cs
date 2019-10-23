@@ -9,6 +9,7 @@ namespace PiwotDrawingLib.UI.Containers
 {
     class FunctionDisplay : Container
     {
+        #region Variables
         protected float domainLowerBorder = 0;
         public float DomainLowerBorder
         {
@@ -50,7 +51,7 @@ namespace PiwotDrawingLib.UI.Containers
                 func = value;
             }
         }
-
+        #endregion
         public FunctionDisplay() : base(new Int2(), new Int2(10, 10), "Menu", Misc.Boxes.BoxType.doubled)
         {
             IsVIsable = false;

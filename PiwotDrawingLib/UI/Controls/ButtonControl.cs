@@ -9,7 +9,7 @@ namespace PiwotDrawingLib.UI.Controls
     /// <summary>
     /// Represents pressable control. If ENTER was pressed while this crontrol was highlighted an action will be performed.
     /// </summary>
-    class ButtonControl : ActionControl, Pressable
+    class ButtonControl : ActionControl, IPressable
     {
         public ButtonControl(string name, string identificator):base(name, identificator)
         {
