@@ -13,10 +13,12 @@ namespace PiwotDrawingLib
     {
         static void Main(string[] args)
         {
-            Renderer.WindowSize = new Int2(200, 60);
+            Renderer.WindowSize = new Int2(200, 50);
             Renderer.DebugMode = true;
             //Renderer.AsyncMode = true;
             Renderer.AsyncFrameLenght = 30;
+
+
             Int2 menuSize = new Int2(40, 20);
             UI.Containers.Menu mainMenu = new UI.Containers.Menu(new Int2((Renderer.WindowSize.X - menuSize.X) / 2, (Renderer.WindowSize.Y - menuSize.X) / 2), menuSize, "Main menu", Misc.Boxes.BoxType.round);
             //mainMenu.VerticalTextWrapping = UI.Containers.Menu.Wrapping.scrolling;
@@ -28,7 +30,7 @@ namespace PiwotDrawingLib
             mainMenu.AddControl(new UI.Controls.LineSeparatorControl("L0", "_label_0"));
 
             bc = new UI.Controls.ButtonControl("b1", "b1");
-            bc.AddAction("b1", (x) => { Renderer.AddDissapearingText($"DXXX {DateTime.Now.Millisecond}", 1000, new Int2(0,1)); return true; });
+            bc.AddAction("b1", (x) => { Renderer.AddDissapearingText($"DXXX {DateTime.Now.Millisecond}", 1000, new Int2(0, 1)); return true; });
             mainMenu.AddControl(bc);
 
             UI.Controls.CheckBoxControl cb = new UI.Controls.CheckBoxControl("CB", "_CB", true)
