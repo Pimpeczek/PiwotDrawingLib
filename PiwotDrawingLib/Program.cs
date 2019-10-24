@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using Pastel;
 using System.IO;
 using System.Drawing;
@@ -11,14 +12,27 @@ namespace PiwotDrawingLib
 {
     class Program
     {
+
         static void Main(string[] args)
         {
             Renderer.WindowSize = new Int2(200, 50);
             Renderer.DebugMode = true;
-            //Renderer.AsyncMode = true;
+            Renderer.AsyncMode = true;
             Renderer.AsyncFrameLenght = 30;
 
+            /*
+            UI.Containers.Canvas c = new UI.Containers.Canvas(new Int2(2, 2), new Int2(40, 40), "Test canvas", Misc.Boxes.BoxType.dashed);
+            for(int i = 0; i < 1000; i++)
+            {
+                for (int j = 0; j < 10000; j++)
+                {
+                    c.Draw("XD", j % 20, (j / 20) % 20);
+                }
+                c.RefreshContent();
+                Console.ReadKey(true);
 
+            }
+            */
             Int2 menuSize = new Int2(40, 20);
             UI.Containers.Menu mainMenu = new UI.Containers.Menu(new Int2((Renderer.WindowSize.X - menuSize.X) / 2, (Renderer.WindowSize.Y - menuSize.X) / 2), menuSize, "Main menu", Misc.Boxes.BoxType.round);
             //mainMenu.VerticalTextWrapping = UI.Containers.Menu.Wrapping.scrolling;

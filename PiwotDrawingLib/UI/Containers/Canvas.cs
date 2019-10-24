@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using Pastel;
 using PiwotToolsLib.PMath;
 
 namespace PiwotDrawingLib.UI.Containers
@@ -17,12 +18,14 @@ namespace PiwotDrawingLib.UI.Containers
         protected int[,] backColorMap;
         protected char[][] charMap;
         protected bool[,] refreshMap;
+        protected int colorPoint;
 
         protected string[] colorDict;
 
         protected bool needsRedraw;
 
         protected Int2 canvasSize;
+        protected Int2 canvasPosition;
 
 
         public Canvas() : base(new Int2(), new Int2(10, 10), "Canvas", Misc.Boxes.BoxType.doubled)
@@ -32,7 +35,7 @@ namespace PiwotDrawingLib.UI.Containers
             IsVIsable = true;
         }
 
-        public Canvas(Int2 position, Int2 size, string name, Misc.Boxes.BoxType boxType, Func<float, float> func) : base(position, size, name, boxType)
+        public Canvas(Int2 position, Int2 size, string name, Misc.Boxes.BoxType boxType) : base(position, size, name, boxType)
         {
             Setup();
         }
@@ -40,10 +43,14 @@ namespace PiwotDrawingLib.UI.Containers
         void Setup()
         {
             canvasSize = new Int2(Size);
-            if(boxType != Misc.Boxes.BoxType.none)
+            canvasPosition = new Int2(Position);
+            if (boxType != Misc.Boxes.BoxType.none)
             {
-                canvasSize.X -= 2;
-                canvasSize.Y -= 2;
+                canvasSize -= Int2.One * 2;
+            }
+            else
+            {
+                canvasPosition += Int2.One;
             }
             needsRedraw = true;
             frontColorMap = new int[canvasSize.Y, canvasSize.X];
@@ -69,6 +76,7 @@ namespace PiwotDrawingLib.UI.Containers
                     refreshMap[i, j] = false;
                 }
             }
+            colorPoint = 2;
         }
 
         public void Draw(string str, int x, int y)
@@ -107,7 +115,7 @@ namespace PiwotDrawingLib.UI.Containers
                 if (pos >= prevPos && pos != prevPos)
                 {
 
-                    retStr += str.Substring(prevPos, pos - prevPos).Pastel(curFHex).PastelBg(curBHex);
+                    //retStr += str.Substring(prevPos, pos - prevPos).Pastel(curFHex).PastelBg(curBHex);
                     //Console.WriteLine(str.Substring(prevPos, str.Length - prevPos));
                     WriteOnCanvas(str.Substring(prevPos, pos - prevPos), curFHex, curBHex, x + xOffset, y);
                     xOffset += pos - prevPos;
@@ -129,9 +137,10 @@ namespace PiwotDrawingLib.UI.Containers
             }
             if (str.Length >= prevPos && pos != prevPos)
             {
-                retStr += str.Substring(prevPos, str.Length - prevPos).Pastel(curFHex).PastelBg(curBHex);
+                //retStr += str.Substring(prevPos, str.Length - prevPos).Pastel(curFHex).PastelBg(curBHex);
                 //Console.WriteLine(str.Substring(prevPos, str.Length - prevPos));
                 WriteOnCanvas(str.Substring(prevPos, str.Length - prevPos), curFHex, curBHex, x + xOffset, y);
+                Rendering.Renderer.Write(str.Substring(prevPos, str.Length - prevPos), 0, 1);
             }
             //Console.WriteLine(retStr);
         }
@@ -163,15 +172,77 @@ namespace PiwotDrawingLib.UI.Containers
                 refreshMap[y, x] = tRef;
                 if (tRef)
                 {
-                    refreshMap[y, xSize] = true;
+                    refreshMap[y, canvasSize.X] = true;
                 }
                 x++;
             }
         }
 
+        public void RefreshContent()
+        {
+            DrawContent();
+        }
+
         protected override void DrawContent()
         {
-            throw new NotImplementedException();
+            int startpos = -1;
+            int endpos = -1;
+            int strPos = 0;
+            int curBCol;
+            int curFCol;
+            int prevBCol = -1;
+            int prevFCol = -1;
+            string retStr;
+            for (int y = 0; y < canvasSize.Y; y++)
+            {
+                //Console.WriteLine();
+                // Console.Write($"{y}");
+                if (refreshMap[y, canvasSize.X])
+                {
+                    //Console.Write($"!");
+                    retStr = "";
+                    for (int x = 0; startpos < 0 && x < canvasSize.X; x++)
+                    {
+                        if (refreshMap[y, x])
+                        {
+                            startpos = x;
+                        }
+                    }
+                    if (startpos >= 0)
+                    {
+                        for (int x = canvasSize.X - 1; x >= 0 && endpos < 0 && x >= startpos; x--)
+                        {
+                            if (refreshMap[y, x])
+                            {
+                                endpos = x + 1;
+
+                            }
+                        }
+
+                        prevFCol = frontColorMap[y, startpos];
+                        prevBCol = backColorMap[y, startpos];
+                        strPos = startpos;
+                        for (int x = startpos; x <= endpos; x++)
+                        {
+                            curFCol = frontColorMap[y, x];
+                            curBCol = backColorMap[y, x];
+                            if (curFCol != prevFCol || prevBCol != curBCol || x == endpos)
+                            {
+                                retStr += new string(charMap[y], strPos, x - strPos).Pastel(colorDict[prevFCol]).PastelBg(colorDict[prevBCol]);
+
+                                strPos = x;
+                                prevBCol = curBCol;
+                                prevFCol = curFCol;
+                            }
+                        }
+
+                        Rendering.Renderer.Write(retStr, startpos + Position.X, y + Position.Y);
+                    }
+                    for(int i = startpos; i <= endpos; i++)
+                        refreshMap[y, i] = false;
+                    refreshMap[y, canvasSize.X] = false;
+                }
+            }
         }
 
         protected override void DrawWindow()
@@ -179,5 +250,22 @@ namespace PiwotDrawingLib.UI.Containers
             base.DrawWindow();
             Rendering.Renderer.Write(Name, Position.X + (Size.X - Name.Length) / 2, Position.Y);
         }
+        
+        protected int TryAddColor(string hex)
+        {
+            colorPoint++;
+            if (colorPoint >= colorDict.Length)
+                colorPoint = 2;
+
+            for (int i = 0; i < colorDict.Length; i++)
+            {
+                if (colorDict[i] == hex)
+                    return i;
+            }
+            colorDict[colorPoint] = hex;
+
+            return colorPoint;
+        }
+        
     }
 }
