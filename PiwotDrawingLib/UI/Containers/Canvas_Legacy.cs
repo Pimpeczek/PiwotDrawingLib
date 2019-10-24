@@ -4,7 +4,7 @@ using System;
 
 namespace PiwotDrawingLib.UI.Containers
 {
-    class Canvas : Container
+    class Canvas_Legacy : Container
     {
         protected string defFHex = "FFFFFF";
         protected string defBHex = "000000";
@@ -13,14 +13,9 @@ namespace PiwotDrawingLib.UI.Containers
 
 
 
-        protected int[,] frameFrontColorMap;
-        protected int[,] frameBackColorMap;
-        protected char[][] frameCharMap;
-
-        protected int[,] canvasFrontColorMap;
-        protected int[,] canvasBackColorMap;
-        protected char[][] canvasCharMap;
-
+        protected int[,] frontColorMap;
+        protected int[,] backColorMap;
+        protected char[][] charMap;
         protected bool[,] refreshMap;
         protected int colorPoint;
 
@@ -34,14 +29,14 @@ namespace PiwotDrawingLib.UI.Containers
         protected Int2 canvasPosition;
 
 
-        public Canvas() : base(new Int2(), new Int2(10, 10), "Canvas", Misc.Boxes.BoxType.doubled)
+        public Canvas_Legacy() : base(new Int2(), new Int2(10, 10), "Canvas", Misc.Boxes.BoxType.doubled)
         {
             IsVIsable = false;
             Setup();
             IsVIsable = true;
         }
 
-        public Canvas(Int2 position, Int2 size, string name, Misc.Boxes.BoxType boxType) : base(position, size, name, boxType)
+        public Canvas_Legacy(Int2 position, Int2 size, string name, Misc.Boxes.BoxType boxType) : base(position, size, name, boxType)
         {
             Setup();
         }
@@ -59,15 +54,9 @@ namespace PiwotDrawingLib.UI.Containers
             }
             //Rendering.Renderer.Write($"{canvasPosition}", 100, 2);
             needsRedraw = true;
-
-            frameFrontColorMap = new int[canvasSize.Y, canvasSize.X];
-            frameBackColorMap = new int[canvasSize.Y, canvasSize.X];
-            frameCharMap = new char[canvasSize.Y][];
-
-            canvasFrontColorMap = new int[canvasSize.Y, canvasSize.X];
-            canvasBackColorMap = new int[canvasSize.Y, canvasSize.X];
-            canvasCharMap = new char[canvasSize.Y][];
-
+            frontColorMap = new int[canvasSize.Y, canvasSize.X];
+            backColorMap = new int[canvasSize.Y, canvasSize.X];
+            charMap = new char[canvasSize.Y][];
             refreshMap = new bool[canvasSize.Y, canvasSize.X + 1];
             colorDict = new string[256];
             for (int i = 0; i < colorDict.Length; i++)
@@ -78,22 +67,13 @@ namespace PiwotDrawingLib.UI.Containers
 
             for (int i = 0; i < canvasSize.Y; i++)
             {
-                frameCharMap[i] = new char[canvasSize.X + 1];
-                frameCharMap[i][canvasSize.X] = ' ';
-
-                canvasCharMap[i] = new char[canvasSize.X + 1];
-                canvasCharMap[i][canvasSize.X] = ' ';
-
+                charMap[i] = new char[canvasSize.X + 1];
+                charMap[i][canvasSize.X] = ' ';
                 for (int j = 0; j < canvasSize.X; j++)
                 {
-                    frameCharMap[i][j] = ' ';
-                    frameFrontColorMap[i, j] = 0;
-                    frameBackColorMap[i, j] = 1;
-
-                    canvasCharMap[i][j] = ' ';
-                    canvasFrontColorMap[i, j] = 0;
-                    canvasBackColorMap[i, j] = 1;
-
+                    charMap[i][j] = ' ';
+                    frontColorMap[i, j] = 0;
+                    backColorMap[i, j] = 1;
                     refreshMap[i, j] = false;
                 }
             }
@@ -166,60 +146,37 @@ namespace PiwotDrawingLib.UI.Containers
 
         protected void WriteOnCanvas(string text, string fHex, string bHex, int x, int y)
         {
+            int tCol;
+            bool tRef;
             for (int i = 0; i < text.Length && x < canvasSize.X; i++)
             {
-                frameCharMap[y][x] = text[i];
-
-                frameFrontColorMap[y, x] = TryAddColor(fHex);
-
-                frameBackColorMap[y, x] = TryAddColor(bHex);
-                
+                tRef = false;
+                if (charMap[y][x] != text[i])
+                {
+                    charMap[y][x] = text[i];
+                    tRef = true;
+                }
+                tCol = TryAddColor(fHex);
+                if (frontColorMap[y, x] != tCol)
+                {
+                    frontColorMap[y, x] = tCol;
+                    tRef = true;
+                }
+                tCol = TryAddColor(bHex);
+                if (backColorMap[y, x] != tCol)
+                {
+                    backColorMap[y, x] = tCol;
+                    tRef = true;
+                }
+                if(!refreshMap[y, x])
+                    refreshMap[y, x] = tRef;
+                if (tRef)
+                {
+                    refreshMap[y, canvasSize.X] = true;
+                }
                 x++;
             }
-            refreshMap[y, canvasSize.X] = true;
 
-        }
-
-        protected void ApplyNewFrame()
-        {
-            for (int y = 0; y < canvasSize.Y; y++)
-            {
-                if (refreshMap[y, canvasSize.X]) {
-                    refreshMap[y, canvasSize.X] = false;
-                    for (int x = 0; x < canvasSize.X; x++)
-                    {
-                        CheckOnePixel(x, y);
-                    }
-                }
-            }
-        }
-
-        protected void CheckOnePixel(int x, int y)
-        {
-            bool tFlag = false;
-            if (frameFrontColorMap[y, x] != canvasFrontColorMap[y, x])
-            {
-                canvasFrontColorMap[y, x] = frameFrontColorMap[y, x];
-                tFlag = true;
-            }
-
-            if (frameBackColorMap[y, x] != canvasBackColorMap[y, x])
-            {
-                canvasBackColorMap[y, x] = frameBackColorMap[y, x];
-                tFlag = true;
-            }
-
-            if (frameCharMap[y][x] != canvasCharMap[y][x])
-            {
-                canvasCharMap[y][x] = frameCharMap[y][x];
-                tFlag = true;
-            }
-
-            if(tFlag)
-            {
-                refreshMap[y, x] = refreshMap[y, canvasSize.X] = true;
-
-            }
         }
 
         public void RefreshContent()
@@ -232,8 +189,8 @@ namespace PiwotDrawingLib.UI.Containers
             Rendering.Renderer.Write(DateTime.Now.Millisecond, 60, 1);
             for (int i = 0; i < canvasSize.Y; i++)
             {
-                Rendering.Renderer.Write(new string(frameCharMap[i]), 60, 2 + i);
-
+                Rendering.Renderer.Write(new string(charMap[i]), 60, 2 + i);
+                
                 for (int j = 0; j <= canvasSize.X; j++)
                 {
                     Rendering.Renderer.Write(refreshMap[i, j] ? "X" : " ", 90 + j, 2 + i);
@@ -252,9 +209,6 @@ namespace PiwotDrawingLib.UI.Containers
             int prevBCol;
             int prevFCol;
             string retStr;
-
-            ApplyNewFrame();
-
             //Rendering.Renderer.SyncWrite($"STOP 7: {canvasSize}  ", 100, 7);
             //DrawMap();
             for (int y = 0; y < canvasSize.Y; y++)
@@ -276,6 +230,7 @@ namespace PiwotDrawingLib.UI.Containers
                         {
                             startpos = x;
                         }
+                        Console.ReadKey(true);
                     }
                     //Rendering.Renderer.Write($"STOP 10 {startpos} ", 100, 10);
                     if (startpos >= 0)
@@ -285,21 +240,22 @@ namespace PiwotDrawingLib.UI.Containers
                             //Rendering.Renderer.Write($"STOP 11 {x}  ", 100, 11);
                             if (refreshMap[y, x])
                             {
-                                endpos = x;
+                                endpos = x + 1;
+
                             }
                         }
 
-                        prevFCol = canvasFrontColorMap[y, startpos];
-                        prevBCol = canvasBackColorMap[y, startpos];
+                        prevFCol = frontColorMap[y, startpos];
+                        prevBCol = backColorMap[y, startpos];
                         strPos = startpos;
                         for (int x = startpos; x <= endpos; x++)
                         {
                             //Rendering.Renderer.Write($"STOP 12 {x}  ", 100, 12);
-                            curFCol = canvasFrontColorMap[y, x];
-                            curBCol = canvasBackColorMap[y, x];
+                            curFCol = frontColorMap[y, x];
+                            curBCol = backColorMap[y, x];
                             if (curFCol != prevFCol || prevBCol != curBCol || x == endpos)
                             {
-                                retStr += new string(canvasCharMap[y], strPos, x - strPos + 1).Pastel(colorDict[prevFCol]).PastelBg(colorDict[prevBCol]);
+                                retStr += new string(charMap[y], strPos, x - strPos).Pastel(colorDict[prevFCol]).PastelBg(colorDict[prevBCol]);
 
                                 strPos = x;
                                 prevBCol = curBCol;

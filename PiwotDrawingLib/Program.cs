@@ -23,17 +23,20 @@ namespace PiwotDrawingLib
 
             UI.Containers.Canvas c = new UI.Containers.Canvas(new Int2(2, 2), new Int2(40, 40), "Test canvas", Misc.Boxes.BoxType.dashed);
             c.Draw();
-
-            for(int i = 0; i < 1000; i++)
+            Console.ReadKey(true);
+            char ch;
+            for (int i = 0; i < 1000; i++)
             {
-                for (int j = 0; j < 20; j++)
+                
+                for (int j = 0; j < 150; j++)
                 {
-                    c.Draw("AA", (j % 5) * 2, (j / 10) % 10);
-                    c.DrawMap();
+                    ch = (char)(65 + (i + j / 100) % 26);
+                    c.Draw(""+ch, j % 38, (j / 38) % 38);
+                    //c.DrawMap();
+                    c.RefreshContent();
                     Console.ReadKey(true);
                 }
                 c.RefreshContent();
-                Console.ReadKey(true);
             }
             
             /*
