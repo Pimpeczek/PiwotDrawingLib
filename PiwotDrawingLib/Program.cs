@@ -20,19 +20,23 @@ namespace PiwotDrawingLib
             Renderer.AsyncMode = true;
             Renderer.AsyncFrameLenght = 30;
 
-            /*
+
             UI.Containers.Canvas c = new UI.Containers.Canvas(new Int2(2, 2), new Int2(40, 40), "Test canvas", Misc.Boxes.BoxType.dashed);
+            c.Draw();
+
             for(int i = 0; i < 1000; i++)
             {
-                for (int j = 0; j < 10000; j++)
+                for (int j = 0; j < 20; j++)
                 {
-                    c.Draw("XD", j % 20, (j / 20) % 20);
+                    c.Draw("AA", (j % 5) * 2, (j / 10) % 10);
+                    c.DrawMap();
+                    Console.ReadKey(true);
                 }
                 c.RefreshContent();
                 Console.ReadKey(true);
-
             }
-            */
+            
+            /*
             Int2 menuSize = new Int2(40, 20);
             UI.Containers.Menu mainMenu = new UI.Containers.Menu(new Int2((Renderer.WindowSize.X - menuSize.X) / 2, (Renderer.WindowSize.Y - menuSize.X) / 2), menuSize, "Main menu", Misc.Boxes.BoxType.round);
             //mainMenu.VerticalTextWrapping = UI.Containers.Menu.Wrapping.scrolling;
@@ -79,7 +83,7 @@ namespace PiwotDrawingLib
             mainMenu.AddControl(fsc);
 
             mainMenu.WaitForInput();
-
+            */
             //Renderer.AbortAsyncThread();
 
             Console.ReadKey(true);
