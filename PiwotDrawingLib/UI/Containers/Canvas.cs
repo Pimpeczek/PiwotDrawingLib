@@ -166,8 +166,13 @@ namespace PiwotDrawingLib.UI.Containers
 
         protected void WriteOnCanvas(string text, string fHex, string bHex, int x, int y)
         {
+            if (y >= canvasSize.Y)
+            { 
+                return;
+            }
             for (int i = 0; i < text.Length && x < canvasSize.X; i++)
             {
+                
                 frameCharMap[y][x] = text[i];
 
                 frameFrontColorMap[y, x] = TryAddColor(fHex);
@@ -175,6 +180,7 @@ namespace PiwotDrawingLib.UI.Containers
                 frameBackColorMap[y, x] = TryAddColor(bHex);
                 
                 x++;
+                
             }
             refreshMap[y, canvasSize.X] = true;
 
@@ -222,7 +228,7 @@ namespace PiwotDrawingLib.UI.Containers
             }
         }
 
-        public void RefreshContent()
+        public virtual void RefreshContent()
         {
             DrawContent();
         }
@@ -327,6 +333,7 @@ namespace PiwotDrawingLib.UI.Containers
 
         protected int TryAddColor(string hex)
         {
+
             colorPoint++;
             if (colorPoint >= colorDict.Length)
                 colorPoint = 2;

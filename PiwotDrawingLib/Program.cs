@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using Pastel;
 using System.IO;
-using System.Drawing;
+using System.Diagnostics;
 using System.Threading;
 using PiwotDrawingLib.Rendering;
 using PiwotToolsLib.PMath;
@@ -21,23 +21,34 @@ namespace PiwotDrawingLib
             Renderer.AsyncFrameLenght = 30;
 
 
-            UI.Containers.Canvas c = new UI.Containers.Canvas(new Int2(2, 2), new Int2(40, 40), "Test canvas", Misc.Boxes.BoxType.dashed);
-            c.Draw();
-            Console.ReadKey(true);
-            char ch;
+            UI.Containers.FunctionDisplay fd = new UI.Containers.FunctionDisplay(new Int2(2, 2), new Int2(150, 40), "Main menu", Misc.Boxes.BoxType.round, (x) => x);
+            fd.Draw();
+            float f;
+            while (true)
+            {
+                f = (float)Rand.Double();
+                fd.Function = (x) => (x + f - 0.5f)* (x + f - 0.5f);
+                fd.RefreshContent();
+                Console.ReadKey(true);
+            }
+            /*
+            Stopwatch sw = new Stopwatch();
             for (int i = 0; i < 1000; i++)
             {
-                
-                for (int j = 0; j < 150; j++)
+                ch = (char)(65 + i % 26);
+                sw.Restart();
+                for (int j = 0; j < 10000; j++)
                 {
-                    ch = (char)(65 + (i + j / 100) % 26);
                     c.Draw(""+ch, j % 38, (j / 38) % 38);
                     //c.DrawMap();
-                    c.RefreshContent();
-                    Console.ReadKey(true);
+                    //Console.ReadKey(true);
                 }
                 c.RefreshContent();
+                sw.Stop();
+                Renderer.Write(sw.ElapsedMilliseconds + " ", 40, 0);
+                Console.ReadKey(true);
             }
+            */
             
             /*
             Int2 menuSize = new Int2(40, 20);
