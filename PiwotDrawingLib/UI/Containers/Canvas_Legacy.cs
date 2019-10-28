@@ -44,8 +44,8 @@ namespace PiwotDrawingLib.UI.Containers
         void Setup()
         {
             canvasNeedsRedraw = true;
-            canvasSize = new Int2(Size);
-            canvasPosition = new Int2(Position);
+            canvasSize = new Int2(size);
+            canvasPosition = new Int2(position);
             //Rendering.Renderer.Write($"{canvasPosition}", 100,1);
             if (boxType != Misc.Boxes.BoxType.none)
             {
@@ -278,7 +278,7 @@ namespace PiwotDrawingLib.UI.Containers
         protected override void DrawWindow()
         {
             base.DrawWindow();
-            Rendering.Renderer.Write(Name, Position.X + (Size.X - Name.Length) / 2, Position.Y);
+            Rendering.Renderer.Write(Name, position.X + (size.X - Name.Length) / 2, position.Y);
         }
 
         protected int TryAddColor(string hex)

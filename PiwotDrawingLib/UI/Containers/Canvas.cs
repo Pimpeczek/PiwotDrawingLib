@@ -30,8 +30,7 @@ namespace PiwotDrawingLib.UI.Containers
         protected bool ready = false;
         protected bool canvasNeedsRedraw;
 
-        protected Int2 canvasSize;
-        protected Int2 canvasPosition;
+
 
 
         public Canvas() : base(new Int2(), new Int2(10, 10), "Canvas", Misc.Boxes.BoxType.doubled)
@@ -49,26 +48,20 @@ namespace PiwotDrawingLib.UI.Containers
         void Setup()
         {
             canvasNeedsRedraw = true;
-            canvasSize = new Int2(Size);
-            canvasPosition = new Int2(Position);
             //Rendering.Renderer.Write($"{canvasPosition}", 100,1);
-            if (boxType != Misc.Boxes.BoxType.none)
-            {
-                canvasSize -= Int2.One * 2;
-                canvasPosition += Int2.One;
-            }
+           
             //Rendering.Renderer.Write($"{canvasPosition}", 100, 2);
             needsRedraw = true;
 
-            frameFrontColorMap = new int[canvasSize.Y, canvasSize.X];
-            frameBackColorMap = new int[canvasSize.Y, canvasSize.X];
-            frameCharMap = new char[canvasSize.Y][];
+            frameFrontColorMap = new int[contentSize.Y, contentSize.X];
+            frameBackColorMap = new int[contentSize.Y, contentSize.X];
+            frameCharMap = new char[contentSize.Y][];
 
-            canvasFrontColorMap = new int[canvasSize.Y, canvasSize.X];
-            canvasBackColorMap = new int[canvasSize.Y, canvasSize.X];
-            canvasCharMap = new char[canvasSize.Y][];
+            canvasFrontColorMap = new int[contentSize.Y, contentSize.X];
+            canvasBackColorMap = new int[contentSize.Y, contentSize.X];
+            canvasCharMap = new char[contentSize.Y][];
 
-            refreshMap = new bool[canvasSize.Y, canvasSize.X + 1];
+            refreshMap = new bool[contentSize.Y, contentSize.X + 1];
             colorDict = new string[256];
             for (int i = 0; i < colorDict.Length; i++)
             {
@@ -76,15 +69,15 @@ namespace PiwotDrawingLib.UI.Containers
             }
             colorDict[1] = defBHex;
 
-            for (int i = 0; i < canvasSize.Y; i++)
+            for (int i = 0; i < contentSize.Y; i++)
             {
-                frameCharMap[i] = new char[canvasSize.X + 1];
-                frameCharMap[i][canvasSize.X] = ' ';
+                frameCharMap[i] = new char[contentSize.X + 1];
+                frameCharMap[i][contentSize.X] = ' ';
 
-                canvasCharMap[i] = new char[canvasSize.X + 1];
-                canvasCharMap[i][canvasSize.X] = ' ';
+                canvasCharMap[i] = new char[contentSize.X + 1];
+                canvasCharMap[i][contentSize.X] = ' ';
 
-                for (int j = 0; j < canvasSize.X; j++)
+                for (int j = 0; j < contentSize.X; j++)
                 {
                     frameCharMap[i][j] = ' ';
                     frameFrontColorMap[i, j] = 0;
@@ -166,11 +159,11 @@ namespace PiwotDrawingLib.UI.Containers
 
         protected void WriteOnCanvas(string text, string fHex, string bHex, int x, int y)
         {
-            if (y >= canvasSize.Y)
+            if (y >= contentSize.Y)
             { 
                 return;
             }
-            for (int i = 0; i < text.Length && x < canvasSize.X; i++)
+            for (int i = 0; i < text.Length && x < contentSize.X; i++)
             {
                 
                 frameCharMap[y][x] = text[i];
@@ -182,17 +175,17 @@ namespace PiwotDrawingLib.UI.Containers
                 x++;
                 
             }
-            refreshMap[y, canvasSize.X] = true;
+            refreshMap[y, contentSize.X] = true;
 
         }
 
         protected void ApplyNewFrame()
         {
-            for (int y = 0; y < canvasSize.Y; y++)
+            for (int y = 0; y < contentSize.Y; y++)
             {
-                if (refreshMap[y, canvasSize.X]) {
-                    refreshMap[y, canvasSize.X] = false;
-                    for (int x = 0; x < canvasSize.X; x++)
+                if (refreshMap[y, contentSize.X]) {
+                    refreshMap[y, contentSize.X] = false;
+                    for (int x = 0; x < contentSize.X; x++)
                     {
                         CheckOnePixel(x, y);
                     }
@@ -223,7 +216,7 @@ namespace PiwotDrawingLib.UI.Containers
 
             if(tFlag)
             {
-                refreshMap[y, x] = refreshMap[y, canvasSize.X] = true;
+                refreshMap[y, x] = refreshMap[y, contentSize.X] = true;
 
             }
         }
@@ -236,11 +229,11 @@ namespace PiwotDrawingLib.UI.Containers
         public void DrawMap()
         {
             Rendering.Renderer.Write(DateTime.Now.Millisecond, 60, 1);
-            for (int i = 0; i < canvasSize.Y; i++)
+            for (int i = 0; i < contentSize.Y; i++)
             {
                 Rendering.Renderer.Write(new string(frameCharMap[i]), 60, 2 + i);
 
-                for (int j = 0; j <= canvasSize.X; j++)
+                for (int j = 0; j <= contentSize.X; j++)
                 {
                     Rendering.Renderer.Write(refreshMap[i, j] ? "X" : " ", 90 + j, 2 + i);
                 }
@@ -263,19 +256,19 @@ namespace PiwotDrawingLib.UI.Containers
 
             //Rendering.Renderer.SyncWrite($"STOP 7: {canvasSize}  ", 100, 7);
             //DrawMap();
-            for (int y = 0; y < canvasSize.Y; y++)
+            for (int y = 0; y < contentSize.Y; y++)
             {
                 //Console.WriteLine();
                 // Console.Write($"{y}");
                 //Rendering.Renderer.Write($"STOP 8: {y}  ", 100, 8);
-                if (refreshMap[y, canvasSize.X])
+                if (refreshMap[y, contentSize.X])
                 {
                     //Console.Write($"!");
                     startpos = -1;
                     endpos = -1;
                     retStr = "";
                     //Rendering.Renderer.Write("STOP 9", 100, 9);
-                    for (int x = 0; startpos < 0 && x < canvasSize.X; x++)
+                    for (int x = 0; startpos < 0 && x < contentSize.X; x++)
                     {
                         //Rendering.Renderer.Write($" {x} : {refreshMap[y, x]} ", 130, 10);
                         if (refreshMap[y, x])
@@ -286,7 +279,7 @@ namespace PiwotDrawingLib.UI.Containers
                     //Rendering.Renderer.Write($"STOP 10 {startpos} ", 100, 10);
                     if (startpos >= 0)
                     {
-                        for (int x = canvasSize.X - 1; x >= 0 && endpos < 0 && x >= startpos; x--)
+                        for (int x = contentSize.X - 1; x >= 0 && endpos < 0 && x >= startpos; x--)
                         {
                             //Rendering.Renderer.Write($"STOP 11 {x}  ", 100, 11);
                             if (refreshMap[y, x])
@@ -313,10 +306,10 @@ namespace PiwotDrawingLib.UI.Containers
                             }
                         }
 
-                        Rendering.Renderer.Write(retStr, startpos + canvasPosition.X, y + canvasPosition.Y);
+                        Rendering.Renderer.Write(retStr, startpos + contentPosition.X, y + contentPosition.Y);
                         for (int i = startpos; i <= endpos; i++)
                             refreshMap[y, i] = false;
-                        refreshMap[y, canvasSize.X] = false;
+                        refreshMap[y, contentSize.X] = false;
                     }
 
 
@@ -328,7 +321,7 @@ namespace PiwotDrawingLib.UI.Containers
         protected override void DrawWindow()
         {
             base.DrawWindow();
-            Rendering.Renderer.Write(Name, Position.X + (Size.X - Name.Length) / 2, Position.Y);
+            Rendering.Renderer.Write(Name, position.X + (size.X - Name.Length) / 2, position.Y);
         }
 
         protected int TryAddColor(string hex)

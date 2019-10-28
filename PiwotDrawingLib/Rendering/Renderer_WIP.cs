@@ -10,8 +10,8 @@ using PiwotToolsLib.PMath;
 
 namespace PiwotDrawingLib.Rendering
 {
-    
-    public static class Renderer
+
+    public class Renderer_WIP
     {
 
         #region Variables
@@ -44,7 +44,7 @@ namespace PiwotDrawingLib.Rendering
                 }
                 Console.SetWindowSize(windowSize.X, windowSize.Y);
             }
-        } 
+        }
         static bool asyncMode;
         static Thread drawingThread;
         static Stopwatch stopwatch;
@@ -105,7 +105,7 @@ namespace PiwotDrawingLib.Rendering
                 }
                 else
                 {
-                    
+
                 }
             }
         }
@@ -162,10 +162,30 @@ namespace PiwotDrawingLib.Rendering
 
         static List<Requests.TimedTextRequest> timedTextRequests;
 
+        protected string defFHex = "FFFFFF";
+        protected string defBHex = "000000";
+        protected string defFHexTag = $"<cfFFFFFF>";
+        protected string defBHexTag = $"<cb000000>";
+
+
+
+        protected int[,] frameFrontColorMap;
+        protected int[,] frameBackColorMap;
+        protected char[][] frameCharMap;
+
+        protected int[,] canvasFrontColorMap;
+        protected int[,] canvasBackColorMap;
+        protected char[][] canvasCharMap;
+
+        protected bool[,] refreshMap;
+        protected int colorPoint;
+
+        protected string[] colorDict;
+
         #endregion
 
         #region Setup
-        static Renderer()
+        static Renderer_WIP()
         {
             Console.OutputEncoding = Encoding.UTF8;
             timedTextRequests = new List<Requests.TimedTextRequest>();
@@ -174,7 +194,7 @@ namespace PiwotDrawingLib.Rendering
             requestPointer = 0;
         }
 
-        
+
         /// <summary>Adjusts window height to compensate for the debug bar.</summary>
         static void SetupDebugMode()
         {
@@ -199,7 +219,7 @@ namespace PiwotDrawingLib.Rendering
                 charCount += tRequest.RawText.Length;
                 Draw(tRequest);
 
-                
+
             }
             requests.Clear();
             stopwatch.Stop();
@@ -226,7 +246,7 @@ namespace PiwotDrawingLib.Rendering
 
             Thread.Sleep(Arit.Clamp(sleepTime, 0, asyncFrameLenght));
         }
-        
+
 
         /// <summary>Asynchronously draws every request in a given drawing frame.</summary>
         static void AsyncDrawing()
@@ -304,7 +324,7 @@ namespace PiwotDrawingLib.Rendering
                 Console.SetCursorPosition(x, y);
                 Console.Write(text);
             }
-            catch(ArgumentOutOfRangeException e)
+            catch (ArgumentOutOfRangeException e)
             {
                 Console.SetWindowSize(windowSize.X, windowSize.Y);
                 if (!visableCursor)
@@ -335,7 +355,7 @@ namespace PiwotDrawingLib.Rendering
             if (AsyncMode)
             {
                 //If queue is full stops the main thread until the queue is empty.
-                if(requests.Count >= maxRequestCount)
+                if (requests.Count >= maxRequestCount)
                     while (requests.Count > 0) Thread.Sleep(emptyCheckingInterval);
 
                 requests.Enqueue(new Requests.RenderRequest(text, x, y));
@@ -466,6 +486,6 @@ namespace PiwotDrawingLib.Rendering
 
 
 
-    
-    
+
+
 }

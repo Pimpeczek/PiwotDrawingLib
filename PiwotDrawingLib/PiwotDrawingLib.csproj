@@ -59,6 +59,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rendering\Renderer.cs" />
+    <Compile Include="Rendering\Renderer_WIP.cs" />
     <Compile Include="Rendering\Requests\RenderRequest.cs" />
     <Compile Include="Rendering\Requests\TimedTextRequest.cs" />
     <Compile Include="UI\Containers\Canvas_Legacy.cs" />
@@ -88,6 +89,8 @@
     <Compile Include="UI\Events\MenuEvent.cs" />
     <Compile Include="UI\Events\StringSwitcherEvent.cs" />
     <Compile Include="UI\Exceptions\IdentificatorNotFoundException.cs" />
+    <Compile Include="UI\Exceptions\InvalidContainerPositionException.cs" />
+    <Compile Include="UI\Exceptions\InvalidContainerSizeException.cs" />
     <Compile Include="UI\Exceptions\InvalidFormatException.cs" />
   </ItemGroup>
   <ItemGroup>

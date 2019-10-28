@@ -20,17 +20,31 @@ namespace PiwotDrawingLib
             Renderer.AsyncMode = true;
             Renderer.AsyncFrameLenght = 30;
 
-
-            UI.Containers.FunctionDisplay fd = new UI.Containers.FunctionDisplay(new Int2(2, 2), new Int2(150, 40), "Main menu", Misc.Boxes.BoxType.round, (x) => x);
+            /*
+            UI.Containers.FunctionDisplay fd = new UI.Containers.FunctionDisplay(new Int2(0, 0), new Int2(200, 50), "Main menu", Misc.Boxes.BoxType.round, (x) => x);
             fd.Draw();
             float f;
-            while (true)
+            long time = 0;
+            Stopwatch stopwatch = new Stopwatch();
+            for(int i = 0; i < 100; i++)
             {
-                f = (float)Rand.Double();
-                fd.Function = (x) => (x + f - 0.5f)* (x + f - 0.5f);
-                fd.RefreshContent();
-                Console.ReadKey(true);
+                stopwatch.Restart();
+                for (int j = 0; j < 1000; j++)
+                {
+                    f = (float)Rand.Double();
+                    fd.Function = (x) => (x + f - 0.5f) * (x + f - 0.5f);
+                    
+                    fd.RefreshContent();
+                }
+                stopwatch.Stop();
+                fd.TestDraw();
+                
+                Renderer.Write(stopwatch.ElapsedMilliseconds + " ",0,0);
+                time += stopwatch.ElapsedMilliseconds;
             }
+            time /= 100;
+            Renderer.Write(time + " ", 0, 0);
+            */
             /*
             Stopwatch sw = new Stopwatch();
             for (int i = 0; i < 1000; i++)
@@ -50,7 +64,7 @@ namespace PiwotDrawingLib
             }
             */
             
-            /*
+            
             Int2 menuSize = new Int2(40, 20);
             UI.Containers.Menu mainMenu = new UI.Containers.Menu(new Int2((Renderer.WindowSize.X - menuSize.X) / 2, (Renderer.WindowSize.Y - menuSize.X) / 2), menuSize, "Main menu", Misc.Boxes.BoxType.round);
             //mainMenu.VerticalTextWrapping = UI.Containers.Menu.Wrapping.scrolling;
@@ -73,15 +87,17 @@ namespace PiwotDrawingLib
             };
             mainMenu.AddControl(cb);
 
-            UI.Controls.IntSwitcherControl isc = new UI.Controls.IntSwitcherControl("ICS", "_ICS", 0, 0, 10000000, 1)
+            UI.Controls.IntSwitcherControl isc = new UI.Controls.IntSwitcherControl("ICS", "_ICS", 40, 2, 10000000, 1)
             {
                 MinSpecialText = "ZERO",
                 MaxSpecialText = "DUŻO",
                 FastStepMultiplier = 10,
                 FastStepsToMultiply = 10,
                 FastStepTime = 1000,
-                HideName = true
+                HideName = true,
+
             };
+            isc.AddAction("ISC", (x) => { mainMenu.Size = new Int2(((UI.Events.IntSwitcherEvent)x).Value, 20); return true; });
             mainMenu.AddControl(isc);
 
             UI.Controls.FloatSwitcherControl fsc = new UI.Controls.FloatSwitcherControl("FCS", "_FCS", 0, 0, 10000000, 0.5f)
@@ -95,11 +111,10 @@ namespace PiwotDrawingLib
                 RoundingDigits = 5
             };
             mainMenu.AddControl(fsc);
-
             mainMenu.WaitForInput();
-            */
+            
             //Renderer.AbortAsyncThread();
-
+            
             Console.ReadKey(true);
 
         }

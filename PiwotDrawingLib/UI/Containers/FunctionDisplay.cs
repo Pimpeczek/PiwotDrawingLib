@@ -57,43 +57,46 @@ namespace PiwotDrawingLib.UI.Containers
         {
             float height;
             int iHeight;
-            bool halfFlag;
-            bool tehthFlag;
-            float step = 1 / (float)canvasSize.X;
-            float halfStep = step / 2;
-            for (int x = 0; x < canvasSize.X; x++)
+
+            float step = 1 / (float)contentSize.X;
+            float halfStep = step / 2; 
+            for (int x = 0; x < contentSize.X; x++)
             {
-                height = (func.Invoke(x * step) * canvasSize.Y);
+                height = (func.Invoke(x * step) * contentSize.Y);
                 iHeight = (int)height;
-                iHeight = Arit.Clamp(iHeight, canvasSize.Y-1);
+                iHeight = Arit.Clamp(iHeight, contentSize.Y);
                 height -= iHeight;
                 
 
-                for (int y = 0; y < canvasSize.Y - iHeight; y++)
+                for (int y = 0; y < contentSize.Y - iHeight; y++)
                 {
                     WriteOnCanvas(" ", defFHex, defBHex, x, y);
                 }
-                if(height >= 0.5f)
+                if(height >= 0.5f && iHeight != contentSize.Y)
                 {
-                    WriteOnCanvas("▄", defFHex, defBHex, x, canvasSize.Y - iHeight - 1);
+                    WriteOnCanvas("▄", defFHex, defBHex, x, contentSize.Y - iHeight - 1);//▬
                 }
                 else if (iHeight == 0 && height >= 0.1f)
                 {
-                    WriteOnCanvas("_", defFHex, defBHex, x, canvasSize.Y - iHeight - 1);
+                    WriteOnCanvas("_", defFHex, defBHex, x, contentSize.Y - 1);
                 }
 
-                for (int y = canvasSize.Y - iHeight; y < canvasSize.Y; y++)
+                for (int y = contentSize.Y - iHeight; y < contentSize.Y; y++)
                 {
                     WriteOnCanvas("█", defFHex, defBHex, x, y);
                 }
             }
+            //base.DrawContent();
+        }
+        public void TestDraw()
+        {
             base.DrawContent();
         }
 
         protected override void DrawWindow()
         {
             base.DrawWindow();
-            Rendering.Renderer.Write(Name, Position.X + (Size.X - Name.Length) / 2, Position.Y);
+            Rendering.Renderer.Write(Name, position.X + (size.X - Name.Length) / 2, position.Y);
         }
 
     }

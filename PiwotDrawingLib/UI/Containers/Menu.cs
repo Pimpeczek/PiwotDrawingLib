@@ -30,10 +30,10 @@ namespace PiwotDrawingLib.UI.Containers
             {
                 if (verticalTextWrapping == value)
                     return;
-                Erase();
+                Hide();
                 if (verticalTextWrapping == Wrapping.wrapping)
                 {
-                    Size = new Int2(Size.X, controls.Count + 2);
+                    size = new Int2(size.X, controls.Count + 2);
                 }
                 verticalTextWrapping = value;
                 DrawWindow();
@@ -65,9 +65,7 @@ namespace PiwotDrawingLib.UI.Containers
 
         public Menu():base(new Int2(), new Int2(10, 10), "Menu", Misc.Boxes.BoxType.doubled)
         {
-            IsVIsable = false;
             Setup();
-            IsVIsable = true;
         }
 
         public Menu(Int2 position, Int2 size, string name, Misc.Boxes.BoxType boxType):base(position, size, name, boxType)
@@ -109,7 +107,7 @@ namespace PiwotDrawingLib.UI.Containers
 
             if (verticalTextWrapping == Wrapping.wrapping)
             {
-                Size = new Int2(Size.X, controls.Count + 2);
+                size = new Int2(size.X, controls.Count + 2);
             }
             return control;
         }
@@ -184,10 +182,11 @@ namespace PiwotDrawingLib.UI.Containers
 
 
                 DrawContent();
+                Rendering.Renderer.Write(IsVIsable + " " + DateTime.Now.Millisecond, 100, 1);
 
             } while (waitForInput);
 
-            Erase();
+            Hide();
         }
 
         /// <summary>
@@ -240,7 +239,7 @@ namespace PiwotDrawingLib.UI.Containers
         override protected void DrawWindow()
         {
             base.DrawWindow();
-            Rendering.Renderer.Write(Name, Position.X + (Size.X - Name.Length) / 2, Position.Y);
+            Rendering.Renderer.Write(Name, position.X + (size.X - Name.Length) / 2, position.Y);
 
         }
 
@@ -252,19 +251,19 @@ namespace PiwotDrawingLib.UI.Containers
         override protected void DrawContent()
         {
             int borderWidth = (boxType == Misc.Boxes.BoxType.none ? 0 : 1);
-            int startHeight = Arit.Clamp((Size.Y - 2 - controls.Count) / 2, 1, Size.Y - borderWidth * 2);
+            int startHeight = Arit.Clamp((size.Y - 2 - controls.Count) / 2, 1, size.Y - borderWidth * 2);
             string printText;
             Controls.MenuControl tControl;
             Int2 pos;
-            for (int i = 0; i < controls.Count && i < Size.Y -  borderWidth; i++)
+            for (int i = 0; i < controls.Count && i < size.Y -  borderWidth; i++)
             {
                 tControl = controls[i + scrollPoint];
                 if (tControl.visable && tControl.NeedsRedraw)
                 {
                     printText = controls[i + scrollPoint].PrintableText;
-                    pos = new Int2(Position.X + 1, Position.Y + startHeight + i + 1);
+                    pos = new Int2(position.X + 1, position.Y + startHeight + i + 1);
                     Rendering.Renderer.Write(emptyLine, pos);
-                    pos = new Int2(Position.X + (Size.X - printText.Length) / 2, Position.Y + startHeight + i + 1);
+                    pos = new Int2(position.X + (size.X - printText.Length) / 2, position.Y + startHeight + i + 1);
                     if (hPoint == i)
                     {
                         Rendering.Renderer.Write(printText.PastelBg(Color.Gray), pos);
