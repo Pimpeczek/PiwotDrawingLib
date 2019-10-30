@@ -2,96 +2,80 @@
 using PiwotToolsLib.PMath;
 using System;
 
-namespace PiwotDrawingLib.UI.Containers
+namespace PiwotDrawingLib.Drawing
 {
-    class Canvas : Container
+    public class Canvas
     {
-        protected string defFHex = "FFFFFF";
-        protected string defBHex = "000000";
-        protected string defFHexTag = $"<cfFFFFFF>";
-        protected string defBHexTag = $"<cb000000>";
+        string defFHex = "FFFFFF";
+        string defBHex = "000000";
+        string defFHexTag = $"<cfFFFFFF>";
+        string defBHexTag = $"<cb000000>";
 
 
+        int drawCOunt = 0;
+        int[,] frameFrontColorMap;
+        int[,] frameBackColorMap;
+        char[][] frameCharMap;
 
-        protected int[,] frameFrontColorMap;
-        protected int[,] frameBackColorMap;
-        protected char[][] frameCharMap;
+        int[,] canvasFrontColorMap;
+        int[,] canvasBackColorMap;
+        char[][] canvasCharMap;
 
-        protected int[,] canvasFrontColorMap;
-        protected int[,] canvasBackColorMap;
-        protected char[][] canvasCharMap;
+        bool[,] refreshMap;
+        int colorPoint;
 
-        protected bool[,] refreshMap;
-        protected int colorPoint;
+        string[] colorDict;
 
-        protected string[] colorDict;
+        bool needsRedraw;
 
-        protected bool needsRedraw;
-        protected bool ready = false;
-        protected bool canvasNeedsRedraw;
-
-
+        Int2 size = new Int2(0,0);
 
 
-        public Canvas() : base(new Int2(), new Int2(10, 10), "Canvas", Misc.Boxes.BoxType.doubled)
+        public int ColorCunt
         {
-            IsVIsable = false;
-            Setup();
-            IsVIsable = true;
+            get
+            {
+                if(colorDict != null)
+                    return colorDict.Length;
+                return 0;
+            }
+            set
+            {
+                if(value < 4)
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+                string[] newDict = new string[value];
+                if(colorDict != null)
+                {
+                    for (int i = 0; i < newDict.Length && i < colorDict.Length; i++)
+                    {
+                        newDict[i] = colorDict[i];
+                    }
+                    for (int i = colorDict.Length; i < newDict.Length; i++)
+                    {
+                        newDict[i] = defFHex;
+                    }
+                    colorDict = newDict;
+                }
+            }
         }
 
-        public Canvas(Int2 position, Int2 size, string name, Misc.Boxes.BoxType boxType) : base(position, size, name, boxType)
+        public Canvas(Int2 size, int colorCount)
         {
-            Setup();
-        }
-
-        void Setup()
-        {
-            canvasNeedsRedraw = true;
-            //Rendering.Renderer.Write($"{canvasPosition}", 100,1);
-           
-            //Rendering.Renderer.Write($"{canvasPosition}", 100, 2);
             needsRedraw = true;
 
-            frameFrontColorMap = new int[contentSize.Y, contentSize.X];
-            frameBackColorMap = new int[contentSize.Y, contentSize.X];
-            frameCharMap = new char[contentSize.Y][];
+            colorDict = new string[colorCount];
 
-            canvasFrontColorMap = new int[contentSize.Y, contentSize.X];
-            canvasBackColorMap = new int[contentSize.Y, contentSize.X];
-            canvasCharMap = new char[contentSize.Y][];
-
-            refreshMap = new bool[contentSize.Y, contentSize.X + 1];
-            colorDict = new string[256];
             for (int i = 0; i < colorDict.Length; i++)
             {
                 colorDict[i] = defFHex;
             }
             colorDict[1] = defBHex;
 
-            for (int i = 0; i < contentSize.Y; i++)
-            {
-                frameCharMap[i] = new char[contentSize.X + 1];
-                frameCharMap[i][contentSize.X] = ' ';
-
-                canvasCharMap[i] = new char[contentSize.X + 1];
-                canvasCharMap[i][contentSize.X] = ' ';
-
-                for (int j = 0; j < contentSize.X; j++)
-                {
-                    frameCharMap[i][j] = ' ';
-                    frameFrontColorMap[i, j] = 0;
-                    frameBackColorMap[i, j] = 1;
-
-                    canvasCharMap[i][j] = ' ';
-                    canvasFrontColorMap[i, j] = 0;
-                    canvasBackColorMap[i, j] = 1;
-
-                    refreshMap[i, j] = false;
-                }
-            }
+            Resize(size);
+           
             colorPoint = 2;
-            ready = true;
         }
 
         public void Draw(string str, int x, int y)
@@ -102,7 +86,7 @@ namespace PiwotDrawingLib.UI.Containers
             string curBHex = "000000";
             int pos = str.IndexOf("<c");
             int prevPos = 0;
-            bool isBackground = false;
+            bool isBackground;
             int xOffset = 0;
             while (pos >= 0)
             {
@@ -130,7 +114,7 @@ namespace PiwotDrawingLib.UI.Containers
 
                     //retStr += str.Substring(prevPos, pos - prevPos).Pastel(curFHex).PastelBg(curBHex);
                     //Rendering.Renderer.Write(str.Substring(prevPos, str.Length - prevPos) + " ", 60, 1);
-                    WriteOnCanvas(str.Substring(prevPos, pos - prevPos), curFHex, curBHex, x + xOffset, y);
+                    Draw(str.Substring(prevPos, pos - prevPos), curFHex, curBHex, x + xOffset, y);
                     xOffset += pos - prevPos;
                 }
 
@@ -152,40 +136,42 @@ namespace PiwotDrawingLib.UI.Containers
             {
                 //retStr += str.Substring(prevPos, str.Length - prevPos).Pastel(curFHex).PastelBg(curBHex);
                 //Rendering.Renderer.Write(str.Substring(prevPos, str.Length - prevPos) + " ", 60, 1);
-                WriteOnCanvas(str.Substring(prevPos, str.Length - prevPos), curFHex, curBHex, x + xOffset, y);
+                Draw(str.Substring(prevPos, str.Length - prevPos), curFHex, curBHex, x + xOffset, y);
             }
             //Console.WriteLine(retStr);
         }
 
-        protected void WriteOnCanvas(string text, string fHex, string bHex, int x, int y)
+
+        public void Draw(string text, string foregroundHex, string backgroundHex, int x, int y)
         {
-            if (y >= contentSize.Y)
-            { 
+            if (y >= size.Y)
+            {
                 return;
             }
-            for (int i = 0; i < text.Length && x < contentSize.X; i++)
+            for (int i = 0; i < text.Length && x < size.X; i++)
             {
-                
+
                 frameCharMap[y][x] = text[i];
 
-                frameFrontColorMap[y, x] = TryAddColor(fHex);
+                frameFrontColorMap[y, x] = TryAddColor(foregroundHex);
 
-                frameBackColorMap[y, x] = TryAddColor(bHex);
-                
+                frameBackColorMap[y, x] = TryAddColor(backgroundHex);
+
                 x++;
-                
+
             }
-            refreshMap[y, contentSize.X] = true;
+            refreshMap[y, size.X] = true;
 
         }
 
-        protected void ApplyNewFrame()
+        public void ApplyNewFrame()
         {
-            for (int y = 0; y < contentSize.Y; y++)
+            for (int y = 0; y < size.Y; y++)
             {
-                if (refreshMap[y, contentSize.X]) {
-                    refreshMap[y, contentSize.X] = false;
-                    for (int x = 0; x < contentSize.X; x++)
+                if (refreshMap[y, size.X])
+                {
+                    refreshMap[y, size.X] = false;
+                    for (int x = 0; x < size.X; x++)
                     {
                         CheckOnePixel(x, y);
                     }
@@ -214,34 +200,14 @@ namespace PiwotDrawingLib.UI.Containers
                 tFlag = true;
             }
 
-            if(tFlag)
+            if (tFlag)
             {
-                refreshMap[y, x] = refreshMap[y, contentSize.X] = true;
-
+                refreshMap[y, x]  = true;
+                refreshMap[y, size.X] = true;
             }
         }
 
-        public virtual void RefreshContent()
-        {
-            DrawContent();
-        }
-
-        public void DrawMap()
-        {
-            Drawing.Renderer.Write(DateTime.Now.Millisecond, 60, 1);
-            for (int i = 0; i < contentSize.Y; i++)
-            {
-                Drawing.Renderer.Write(new string(frameCharMap[i]), 60, 2 + i);
-
-                for (int j = 0; j <= contentSize.X; j++)
-                {
-                    Drawing.Renderer.Write(refreshMap[i, j] ? "X" : " ", 90 + j, 2 + i);
-                }
-            }
-
-        }
-
-        protected override void DrawContent()
+        public void Print()
         {
             int startpos;
             int endpos;
@@ -251,25 +217,25 @@ namespace PiwotDrawingLib.UI.Containers
             int prevBCol;
             int prevFCol;
             string retStr;
-
             ApplyNewFrame();
-
+            drawCOunt++;
             //Rendering.Renderer.SyncWrite($"STOP 7: {canvasSize}  ", 100, 7);
             //DrawMap();
-            for (int y = 0; y < contentSize.Y; y++)
+            for (int y = 0; y < size.Y; y++)
             {
                 //Console.WriteLine();
                 // Console.Write($"{y}");
-                //Rendering.Renderer.Write($"STOP 8: {y}  ", 100, 8);
-                if (refreshMap[y, contentSize.X])
+                Renderer.SyncWrite(refreshMap[y, size.X] + " ", 0, y);
+                if (refreshMap[y, size.X])
                 {
                     //Console.Write($"!");
                     startpos = -1;
                     endpos = -1;
                     retStr = "";
                     //Rendering.Renderer.Write("STOP 9", 100, 9);
-                    for (int x = 0; startpos < 0 && x < contentSize.X; x++)
+                    for (int x = 0; startpos < 0 && x < size.X; x++)
                     {
+                        //Renderer.SyncWrite(" ", x + 50, y);
                         //Rendering.Renderer.Write($" {x} : {refreshMap[y, x]} ", 130, 10);
                         if (refreshMap[y, x])
                         {
@@ -279,8 +245,9 @@ namespace PiwotDrawingLib.UI.Containers
                     //Rendering.Renderer.Write($"STOP 10 {startpos} ", 100, 10);
                     if (startpos >= 0)
                     {
-                        for (int x = contentSize.X - 1; x >= 0 && endpos < 0 && x >= startpos; x--)
+                        for (int x = size.X - 1; x >= 0 && endpos < 0 && x >= startpos; x--)
                         {
+                            //Renderer.SyncWrite(" ", x + 50, y);
                             //Rendering.Renderer.Write($"STOP 11 {x}  ", 100, 11);
                             if (refreshMap[y, x])
                             {
@@ -304,24 +271,20 @@ namespace PiwotDrawingLib.UI.Containers
                                 prevBCol = curBCol;
                                 prevFCol = curFCol;
                             }
+                            //Renderer.SyncWrite("X", x + 50, y);
                         }
 
-                        Drawing.Renderer.Write(retStr, startpos + contentPosition.X, y + contentPosition.Y);
+                        Renderer.SyncWrite(retStr, startpos, y);
                         for (int i = startpos; i <= endpos; i++)
                             refreshMap[y, i] = false;
-                        refreshMap[y, contentSize.X] = false;
+                        refreshMap[y, size.X] = false;
                     }
 
 
                 }
             }
-            canvasNeedsRedraw = false;
-        }
-
-        protected override void DrawWindow()
-        {
-            base.DrawWindow();
-            Drawing.Renderer.Write(Name, position.X + (size.X - Name.Length) / 2, position.Y);
+            needsRedraw = false;
+            Console.ReadKey(true);
         }
 
         protected int TryAddColor(string hex)
@@ -339,6 +302,82 @@ namespace PiwotDrawingLib.UI.Containers
             colorDict[colorPoint] = hex;
 
             return colorPoint;
+        }
+        public void Resize(Int2 newSize)
+        {
+
+            int[,] newFrameFrontColorMap;
+            int[,] newFrameBackColorMap;
+            char[][] newFrameCharMap;
+
+            int[,] newCanvasFrontColorMap;
+            int[,] newCanvasBackColorMap;
+            char[][] newCanvasCharMap;
+
+            bool[,] newRefreshMap;
+            newFrameFrontColorMap = new int[newSize.Y, newSize.X];
+            newFrameBackColorMap = new int[newSize.Y, newSize.X];
+            newFrameCharMap = new char[newSize.Y][];
+
+            newCanvasFrontColorMap = new int[newSize.Y, newSize.X];
+            newCanvasBackColorMap = new int[newSize.Y, newSize.X];
+            newCanvasCharMap = new char[newSize.Y][];
+
+            newRefreshMap = new bool[newSize.Y, newSize.X + 1];
+
+            for (int i = 0; i < newSize.Y && i < size.Y; i++)
+            {
+                newFrameCharMap[i] = new char[newSize.X + 1];
+                newFrameCharMap[i][newSize.X] = ' ';
+
+                newCanvasCharMap[i] = new char[newSize.X + 1];
+                newCanvasCharMap[i][newSize.X] = ' ';
+
+                for (int j = 0; j < newSize.X && j < size.X; j++)
+                {
+                    newFrameCharMap[i][j] = frameCharMap[i][j];
+                    newFrameFrontColorMap[i, j] = frameFrontColorMap[i,j];
+                    newFrameBackColorMap[i, j] = frameBackColorMap[i,j];
+
+                    newCanvasCharMap[i][j] = canvasCharMap[i][j];
+                    newCanvasFrontColorMap[i, j] = canvasFrontColorMap[i, j];
+                    newCanvasBackColorMap[i, j] = canvasBackColorMap[i,j];
+
+                    newRefreshMap[i, j] = refreshMap[i,j];
+                }
+            }
+
+            for (int i = size.Y; i < newSize.Y; i++)
+            {
+                newFrameCharMap[i] = new char[newSize.X + 1];
+                newFrameCharMap[i][newSize.X] = ' ';
+
+                newCanvasCharMap[i] = new char[newSize.X + 1];
+                newCanvasCharMap[i][newSize.X] = ' ';
+
+                for (int j = size.X; j < newSize.X; j++)
+                {
+                    newFrameCharMap[i][j] = ' ';
+                    newFrameFrontColorMap[i, j] = 0;
+                    newFrameBackColorMap[i, j] = 1;
+
+                    newCanvasCharMap[i][j] = ' ';
+                    newCanvasFrontColorMap[i, j] = 0;
+                    newCanvasBackColorMap[i, j] = 1;
+
+                    newRefreshMap[i, j] = false;
+                }
+            }
+            size = new Int2(newSize);
+            frameFrontColorMap = newFrameFrontColorMap;
+            frameBackColorMap = newFrameBackColorMap;
+            frameCharMap = newFrameCharMap;
+            
+            canvasFrontColorMap = newCanvasFrontColorMap;
+            canvasBackColorMap = newCanvasBackColorMap;
+            canvasCharMap = newCanvasCharMap;
+
+            refreshMap = newRefreshMap;
         }
 
     }

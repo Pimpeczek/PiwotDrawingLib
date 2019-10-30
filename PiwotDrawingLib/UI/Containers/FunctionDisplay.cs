@@ -96,7 +96,7 @@ namespace PiwotDrawingLib.UI.Containers
         protected override void DrawWindow()
         {
             base.DrawWindow();
-            Rendering.Renderer.Write(Name, position.X + (size.X - Name.Length) / 2, position.Y);
+            Drawing.Renderer.Write(Name, position.X + (size.X - Name.Length) / 2, position.Y);
         }
 
     }

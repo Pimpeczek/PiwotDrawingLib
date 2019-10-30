@@ -5,7 +5,7 @@ using Pastel;
 using System.IO;
 using System.Diagnostics;
 using System.Threading;
-using PiwotDrawingLib.Rendering;
+using PiwotDrawingLib.Drawing;
 using PiwotToolsLib.PMath;
 
 namespace PiwotDrawingLib
@@ -18,8 +18,7 @@ namespace PiwotDrawingLib
             Renderer.WindowSize = new Int2(200, 50);
             Renderer.DebugMode = true;
             Renderer.AsyncMode = true;
-            Renderer.AsyncFrameLenght = 30;
-
+            Renderer.AsyncFrameLenght = 100;
             /*
             UI.Containers.FunctionDisplay fd = new UI.Containers.FunctionDisplay(new Int2(0, 0), new Int2(200, 50), "Main menu", Misc.Boxes.BoxType.round, (x) => x);
             fd.Draw();

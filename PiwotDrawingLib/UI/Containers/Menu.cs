@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using Pastel;
 using PiwotToolsLib.PMath;
 using PiwotToolsLib.Data;
 
@@ -182,7 +181,6 @@ namespace PiwotDrawingLib.UI.Containers
 
 
                 DrawContent();
-                Rendering.Renderer.Write(IsVIsable + " " + DateTime.Now.Millisecond, 100, 1);
 
             } while (waitForInput);
 
@@ -239,7 +237,7 @@ namespace PiwotDrawingLib.UI.Containers
         override protected void DrawWindow()
         {
             base.DrawWindow();
-            Rendering.Renderer.Write(Name, position.X + (size.X - Name.Length) / 2, position.Y);
+            Drawing.Renderer.Write(Name, position.X + (size.X - Name.Length) / 2, position.Y);
 
         }
 
@@ -262,15 +260,15 @@ namespace PiwotDrawingLib.UI.Containers
                 {
                     printText = controls[i + scrollPoint].PrintableText;
                     pos = new Int2(position.X + 1, position.Y + startHeight + i + 1);
-                    Rendering.Renderer.Write(emptyLine, pos);
+                    Drawing.Renderer.Write(emptyLine, pos);
                     pos = new Int2(position.X + (size.X - printText.Length) / 2, position.Y + startHeight + i + 1);
                     if (hPoint == i)
                     {
-                        Rendering.Renderer.Write(printText.PastelBg(Color.Gray), pos);
+                        Drawing.Renderer.Write($"<cb808080>{printText}</cb>", pos);
                     }
                     else
                     {
-                        Rendering.Renderer.Write(printText, pos);
+                        Drawing.Renderer.Write(printText, pos);
                     }
                 }
             }

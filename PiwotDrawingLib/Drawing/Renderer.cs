@@ -8,10 +8,10 @@ using Pastel;
 using System.Drawing;
 using PiwotToolsLib.PMath;
 
-namespace PiwotDrawingLib.Rendering
+namespace PiwotDrawingLib.Drawing
 {
 
-    public class Renderer_WIP
+    public static class Renderer
     {
 
         #region Variables
@@ -43,6 +43,7 @@ namespace PiwotDrawingLib.Rendering
                     SetupDebugMode();
                 }
                 Console.SetWindowSize(windowSize.X, windowSize.Y);
+                canvas.Resize(windowSize);
             }
         }
         static bool asyncMode;
@@ -109,7 +110,7 @@ namespace PiwotDrawingLib.Rendering
                 }
             }
         }
-        static int asyncFrameLenght = 10;
+        static int asyncFrameLenght = 30;
 
         /// <summary>The interval in milliseconds between each frame render.</summary>
         public static int AsyncFrameLenght
@@ -160,38 +161,21 @@ namespace PiwotDrawingLib.Rendering
             }
         }
 
+        static Canvas canvas;
+
         static List<Requests.TimedTextRequest> timedTextRequests;
-
-        protected string defFHex = "FFFFFF";
-        protected string defBHex = "000000";
-        protected string defFHexTag = $"<cfFFFFFF>";
-        protected string defBHexTag = $"<cb000000>";
-
-
-
-        protected int[,] frameFrontColorMap;
-        protected int[,] frameBackColorMap;
-        protected char[][] frameCharMap;
-
-        protected int[,] canvasFrontColorMap;
-        protected int[,] canvasBackColorMap;
-        protected char[][] canvasCharMap;
-
-        protected bool[,] refreshMap;
-        protected int colorPoint;
-
-        protected string[] colorDict;
 
         #endregion
 
         #region Setup
-        static Renderer_WIP()
+        static Renderer()
         {
             Console.OutputEncoding = Encoding.UTF8;
             timedTextRequests = new List<Requests.TimedTextRequest>();
             Console.CursorVisible = false;
             AsyncMode = true;
             requestPointer = 0;
+            canvas = new Canvas(windowSize, 256);
         }
 
 
@@ -209,8 +193,9 @@ namespace PiwotDrawingLib.Rendering
         static void AsyncDrawingDebug()
         {
             int sleepTime, elapsedTime, queleLen = 0, charCount = 0;
-
+            
             stopwatch.Restart();
+            canvas.Print();
             Requests.RenderRequest tRequest;
             while (requests.Count > 0)
             {
@@ -226,7 +211,7 @@ namespace PiwotDrawingLib.Rendering
             elapsedTime = (int)stopwatch.ElapsedMilliseconds;
             sleepTime = asyncFrameLenght - elapsedTime - Arit.Clamp(lastSleepTime, int.MinValue, 0);
 
-            if (queleLen > 0)
+            if (true)
             {
                 string debugString = "";
                 debugString += $"Frame len: {$"{asyncFrameLenght}".PadLeft(5)}, ";
@@ -266,10 +251,12 @@ namespace PiwotDrawingLib.Rendering
         {
             frame = 0;
             stopwatch = new Stopwatch();
+
             try
             {
                 while (asyncMode)
                 {
+                    Thread.Sleep(asyncFrameLenght);
                     if (debugMode)
                     {
                         AsyncDrawingDebug();
@@ -334,6 +321,7 @@ namespace PiwotDrawingLib.Rendering
         #endregion
 
         #region Writting
+
         /// <summary>Draws a given string on a given position. If AsyncMode is enabled it will add a render request to the queue.</summary>
         /// <param name="text">String to be printed.</param>
         /// <param name="position">Horizontal(X) and vertical(Y) distance from the top left corner.</param>>
@@ -355,11 +343,11 @@ namespace PiwotDrawingLib.Rendering
             if (AsyncMode)
             {
                 //If queue is full stops the main thread until the queue is empty.
-                if (requests.Count >= maxRequestCount)
-                    while (requests.Count > 0) Thread.Sleep(emptyCheckingInterval);
+                //if (requests.Count >= maxRequestCount)
+                //while (requests.Count > 0) Thread.Sleep(emptyCheckingInterval);
 
-                requests.Enqueue(new Requests.RenderRequest(text, x, y));
-
+                //requests.Enqueue(new Requests.RenderRequest(text, x, y));
+                canvas.Draw(text, x, y);
                 return;
             }
             SyncDraw(text, x, y);

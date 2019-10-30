@@ -157,9 +157,7 @@ namespace PiwotDrawingLib.UI.Controls
             }
         }
 
-        public bool Accessable { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
-        public bool Selected { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
-
+       
         protected Stopwatch stopwatch;
 
         public SwitcherControl(string name, string identificator) : base(name, identificator)

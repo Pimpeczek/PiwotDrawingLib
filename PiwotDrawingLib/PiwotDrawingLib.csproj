@@ -58,10 +58,9 @@
     <Compile Include="Misc\Rend_test.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Rendering\Renderer.cs" />
-    <Compile Include="Rendering\Renderer_WIP.cs" />
-    <Compile Include="Rendering\Requests\RenderRequest.cs" />
-    <Compile Include="Rendering\Requests\TimedTextRequest.cs" />
+    <Compile Include="Drawing\Renderer.cs" />
+    <Compile Include="Drawing\Requests\RenderRequest.cs" />
+    <Compile Include="Drawing\Requests\TimedTextRequest.cs" />
     <Compile Include="UI\Containers\Canvas_Legacy.cs" />
     <Compile Include="UI\Containers\Canvas.cs" />
     <Compile Include="UI\Containers\Container.cs" />
@@ -80,6 +79,7 @@
     <Compile Include="UI\Controls\StringSwitcherControl.cs" />
     <Compile Include="UI\Controls\Interfaces\ISwitchable.cs" />
     <Compile Include="UI\Controls\SwitcherControl.cs" />
+    <Compile Include="Drawing\Canvas.cs" />
     <Compile Include="UI\Events\ButtonEvent.cs" />
     <Compile Include="UI\Events\CheckBoxEvent.cs" />
     <Compile Include="UI\Events\FloatSwitcherEvent.cs" />
@@ -91,6 +91,7 @@
     <Compile Include="UI\Exceptions\IdentificatorNotFoundException.cs" />
     <Compile Include="UI\Exceptions\InvalidContainerPositionException.cs" />
     <Compile Include="UI\Exceptions\InvalidContainerSizeException.cs" />
+    <Compile Include="Drawing\Exceptions\InvalidFormatException.cs" />
     <Compile Include="UI\Exceptions\InvalidFormatException.cs" />
   </ItemGroup>
   <ItemGroup>

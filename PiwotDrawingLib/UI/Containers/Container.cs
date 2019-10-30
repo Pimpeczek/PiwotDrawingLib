@@ -53,18 +53,14 @@ namespace PiwotDrawingLib.UI.Containers
                 
                 if (IsVIsable)
                 {
-                    Rendering.Renderer.Write("Erase", 0, 1);
                     Erase();
-                }
-                else
-                {
-                    Rendering.Renderer.Write("NotErase", 0, 1);
                 }
                 size = value ?? throw new ArgumentNullException();
                 contentSize = size - (boxType != Misc.Boxes.BoxType.none ? Int2.One * 2 : Int2.Zero);
-                Rendering.Renderer.Write($"Size {Size.ToString()} {DateTime.Now.Millisecond}  ", 0, 0);
                 emptyLine = Stringer.GetFilledString(contentSize.X, ' ');
+                emptyLine = $"<cb000000>{emptyLine}</cb>";
                 fullEmptyLine = Stringer.GetFilledString(size.X, ' ');
+                fullEmptyLine = $"<cb000000>{fullEmptyLine}</cb>";
                 Erase();
                 if (IsVIsable)
                     Draw();
@@ -132,10 +128,9 @@ namespace PiwotDrawingLib.UI.Containers
 
         protected void Erase()
         {
-            Rendering.Renderer.Write("EraseREAL" + DateTime.Now.Millisecond, 0, 2);
             for (int y = 0; y < size.Y; y++)
             {
-                Rendering.Renderer.Write(fullEmptyLine, position.X, position.Y + y);
+                Drawing.Renderer.Write(fullEmptyLine, position.X, position.Y + y);
             }
         }
 

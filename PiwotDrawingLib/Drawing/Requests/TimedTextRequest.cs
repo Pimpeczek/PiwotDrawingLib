@@ -1,5 +1,5 @@
 ﻿
-namespace PiwotDrawingLib.Rendering.Requests
+namespace PiwotDrawingLib.Drawing.Requests
 {
     /// <summary>
     /// Class representing request for a string to be shown on screen for a given amount of time.

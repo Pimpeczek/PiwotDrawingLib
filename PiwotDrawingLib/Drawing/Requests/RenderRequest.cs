@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PiwotDrawingLib.Rendering.Requests
+namespace PiwotDrawingLib.Drawing.Requests
 {
 
     /// <summary>
