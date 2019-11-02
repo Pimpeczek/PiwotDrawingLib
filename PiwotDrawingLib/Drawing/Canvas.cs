@@ -109,7 +109,7 @@ namespace PiwotDrawingLib.Drawing
                     throw new Exceptions.InvalidFormatException();
                 }
 
-                if (pos >= prevPos && pos != prevPos)
+                if (pos > prevPos)
                 {
 
                     //retStr += str.Substring(prevPos, pos - prevPos).Pastel(curFHex).PastelBg(curBHex);

@@ -128,10 +128,14 @@ namespace PiwotDrawingLib.UI.Containers
 
         protected void Erase()
         {
+            
             for (int y = 0; y < size.Y; y++)
             {
-                Drawing.Renderer.Write(fullEmptyLine, position.X, position.Y + y);
+                
+                Drawing.Renderer.Draw(fullEmptyLine, position.X, position.Y + y);
+                
             }
+            
         }
 
         protected virtual void DrawWindow()

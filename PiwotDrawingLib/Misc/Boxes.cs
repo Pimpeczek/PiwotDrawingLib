@@ -127,14 +127,14 @@ namespace PiwotDrawingLib.Misc
         {
             if (bs == null)
                 throw new ArgumentNullException();
-            Drawing.Renderer.Write($"{bs[3]}{"".PadLeft(sx - 2, bs[2])}{bs[0]}", x, y);
+            Drawing.Renderer.Draw($"{bs[3]}{"".PadLeft(sx - 2, bs[2])}{bs[0]}", x, y);
             string midBorder = $"{bs[7]}{"".PadLeft(sx - 2)}{bs[7]}";
             for (int i = 1; i < sy - 1; i++)
             {
-                Drawing.Renderer.Write(midBorder, x, y + i);
+                Drawing.Renderer.Draw(midBorder, x, y + i);
 
             }
-            Drawing.Renderer.Write($"{bs[9]}{"".PadLeft(sx - 2, bs[2])}{bs[6]}", x, y + sy - 1);
+            Drawing.Renderer.Draw($"{bs[9]}{"".PadLeft(sx - 2, bs[2])}{bs[6]}", x, y + sy - 1);
 
         }
     

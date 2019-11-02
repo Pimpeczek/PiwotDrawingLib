@@ -237,7 +237,7 @@ namespace PiwotDrawingLib.UI.Containers
         override protected void DrawWindow()
         {
             base.DrawWindow();
-            Drawing.Renderer.Write(Name, position.X + (size.X - Name.Length) / 2, position.Y);
+            Drawing.Renderer.Draw(Name, position.X + (size.X - Name.Length) / 2, position.Y);
 
         }
 
@@ -260,19 +260,19 @@ namespace PiwotDrawingLib.UI.Containers
                 {
                     printText = controls[i + scrollPoint].PrintableText;
                     pos = new Int2(position.X + 1, position.Y + startHeight + i + 1);
-                    Drawing.Renderer.Write(emptyLine, pos);
+                    Drawing.Renderer.Draw(emptyLine, pos.X, pos.Y);
                     pos = new Int2(position.X + (size.X - printText.Length) / 2, position.Y + startHeight + i + 1);
                     if (hPoint == i)
                     {
-                        Drawing.Renderer.Write($"<cb808080>{printText}</cb>", pos);
+                        Drawing.Renderer.Draw($"<cb808080>{printText}</cb>", pos.X, pos.Y);
                     }
                     else
                     {
-                        Drawing.Renderer.Write(printText, pos);
+                        Drawing.Renderer.Draw(printText, pos.X, pos.Y);
                     }
                 }
             }
-
+            Drawing.Renderer.Print();
         }
 
         /// <summary>

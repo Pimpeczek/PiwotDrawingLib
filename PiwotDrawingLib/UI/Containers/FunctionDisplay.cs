@@ -7,7 +7,7 @@ using PiwotToolsLib.PMath;
 
 namespace PiwotDrawingLib.UI.Containers
 {
-    class FunctionDisplay : Canvas
+    class FunctionDisplay : Container
     {
         #region Variables
 
@@ -48,7 +48,7 @@ namespace PiwotDrawingLib.UI.Containers
             this.func = func;
         }
 
-        public override void RefreshContent()
+        public void RefreshContent()
         {
             DrawContent();
         }
@@ -70,33 +70,33 @@ namespace PiwotDrawingLib.UI.Containers
 
                 for (int y = 0; y < contentSize.Y - iHeight; y++)
                 {
-                    WriteOnCanvas(" ", defFHex, defBHex, x, y);
+                    Drawing.Renderer.Draw(" ", "FFFFFF", "000000", x + contentPosition.X, y + contentPosition.Y);
                 }
                 if(height >= 0.5f && iHeight != contentSize.Y)
                 {
-                    WriteOnCanvas("▄", defFHex, defBHex, x, contentSize.Y - iHeight - 1);//▬
+                    Drawing.Renderer.Draw("▄", "FFFFFF", "000000", x + contentPosition.X, contentSize.Y - iHeight - 1 + contentPosition.Y);//▬
                 }
                 else if (iHeight == 0 && height >= 0.1f)
                 {
-                    WriteOnCanvas("_", defFHex, defBHex, x, contentSize.Y - 1);
+                    Drawing.Renderer.Draw("_", "FFFFFF", "000000", x + contentPosition.X, contentSize.Y - 1 + contentPosition.Y);
                 }
 
                 for (int y = contentSize.Y - iHeight; y < contentSize.Y; y++)
                 {
-                    WriteOnCanvas("█", defFHex, defBHex, x, y);
+                    Drawing.Renderer.Draw("█", "FFFFFF", "000000", x + contentPosition.X, y + contentPosition.Y);
                 }
             }
             //base.DrawContent();
         }
         public void TestDraw()
         {
-            base.DrawContent();
+            //base.DrawContent();
         }
 
         protected override void DrawWindow()
         {
             base.DrawWindow();
-            Drawing.Renderer.Write(Name, position.X + (size.X - Name.Length) / 2, position.Y);
+            Drawing.Renderer.Draw(Name, position.X + (size.X - Name.Length) / 2, position.Y);
         }
 
     }

@@ -228,14 +228,14 @@ namespace PiwotDrawingLib.UI.Containers
 
         public void DrawMap()
         {
-            Drawing.Renderer.Write(DateTime.Now.Millisecond, 60, 1);
+            Drawing.Renderer.Draw(DateTime.Now.Millisecond, 60, 1);
             for (int i = 0; i < contentSize.Y; i++)
             {
-                Drawing.Renderer.Write(new string(frameCharMap[i]), 60, 2 + i);
+                Drawing.Renderer.Draw(new string(frameCharMap[i]), 60, 2 + i);
 
                 for (int j = 0; j <= contentSize.X; j++)
                 {
-                    Drawing.Renderer.Write(refreshMap[i, j] ? "X" : " ", 90 + j, 2 + i);
+                    Drawing.Renderer.Draw(refreshMap[i, j] ? "X" : " ", 90 + j, 2 + i);
                 }
             }
 
@@ -306,7 +306,7 @@ namespace PiwotDrawingLib.UI.Containers
                             }
                         }
 
-                        Drawing.Renderer.Write(retStr, startpos + contentPosition.X, y + contentPosition.Y);
+                        Drawing.Renderer.Draw(retStr, startpos + contentPosition.X, y + contentPosition.Y);
                         for (int i = startpos; i <= endpos; i++)
                             refreshMap[y, i] = false;
                         refreshMap[y, contentSize.X] = false;
@@ -321,7 +321,7 @@ namespace PiwotDrawingLib.UI.Containers
         protected override void DrawWindow()
         {
             base.DrawWindow();
-            Drawing.Renderer.Write(Name, position.X + (size.X - Name.Length) / 2, position.Y);
+            Drawing.Renderer.Draw(Name, position.X + (size.X - Name.Length) / 2, position.Y);
         }
 
         protected int TryAddColor(string hex)

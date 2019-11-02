@@ -15,20 +15,22 @@ namespace PiwotDrawingLib
 
         static void Main(string[] args)
         {
-            Renderer.WindowSize = new Int2(200, 50);
-            Renderer.DebugMode = true;
-            Renderer.AsyncMode = true;
-            Renderer.AsyncFrameLenght = 100;
-            /*
-            UI.Containers.FunctionDisplay fd = new UI.Containers.FunctionDisplay(new Int2(0, 0), new Int2(200, 50), "Main menu", Misc.Boxes.BoxType.round, (x) => x);
+            //Renderer.WindowSize = new Int2(200, 50);
+            //Renderer.DebugMode = true;
+            //Renderer.AsyncMode = true;
+            //Renderer.AsyncFrameLenght = 100;
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+            Renderer.WindowSize = new Int2(150, 50); 
+            
+            UI.Containers.FunctionDisplay fd = new UI.Containers.FunctionDisplay(new Int2(0, 0), new Int2(150, 50), "Main menu", Misc.Boxes.BoxType.round, (x) => x);
             fd.Draw();
             float f;
             long time = 0;
             Stopwatch stopwatch = new Stopwatch();
-            for(int i = 0; i < 100; i++)
+            for(int i = 0; i < 1000; i++)
             {
                 stopwatch.Restart();
-                for (int j = 0; j < 1000; j++)
+                for (int j = 0; j < 1; j++)
                 {
                     f = (float)Rand.Double();
                     fd.Function = (x) => (x + f - 0.5f) * (x + f - 0.5f);
@@ -38,12 +40,13 @@ namespace PiwotDrawingLib
                 stopwatch.Stop();
                 fd.TestDraw();
                 
-                Renderer.Write(stopwatch.ElapsedMilliseconds + " ",0,0);
+                Renderer.Draw(stopwatch.ElapsedMilliseconds + " ",0,0);
+                Renderer.Print();
                 time += stopwatch.ElapsedMilliseconds;
             }
             time /= 100;
-            Renderer.Write(time + " ", 0, 0);
-            */
+            Renderer.Draw(time + " ", 0, 0);
+            
             /*
             Stopwatch sw = new Stopwatch();
             for (int i = 0; i < 1000; i++)
@@ -63,9 +66,9 @@ namespace PiwotDrawingLib
             }
             */
             
-            
+            /*
             Int2 menuSize = new Int2(40, 20);
-            UI.Containers.Menu mainMenu = new UI.Containers.Menu(new Int2((Renderer.WindowSize.X - menuSize.X) / 2, (Renderer.WindowSize.Y - menuSize.X) / 2), menuSize, "Main menu", Misc.Boxes.BoxType.round);
+            UI.Containers.Menu mainMenu = new UI.Containers.Menu(Int2.One, menuSize, "Main menu", Misc.Boxes.BoxType.light);
             //mainMenu.VerticalTextWrapping = UI.Containers.Menu.Wrapping.scrolling;
 
             UI.Controls.ButtonControl bc = new UI.Controls.ButtonControl("b0", "b0");
@@ -92,7 +95,7 @@ namespace PiwotDrawingLib
                 MaxSpecialText = "DUŻO",
                 FastStepMultiplier = 10,
                 FastStepsToMultiply = 10,
-                FastStepTime = 1000,
+                FastStepTime = 10,
                 HideName = true,
 
             };
@@ -113,7 +116,7 @@ namespace PiwotDrawingLib
             mainMenu.WaitForInput();
             
             //Renderer.AbortAsyncThread();
-            
+            */
             Console.ReadKey(true);
 
         }
