@@ -505,6 +505,7 @@ namespace PiwotDrawingLib.Drawing
             int[,] newCanvasBackColorMap;
             char[][] newCanvasCharMap;
 
+
             bool[,] newRefreshMap;
             newFrameFrontColorMap = new int[newSize.Y, newSize.X];
             newFrameBackColorMap = new int[newSize.Y, newSize.X];
