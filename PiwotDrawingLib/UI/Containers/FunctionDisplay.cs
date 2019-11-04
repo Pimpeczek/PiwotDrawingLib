@@ -70,33 +70,28 @@ namespace PiwotDrawingLib.UI.Containers
 
                 for (int y = 0; y < contentSize.Y - iHeight; y++)
                 {
-                    Drawing.Renderer.Draw(" ", "FFFFFF", "000000", x + contentPosition.X, y + contentPosition.Y);
+                    Drawing.Renderer.Draw(" ", "FFFFFF", "101010", x + contentPosition.X, y + contentPosition.Y);
                 }
                 if(height >= 0.5f && iHeight != contentSize.Y)
                 {
-                    Drawing.Renderer.Draw("▄", "FFFFFF", "000000", x + contentPosition.X, contentSize.Y - iHeight - 1 + contentPosition.Y);//▬
+                    Drawing.Renderer.Draw("▄", "FFFFFF", "101010", x + contentPosition.X, contentSize.Y - iHeight - 1 + contentPosition.Y);//▬
                 }
                 else if (iHeight == 0 && height >= 0.1f)
                 {
-                    Drawing.Renderer.Draw("_", "FFFFFF", "000000", x + contentPosition.X, contentSize.Y - 1 + contentPosition.Y);
+                    Drawing.Renderer.Draw("_", "FFFFFF", "101010", x + contentPosition.X, contentSize.Y - 1 + contentPosition.Y);
                 }
 
                 for (int y = contentSize.Y - iHeight; y < contentSize.Y; y++)
                 {
-                    Drawing.Renderer.Draw("█", "FFFFFF", "000000", x + contentPosition.X, y + contentPosition.Y);
+                    Drawing.Renderer.Draw("█", "FFFFFF", "101010", x + contentPosition.X, y + contentPosition.Y);
                 }
             }
-            //base.DrawContent();
-        }
-        public void TestDraw()
-        {
-            //base.DrawContent();
         }
 
         protected override void DrawWindow()
         {
             base.DrawWindow();
-            Drawing.Renderer.Draw(Name, position.X + (size.X - Name.Length) / 2, position.Y);
+            Drawing.Renderer.DrawFormated(Name, position.X + (size.X - Name.Length) / 2, position.Y);
         }
 
     }

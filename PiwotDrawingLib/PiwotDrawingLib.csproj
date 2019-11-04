@@ -44,6 +44,7 @@
       <HintPath>..\..\..\LIBS\PiwotToolsLib.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Activities" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
@@ -54,13 +55,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Drawing\DrawingRequest.cs" />
     <Compile Include="Drawing\Renderer.cs" />
     <Compile Include="Drawing\Exceptions\InvalidWindowSizeException.cs" />
     <Compile Include="Misc\Boxes.cs" />
     <Compile Include="Misc\Rend_test.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Drawing\Renderer_Legacy.cs" />
     <Compile Include="UI\Containers\Canvas_Legacy.cs" />
     <Compile Include="UI\Containers\Canvas.cs" />
     <Compile Include="UI\Containers\Container.cs" />
@@ -79,7 +80,6 @@
     <Compile Include="UI\Controls\StringSwitcherControl.cs" />
     <Compile Include="UI\Controls\Interfaces\ISwitchable.cs" />
     <Compile Include="UI\Controls\SwitcherControl.cs" />
-    <Compile Include="Drawing\Canvas.cs" />
     <Compile Include="UI\Events\ButtonEvent.cs" />
     <Compile Include="UI\Events\CheckBoxEvent.cs" />
     <Compile Include="UI\Events\FloatSwitcherEvent.cs" />

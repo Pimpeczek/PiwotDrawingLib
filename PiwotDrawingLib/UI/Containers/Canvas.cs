@@ -231,11 +231,11 @@ namespace PiwotDrawingLib.UI.Containers
             Drawing.Renderer.Draw(DateTime.Now.Millisecond, 60, 1);
             for (int i = 0; i < contentSize.Y; i++)
             {
-                Drawing.Renderer.Draw(new string(frameCharMap[i]), 60, 2 + i);
+                Drawing.Renderer.DrawFormated(new string(frameCharMap[i]), 60, 2 + i);
 
                 for (int j = 0; j <= contentSize.X; j++)
                 {
-                    Drawing.Renderer.Draw(refreshMap[i, j] ? "X" : " ", 90 + j, 2 + i);
+                    Drawing.Renderer.DrawFormated(refreshMap[i, j] ? "X" : " ", 90 + j, 2 + i);
                 }
             }
 
@@ -250,63 +250,47 @@ namespace PiwotDrawingLib.UI.Containers
             int curFCol;
             int prevBCol;
             int prevFCol;
-            string retStr;
-
             ApplyNewFrame();
 
-            //Rendering.Renderer.SyncWrite($"STOP 7: {canvasSize}  ", 100, 7);
-            //DrawMap();
-            for (int y = 0; y < contentSize.Y; y++)
+            for (int y = 0; y < size.Y; y++)
             {
-                //Console.WriteLine();
-                // Console.Write($"{y}");
-                //Rendering.Renderer.Write($"STOP 8: {y}  ", 100, 8);
-                if (refreshMap[y, contentSize.X])
+                if (refreshMap[y, size.X])
                 {
-                    //Console.Write($"!");
                     startpos = -1;
                     endpos = -1;
-                    retStr = "";
-                    //Rendering.Renderer.Write("STOP 9", 100, 9);
-                    for (int x = 0; startpos < 0 && x < contentSize.X; x++)
-                    {
-                        //Rendering.Renderer.Write($" {x} : {refreshMap[y, x]} ", 130, 10);
+
+                    for (int x = 0; startpos < 0 && x < size.X; x++)
                         if (refreshMap[y, x])
-                        {
                             startpos = x;
-                        }
-                    }
-                    //Rendering.Renderer.Write($"STOP 10 {startpos} ", 100, 10);
+
                     if (startpos >= 0)
                     {
-                        for (int x = contentSize.X - 1; x >= 0 && endpos < 0 && x >= startpos; x--)
-                        {
-                            //Rendering.Renderer.Write($"STOP 11 {x}  ", 100, 11);
+                        for (int x = size.X - 1; endpos < 0 && x >= 0 && x >= startpos; x--)
                             if (refreshMap[y, x])
-                            {
                                 endpos = x;
-                            }
-                        }
 
                         prevFCol = canvasFrontColorMap[y, startpos];
                         prevBCol = canvasBackColorMap[y, startpos];
+                        curFCol = -1;
+                        curBCol = -1;
                         strPos = startpos;
                         for (int x = startpos; x <= endpos; x++)
                         {
-                            //Rendering.Renderer.Write($"STOP 12 {x}  ", 100, 12);
-                            curFCol = canvasFrontColorMap[y, x];
-                            curBCol = canvasBackColorMap[y, x];
+                            if (x < endpos)
+                            {
+                                curFCol = canvasFrontColorMap[y, x + 1];
+                                curBCol = canvasBackColorMap[y, x + 1];
+                            }
                             if (curFCol != prevFCol || prevBCol != curBCol || x == endpos)
                             {
-                                retStr += new string(canvasCharMap[y], strPos, x - strPos + 1).Pastel(colorDict[prevFCol]).PastelBg(colorDict[prevBCol]);
+                                Drawing.Renderer.Draw( new string(canvasCharMap[y], strPos, x - strPos + 1), colorDict[prevFCol], colorDict[prevBCol], strPos + contentPosition.X, y + contentPosition.Y);
 
-                                strPos = x;
+                                strPos = x + 1;
                                 prevBCol = curBCol;
                                 prevFCol = curFCol;
                             }
                         }
 
-                        Drawing.Renderer.Draw(retStr, startpos + contentPosition.X, y + contentPosition.Y);
                         for (int i = startpos; i <= endpos; i++)
                             refreshMap[y, i] = false;
                         refreshMap[y, contentSize.X] = false;
@@ -315,13 +299,12 @@ namespace PiwotDrawingLib.UI.Containers
 
                 }
             }
-            canvasNeedsRedraw = false;
         }
 
         protected override void DrawWindow()
         {
             base.DrawWindow();
-            Drawing.Renderer.Draw(Name, position.X + (size.X - Name.Length) / 2, position.Y);
+            Drawing.Renderer.DrawFormated(Name, position.X + (size.X - Name.Length) / 2, position.Y);
         }
 
         protected int TryAddColor(string hex)

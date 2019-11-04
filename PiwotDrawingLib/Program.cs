@@ -7,6 +7,9 @@ using System.Diagnostics;
 using System.Threading;
 using PiwotDrawingLib.Drawing;
 using PiwotToolsLib.PMath;
+using System.Text;
+using System.Activities;
+using System.Runtime.InteropServices;
 
 namespace PiwotDrawingLib
 {
@@ -15,37 +18,26 @@ namespace PiwotDrawingLib
 
         static void Main(string[] args)
         {
-            //Renderer.WindowSize = new Int2(200, 50);
-            //Renderer.DebugMode = true;
-            //Renderer.AsyncMode = true;
-            //Renderer.AsyncFrameLenght = 100;
-            Console.OutputEncoding = System.Text.Encoding.UTF8;
-            Renderer.WindowSize = new Int2(150, 50); 
-            
+            Renderer.WindowSize = new Int2(150, 50);
+            Renderer.AsyncDrawing = false;
+
             UI.Containers.FunctionDisplay fd = new UI.Containers.FunctionDisplay(new Int2(0, 0), new Int2(150, 50), "Main menu", Misc.Boxes.BoxType.round, (x) => x);
             fd.Draw();
             float f;
             long time = 0;
-            Stopwatch stopwatch = new Stopwatch();
             for(int i = 0; i < 1000; i++)
             {
-                stopwatch.Restart();
                 for (int j = 0; j < 1; j++)
                 {
-                    f = (float)Rand.Double();
-                    fd.Function = (x) => (x + f - 0.5f) * (x + f - 0.5f);
+                    f = (float)Rand.Double() * 2;
+                    fd.Function = (x) => (x + f - 1) * (x + f - 1);
                     
                     fd.RefreshContent();
+                    Renderer.ForcePrint();
+                    Thread.Sleep(200);
                 }
-                stopwatch.Stop();
-                fd.TestDraw();
-                
-                Renderer.Draw(stopwatch.ElapsedMilliseconds + " ",0,0);
-                Renderer.Print();
-                time += stopwatch.ElapsedMilliseconds;
             }
             time /= 100;
-            Renderer.Draw(time + " ", 0, 0);
             
             /*
             Stopwatch sw = new Stopwatch();

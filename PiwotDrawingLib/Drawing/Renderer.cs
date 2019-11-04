@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Collections.Concurrent;
+using System.Threading;
 using Pastel;
 using PiwotToolsLib.PMath;
 
@@ -21,25 +21,21 @@ namespace PiwotDrawingLib.Drawing
             {
                 if (value == null)
                     throw new ArgumentNullException();
-                if (value < Int2.One)
+                if (value < Int2.One || value > maxWindowSize)
                     throw new Exceptions.InvalidWindowSizeException();
                 if (value == windowSize)
                     return;
                 windowSize = value;
                 ResizeCanvas(new Int2(windowSize.X, windowSize.Y));
+                Console.SetWindowSize(windowSize.X, windowSize.Y+1);
             }
         }
-        
-
-
 
         static string defFHex = "FFFFFF";
         static string defBHex = "000000";
         static string defFHexTag = $"<cfFFFFFF>";
         static string defBHexTag = $"<cb000000>";
 
-
-        static int drawCOunt = 0;
         static int[,] frameFrontColorMap;
         static int[,] frameBackColorMap;
         static char[][] frameCharMap;
@@ -55,30 +51,161 @@ namespace PiwotDrawingLib.Drawing
 
         static int colorDictLength;
 
+        static int frameLenght;
+        public static int FrameLenght
+        {
+            get
+            {
+                return frameLenght;
+            }
+            set
+            {
+                if(value < 0)
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+                frameLenght = value;
+            }
+        }
 
+        static Thread drawingThread;
+        static Thread dequeuingThread;
+
+        static bool nowWrittingRaw;
+        static bool nowDrawingFrame;
+        static readonly ConcurrentQueue<DrawingRequest> drawingRequests;
+        static long time;
+
+        static bool asyncDrawing;
+        public static bool AsyncDrawing
+        {
+            get
+            {
+                return asyncDrawing;
+            }
+            set
+            {
+                if (asyncDrawing == value)
+                    return;
+                asyncDrawing = value;
+                if(asyncDrawing)
+                {
+                    drawingThread = new Thread(PrintingLoop);
+                    dequeuingThread = new Thread(DequeuingLoop);
+                    drawingThread.Start();
+                    dequeuingThread.Start();
+                }
+                else
+                {
+                    drawingThread.Abort();
+                    dequeuingThread.Abort();
+                }
+            }
+        }
+
+        static bool useColor;
+        public static bool UseColor
+        {
+            get
+            {
+                return useColor;
+            }
+            set
+            {
+                useColor = value;
+                if(!useColor)
+                {
+                    colorDict[0] = defFHex;
+                    colorDict[1] = defBHex;
+                }
+            }
+        }
+        
 
         static Renderer()
         {
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+            Console.CursorVisible = false;
             windowSize = new Int2(Console.WindowWidth, Console.WindowHeight);
-            maxWindowSize = new Int2(Console.LargestWindowWidth, Console.LargestWindowHeight);
+            maxWindowSize = new Int2(Console.LargestWindowWidth, Console.LargestWindowHeight-1);
             CreateCanvas();
             colorDictLength = 256;
             colorDict = new string[colorDictLength];
             colorDict[0] = defFHex;
             colorDict[1] = defBHex;
-            
+            colorPoint = 1;
+            nowWrittingRaw = false;
+            nowDrawingFrame = false;
+            frameLenght = 30;
+            drawingRequests = new ConcurrentQueue<DrawingRequest>();
+            drawingThread = new Thread(PrintingLoop);
+            dequeuingThread = new Thread(DequeuingLoop);
+            time = 0;
+            drawingThread.Start();
+            dequeuingThread.Start();
+            asyncDrawing = true;
+            useColor = true;
         }
 
-        public static void DrawCanvas()
+        private static void PrintingLoop()
         {
-            for(int y = 0; y < canvasSize.Y; y++)
+            System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+            int sleepTime;
+            while(true)
             {
-                RawWrite(new string(canvasCharMap[y]), canvasSize.X, y);
+                stopwatch.Restart();
+                ForcePrint();
+                sleepTime = frameLenght - (int)stopwatch.ElapsedMilliseconds;
+                time += stopwatch.ElapsedMilliseconds;
+                if (time >= 1000)
+                {
+                    time = 0;
+                    GC.Collect();
+                }
+                if (sleepTime > 0)
+                    Thread.Sleep(sleepTime);
+                 
+
+            }
+        }
+        private static void DequeuingLoop()
+        {
+            
+            while (true)
+            {
+                while (nowDrawingFrame) { }
+                if (drawingRequests.TryDequeue(out DrawingRequest dr))
+                {
+                    DrawOnCanvas(dr.Text, dr.FID, dr.BID, dr.X, dr.Y);
+
+
+                }
             }
         }
 
-        public static void Print()
+        static void DrawOnCanvas(string Text, int FID, int BID, int x, int y)
         {
+            for (int i = 0; i < Text.Length && x < canvasSize.X; i++)
+            {
+                if (x >= 0)
+                {
+                    frameCharMap[y][x] = Text[i];
+
+                    frameFrontColorMap[y, x] = FID;
+
+                    frameBackColorMap[y, x] = BID;
+                    
+                }
+
+                x++;
+
+            }
+            refreshMap[y, canvasSize.X] = true;
+        }
+
+        public static void ForcePrint()
+        {
+            nowDrawingFrame = true;
             int startpos;
             int endpos;
             int strPos;
@@ -88,42 +215,24 @@ namespace PiwotDrawingLib.Drawing
             int prevFCol;
             string retStr;
             ApplyNewFrame();
-            //DrawCanvas();
-            //Console.ReadKey(true);
-            drawCOunt++;
-            //Rendering.Renderer.SyncWrite($"STOP 7: {canvasSize}  ", 100, 7);
-            //DrawMap();
+
             for (int y = 0; y < canvasSize.Y; y++)
             {
-                //Console.WriteLine();
-                // Console.Write($"{y}");
                 if (refreshMap[y, canvasSize.X])
                 {
-                    //Console.Write($"!");
                     startpos = -1;
                     endpos = -1;
                     retStr = "";
-                    //Rendering.Renderer.Write("STOP 9", 100, 9);
-                    for (int x = 0; startpos < 0 && x < canvasSize.X; x++)
-                    {
-                        
+
+                    for (int x = 0; startpos < 0 && x < canvasSize.X; x++) 
                         if (refreshMap[y, x])
-                        {
                             startpos = x;
-                        }
-                    }
-                    //Rendering.Renderer.Write($"STOP 10 {startpos} ", 100, 10);
+
                     if (startpos >= 0)
                     {
                         for (int x = canvasSize.X - 1; endpos < 0 && x >= 0 && x >= startpos; x--)
-                        {
-                            //Renderer.SyncWrite(" ", x + 50, y);
-                            //Rendering.Renderer.Write($"STOP 11 {x}  ", 100, 11);
                             if (refreshMap[y, x])
-                            {
                                 endpos = x;
-                            }
-                        }
 
                         prevFCol = canvasFrontColorMap[y, startpos];
                         prevBCol = canvasBackColorMap[y, startpos];
@@ -132,7 +241,6 @@ namespace PiwotDrawingLib.Drawing
                         strPos = startpos;
                         for (int x = startpos; x <= endpos; x++)
                         {
-                            //Rendering.Renderer.Write($"STOP 12 {x}  ", 100, 12);
                             if (x < endpos)
                             {
                                 curFCol = canvasFrontColorMap[y, x + 1];
@@ -146,8 +254,9 @@ namespace PiwotDrawingLib.Drawing
                                 prevBCol = curBCol;
                                 prevFCol = curFCol;
                             }
-                            //Renderer.SyncWrite("X", x + 50, y);
                         }
+
+                        while (nowWrittingRaw) { } 
 
                         RawWrite(retStr, startpos, y);
                         for (int i = startpos; i <= endpos; i++)
@@ -158,11 +267,14 @@ namespace PiwotDrawingLib.Drawing
 
                 }
             }
+            nowDrawingFrame = false;
         }
-        private static void RawWrite(string text, int x, int y)
+        public static void RawWrite(string text, int x, int y)
         {
+            nowWrittingRaw = true;
             Console.SetCursorPosition(x, y);
             Console.Write(text);
+            nowWrittingRaw = false;
         }
 
 
@@ -189,15 +301,13 @@ namespace PiwotDrawingLib.Drawing
         }
 
 
-        public static void Draw(string text, int x, int y)
+        public static void DrawFormated(string text, int x, int y)
         {
             //RawWrite(text, x, y);
             text = text.Replace("</cf>", defFHexTag);
             text = text.Replace("</cb>", defBHexTag);
             string curFHex = defFHex;
             string curBHex = defBHex;
-            int curFID = 0;
-            int curBID = 1;
             int pos = text.IndexOf("<c");
             int prevPos = 0;
             bool isBackground;
@@ -235,12 +345,12 @@ namespace PiwotDrawingLib.Drawing
                 if (isBackground)
                 {
                     curBHex = text.Substring(pos + 3, 6);
-                    curBID = TryAddColor(curBHex);
+                    TryAddColor(curBHex);
                 }
                 else
                 {
                     curFHex = text.Substring(pos + 3, 6);
-                    curFID = TryAddColor(curFHex);
+                    TryAddColor(curFHex);
                 }
 
                 prevPos = pos + 10;
@@ -257,30 +367,36 @@ namespace PiwotDrawingLib.Drawing
 
         public static void Draw(string text, string foregroundHex, string backgroundHex, int x, int y)
         {
-            Draw(text, TryAddColor(foregroundHex), TryAddColor(backgroundHex), x, y);
+            if (useColor)
+            {
+                Draw(text, TryAddColor(foregroundHex), TryAddColor(backgroundHex), x, y);
+            }
+            else
+            {
+                Draw(text, 0, 1, x, y);
+            }
+        }
+
+        public static void Draw(string text, int x, int y)
+        {
+            Draw(text, 0, 1, x, y);
         }
 
         private static void Draw(string text, int fID, int bID, int x, int y)
         {
-            if (y >= canvasSize.Y || y < 0)
+            if (y >= canvasSize.Y || y < 0 || x > canvasSize.X || text.Length == 0)
             {
                 return;
             }
-            for (int i = 0; i < text.Length && x < canvasSize.X; i++)
+            if (asyncDrawing)
             {
-                if (x >= 0)
-                {
-                    frameCharMap[y][x] = text[i];
-
-                    frameFrontColorMap[y, x] = fID;
-
-                    frameBackColorMap[y, x] = bID;
-                }
-
-                x++;
-
+                drawingRequests.Enqueue(new DrawingRequest(text, fID, bID, x, y));
             }
-            refreshMap[y, canvasSize.X] = true;
+            else
+            {
+                DrawOnCanvas(text, fID, bID, x, y);
+            }
+            
         }
 
         
@@ -330,15 +446,16 @@ namespace PiwotDrawingLib.Drawing
 
         private static int TryAddColor(string hex)
         {
-            colorPoint++;
-            if (colorPoint >= colorDict.Length)
-                colorPoint = 0;
-
             for (int i = 0; i < colorDict.Length; i++)
             {
                 if (colorDict[i] == hex)
+                {
                     return i;
+                }
             }
+            colorPoint++;
+            if (colorPoint >= colorDict.Length)
+                colorPoint = 2;
             colorDict[colorPoint] = hex;
 
             return colorPoint;

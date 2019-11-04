@@ -132,7 +132,7 @@ namespace PiwotDrawingLib.UI.Containers
             for (int y = 0; y < size.Y; y++)
             {
                 
-                Drawing.Renderer.Draw(fullEmptyLine, position.X, position.Y + y);
+                Drawing.Renderer.DrawFormated(fullEmptyLine, position.X, position.Y + y);
                 
             }
             
