@@ -19,7 +19,6 @@ namespace PiwotDrawingLib
         static void Main(string[] args)
         {
             Renderer.WindowSize = new Int2(150, 50);
-            Renderer.AsyncDrawing = false;
 
             UI.Containers.FunctionDisplay fd = new UI.Containers.FunctionDisplay(new Int2(0, 0), new Int2(150, 50), "Main menu", Misc.Boxes.BoxType.round, (x) => x);
             fd.Draw();
@@ -33,7 +32,6 @@ namespace PiwotDrawingLib
                     fd.Function = (x) => (x + f - 1) * (x + f - 1);
                     
                     fd.RefreshContent();
-                    Renderer.ForcePrint();
                     Thread.Sleep(200);
                 }
             }

@@ -3,6 +3,8 @@ using System.Collections.Concurrent;
 using System.Threading;
 using Pastel;
 using PiwotToolsLib.PMath;
+using Microsoft.Win32.SafeHandles;
+using System.IO;
 
 namespace PiwotDrawingLib.Drawing
 {
@@ -27,12 +29,12 @@ namespace PiwotDrawingLib.Drawing
                     return;
                 windowSize = value;
                 ResizeCanvas(new Int2(windowSize.X, windowSize.Y));
-                Console.SetWindowSize(windowSize.X, windowSize.Y+1);
+                SetupConsoleWindow();
             }
         }
 
-        static string defFHex = "FFFFFF";
-        static string defBHex = "000000";
+        static string defFHex = "404040";
+        static string defBHex = "101010";
         static string defFHexTag = $"<cfFFFFFF>";
         static string defBHexTag = $"<cb000000>";
 
@@ -125,6 +127,7 @@ namespace PiwotDrawingLib.Drawing
         static Renderer()
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
+            
             Console.CursorVisible = false;
             windowSize = new Int2(Console.WindowWidth, Console.WindowHeight);
             maxWindowSize = new Int2(Console.LargestWindowWidth, Console.LargestWindowHeight-1);
@@ -214,24 +217,29 @@ namespace PiwotDrawingLib.Drawing
             int prevBCol;
             int prevFCol;
             string retStr;
+            bool forceFull = false;
             ApplyNewFrame();
-
+            if (Console.WindowWidth != windowSize.X || Console.WindowHeight != windowSize.Y)
+            {
+                SetupConsoleWindow();
+                forceFull = true;
+            }
             for (int y = 0; y < canvasSize.Y; y++)
             {
-                if (refreshMap[y, canvasSize.X])
+                if (refreshMap[y, canvasSize.X] || forceFull)
                 {
                     startpos = -1;
                     endpos = -1;
                     retStr = "";
 
                     for (int x = 0; startpos < 0 && x < canvasSize.X; x++) 
-                        if (refreshMap[y, x])
+                        if (refreshMap[y, x] || forceFull)
                             startpos = x;
 
                     if (startpos >= 0)
                     {
                         for (int x = canvasSize.X - 1; endpos < 0 && x >= 0 && x >= startpos; x--)
-                            if (refreshMap[y, x])
+                            if (refreshMap[y, x] || forceFull)
                                 endpos = x;
 
                         prevFCol = canvasFrontColorMap[y, startpos];
@@ -272,8 +280,16 @@ namespace PiwotDrawingLib.Drawing
         public static void RawWrite(string text, int x, int y)
         {
             nowWrittingRaw = true;
-            Console.SetCursorPosition(x, y);
-            Console.Write(text);
+            
+            try
+            {
+                Console.SetCursorPosition(x, y);
+                Console.Write(text);
+            }
+            catch
+            {
+                
+            }
             nowWrittingRaw = false;
         }
 
@@ -572,6 +588,15 @@ namespace PiwotDrawingLib.Drawing
             refreshMap = newRefreshMap;
         }
 
+        private static void SetupConsoleWindow()
+        {
+            Console.SetWindowPosition(0, 0);
+            Console.SetWindowSize(windowSize.X, windowSize.Y);
+            Console.SetBufferSize(windowSize.X, windowSize.Y);
+            Console.SetWindowPosition(0, 0);
+            Console.CursorVisible = false;
+
+        }
 
         #region Pastel
 
