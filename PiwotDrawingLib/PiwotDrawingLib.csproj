@@ -22,6 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\PiwotDrawingLib.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -65,7 +66,8 @@
     <Compile Include="UI\Containers\Canvas_Legacy.cs" />
     <Compile Include="UI\Containers\Canvas.cs" />
     <Compile Include="UI\Containers\Container.cs" />
-    <Compile Include="UI\Containers\FunctionDisplay.cs" />
+    <Compile Include="UI\Containers\PictureBox.cs" />
+    <Compile Include="UI\Containers\SimpleFunctionDisplay.cs" />
     <Compile Include="UI\Controls\AccessableControl.cs" />
     <Compile Include="UI\Controls\ActionControl.cs" />
     <Compile Include="UI\Containers\Menu.cs" />

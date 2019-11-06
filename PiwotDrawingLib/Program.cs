@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using Pastel;
 using System.IO;
-using System.Diagnostics;
+using System.Drawing;
 using System.Threading;
 using PiwotDrawingLib.Drawing;
 using PiwotToolsLib.PMath;
@@ -18,9 +18,25 @@ namespace PiwotDrawingLib
 
         static void Main(string[] args)
         {
-            Renderer.WindowSize = new Int2(150, 50);
+            Renderer.WindowSize = new Int2(100, 50);
+            Renderer.FrameLenght = 1000;
+            Bitmap b = new Bitmap("picture.png");
+            Bitmap b2 = new Bitmap("images.png");
+            int counter = 0;
+            UI.Containers.PictureBox pb = new UI.Containers.PictureBox(new Int2(0, 0), new Int2(100, 50), "", Misc.Boxes.BoxType.none, b);
 
-            UI.Containers.FunctionDisplay fd = new UI.Containers.FunctionDisplay(new Int2(0, 0), new Int2(150, 50), "Main menu", Misc.Boxes.BoxType.round, (x) => x);
+            pb.Draw();
+            while (true)
+            {
+                
+                pb.Image = (counter % 2 == 0 ? b : b2);
+                pb.RefreshContent();
+                counter++;
+                Console.ReadKey(true);
+            }
+
+            /*
+            UI.Containers.SimpleFunctionDisplay fd = new UI.Containers.SimpleFunctionDisplay(new Int2(0, 0), new Int2(150, 50), "Main menu", Misc.Boxes.BoxType.round, (x) => x);
             fd.Draw();
             float f;
             long time = 0;
@@ -36,7 +52,7 @@ namespace PiwotDrawingLib
                 }
             }
             time /= 100;
-            
+            */
             /*
             Stopwatch sw = new Stopwatch();
             for (int i = 0; i < 1000; i++)

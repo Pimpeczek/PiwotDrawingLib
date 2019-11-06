@@ -10,6 +10,8 @@ namespace PiwotDrawingLib.UI.Containers
     abstract class Container
     {
         #region Variables
+
+        public enum ContentHandling { ResizeContent, CropContent}
         /// <summary>
         /// Position of the container.
         /// </summary>
@@ -100,11 +102,12 @@ namespace PiwotDrawingLib.UI.Containers
 
         public Container(Int2 position, Int2 size, string name, Misc.Boxes.BoxType boxType)
         {
+            this.boxType = boxType;
             Position = position;
             Size = size;
             Name = name;
             
-            this.boxType = boxType;
+            
         }
 
         /// <summary>
@@ -141,7 +144,6 @@ namespace PiwotDrawingLib.UI.Containers
         protected virtual void DrawWindow()
         {
             IsVIsable = true;
-            Console.ForegroundColor = ConsoleColor.White;
             if (boxType != Misc.Boxes.BoxType.none)
                 Misc.Boxes.DrawBox(boxType, position.X, position.Y, size.X, size.Y);
             //Rendering.Renderer.Write(Name, Position.X + (Size.X - Name.Length) / 2, Position.Y);

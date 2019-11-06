@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Threading;
-using Pastel;
+﻿using Pastel;
 using PiwotToolsLib.PMath;
-using Microsoft.Win32.SafeHandles;
-using System.IO;
 
 namespace PiwotDrawingLib.Drawing
 {
@@ -16,6 +11,18 @@ namespace PiwotDrawingLib.Drawing
         private static Int2 windowSize;
         private static Int2 canvasSize;
 
+
+        public static string WindowTitle
+        {
+            get
+            {
+                return System.Console.Title;
+            }
+            set
+            {
+                System.Console.Title = value;
+            }
+        }
         /// <summary>
         /// Size of the console window. 
         /// </summary>
@@ -28,7 +35,7 @@ namespace PiwotDrawingLib.Drawing
             set
             {
                 if (value == null)
-                    throw new ArgumentNullException();
+                    throw new System.ArgumentNullException();
                 if (value < Int2.One || value > maxWindowSize)
                     throw new Exceptions.InvalidWindowSizeException();
                 if (value == windowSize)
@@ -72,7 +79,7 @@ namespace PiwotDrawingLib.Drawing
             set
             {
                 if (value < 4)
-                    throw new ArgumentOutOfRangeException();
+                    throw new System.ArgumentOutOfRangeException();
                 if (value == colorDictLength)
                     return;
                 if(value > colorDictLength)
@@ -103,7 +110,7 @@ namespace PiwotDrawingLib.Drawing
             {
                 if(value < 0)
                 {
-                    throw new ArgumentOutOfRangeException();
+                    throw new System.ArgumentOutOfRangeException();
                 }
                 frameLenght = value;
             }
@@ -112,11 +119,11 @@ namespace PiwotDrawingLib.Drawing
         /// <summary>
         /// Thread responsible for asynchronous printing.
         /// </summary>
-        static Thread drawingThread;
+        static System.Threading.Thread drawingThread;
         /// <summary>
         /// Thread responsible for asynchronous dequeuing of DrawingRequests. 
         /// </summary>
-        static Thread dequeuingThread;
+        static System.Threading.Thread dequeuingThread;
 
         /// <summary>
         /// Flag used to prevent simultaneous printing.
@@ -127,7 +134,7 @@ namespace PiwotDrawingLib.Drawing
         /// </summary>
         static bool nowDrawingFrame;
 
-        static readonly ConcurrentQueue<DrawingRequest> drawingRequests;
+        static readonly System.Collections.Concurrent.ConcurrentQueue<DrawingRequest> drawingRequests;
         static long time;
 
         static bool asyncDrawing;
@@ -135,7 +142,7 @@ namespace PiwotDrawingLib.Drawing
         /// While set to true: the Renderer will try to refresh canvas every FrameLenght miliseconds.  
         /// <para>While set to false: the ForcePrint method must be invoked by hand in order to refresh canvas.</para>
         /// </summary>
-        public static bool AsyncDrawing
+        public static bool AsyncMode
         {
             get
             {
@@ -148,10 +155,7 @@ namespace PiwotDrawingLib.Drawing
                 asyncDrawing = value;
                 if(asyncDrawing)
                 {
-                    drawingThread = new Thread(PrintingLoop);
-                    dequeuingThread = new Thread(DequeuingLoop);
-                    drawingThread.Start();
-                    dequeuingThread.Start();
+                    
                 }
                 else
                 {
@@ -189,13 +193,13 @@ namespace PiwotDrawingLib.Drawing
         #region Setup
         static Renderer()
         {
-            Console.OutputEncoding = System.Text.Encoding.UTF8;
-            
-            Console.CursorVisible = false;
-            windowSize = new Int2(Console.WindowWidth, Console.WindowHeight);
-            maxWindowSize = new Int2(Console.LargestWindowWidth, Console.LargestWindowHeight-1);
+            System.Console.OutputEncoding = System.Text.Encoding.UTF8;
+            WindowTitle = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
+            System.Console.CursorVisible = false;
+            windowSize = new Int2(System.Console.WindowWidth, System.Console.WindowHeight);
+            maxWindowSize = new Int2(System.Console.LargestWindowWidth, System.Console.LargestWindowHeight-1);
             CreateCanvas();
-            colorDictLength = 256;
+            colorDictLength = 1024;
             colorDict = new string[colorDictLength];
             colorDict[0] = defFHex;
             colorDict[1] = defBHex;
@@ -203,9 +207,9 @@ namespace PiwotDrawingLib.Drawing
             nowWrittingRaw = false;
             nowDrawingFrame = false;
             frameLenght = 30;
-            drawingRequests = new ConcurrentQueue<DrawingRequest>();
-            drawingThread = new Thread(PrintingLoop);
-            dequeuingThread = new Thread(DequeuingLoop);
+            drawingRequests = new System.Collections.Concurrent.ConcurrentQueue<DrawingRequest>();
+            drawingThread = new System.Threading.Thread(PrintingLoop);
+            dequeuingThread = new System.Threading.Thread(DequeuingLoop);
             time = 0;
             drawingThread.Start();
             dequeuingThread.Start();
@@ -326,50 +330,95 @@ namespace PiwotDrawingLib.Drawing
 
         private static void SetupConsoleWindow()
         {
-            Console.SetWindowPosition(0, 0);
-            Console.SetWindowSize(windowSize.X, windowSize.Y);
-            Console.SetBufferSize(windowSize.X, windowSize.Y);
-            Console.SetWindowPosition(0, 0);
-            Console.CursorVisible = false;
+            System.Console.SetWindowPosition(0, 0);
+            System.Console.SetWindowSize(windowSize.X, windowSize.Y);
+            System.Console.SetBufferSize(windowSize.X, windowSize.Y);
+            System.Console.SetWindowPosition(0, 0);
+            System.Console.CursorVisible = false;
 
         }
 
         #endregion
 
-        #region Asynchronous loops
+        #region Asynchronous loops and threading
         private static void PrintingLoop()
         {
-            System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
-            int sleepTime;
-            while(true)
+            try
             {
-                stopwatch.Restart();
-                ForcePrint();
-                sleepTime = frameLenght - (int)stopwatch.ElapsedMilliseconds;
-                time += stopwatch.ElapsedMilliseconds;
-                if (time >= 1000)
+                System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+                int sleepTime;
+                while (true)
                 {
-                    time = 0;
-                    GC.Collect();
+                    stopwatch.Restart();
+                    ForcePrint();
+                    sleepTime = frameLenght - (int)stopwatch.ElapsedMilliseconds;
+                    time += stopwatch.ElapsedMilliseconds;
+                    if (time >= 1000)
+                    {
+                        time = 0;
+                        System.GC.Collect();
+                    }
+                    if (sleepTime > 0)
+                        System.Threading.Thread.Sleep(sleepTime);
                 }
-                if (sleepTime > 0)
-                    Thread.Sleep(sleepTime);
+            }
+            catch(System.Threading.ThreadAbortException)
+            {
+                
             }
         }
 
         private static void DequeuingLoop()
         {
-            while (true)
-            {
-                while (nowDrawingFrame) { }
-                if (drawingRequests.TryDequeue(out DrawingRequest dr))
+            try
+            { 
+                while (true)
                 {
-                    DrawOnCanvas(dr.Text, dr.FID, dr.BID, dr.X, dr.Y);
+                    while (nowDrawingFrame) { }
+                    if (drawingRequests.TryDequeue(out DrawingRequest dr))
+                    {
+                        DrawOnCanvas(dr.Text, dr.FID, dr.BID, dr.X, dr.Y);
 
 
+                    }
                 }
             }
+            catch (System.Threading.ThreadAbortException)
+            {
+
+            }
         }
+
+        /// <summary>
+        /// Aborts printing and queue threads.
+        /// </summary>
+        public static void StopThreads()
+        {
+            drawingThread.Abort();
+            dequeuingThread.Abort();
+        }
+
+        /// <summary>
+        /// Restarts printing and queue threads if AsyncMode is enabled and threads are not already running.
+        /// </summary>
+        public static void RestartThreads()
+        {
+            
+            if (!asyncDrawing)
+                return;
+            if (drawingThread.ThreadState != System.Threading.ThreadState.Running)
+            {
+                drawingThread = new System.Threading.Thread(PrintingLoop);
+                drawingThread.Start();
+            }
+            if (dequeuingThread.ThreadState != System.Threading.ThreadState.Running)
+            {
+                dequeuingThread = new System.Threading.Thread(DequeuingLoop);
+                dequeuingThread.Start();
+            }
+            
+        }
+
         #endregion
 
         #region Canvas Operations
@@ -445,6 +494,39 @@ namespace PiwotDrawingLib.Drawing
                 refreshMap[y, canvasSize.X] = true;
             }
         }
+        /// <summary>
+        /// Creates and enqueues new drawing request.
+        /// </summary>
+        /// <param name="text">String to be printed.</param>
+        /// <param name="fID">Id of the foreground color.</param>
+        /// <param name="bID">Id of the background color.</param>
+        /// <param name="x">Horizontal distance from the top left corner.</param>
+        /// <param name="y">Vertical distance from the top left corner.</param>
+        private static void Draw(string text, int fID, int bID, int x, int y)
+        {
+            if (text.Contains("\n"))
+            {
+                string[] split = text.Split('\n');
+                for (int i = 0; i < split.Length; i++)
+                {
+                    Draw(split[i], fID, bID, x, y + i);
+                }
+                return;
+            }
+            if (y >= canvasSize.Y || y < 0 || x > canvasSize.X || text.Length == 0)
+            {
+                return;
+            }
+            if (asyncDrawing)
+            {
+                drawingRequests.Enqueue(new DrawingRequest(text, fID, bID, x, y));
+            }
+            else
+            {
+                DrawOnCanvas(text, fID, bID, x, y);
+            }
+
+        }
 
         #endregion
 
@@ -465,7 +547,7 @@ namespace PiwotDrawingLib.Drawing
             string retStr;
             bool forceFull = false;
             ApplyNewFrame();
-            if (Console.WindowWidth != windowSize.X || Console.WindowHeight != windowSize.Y)
+            if (System.Console.WindowWidth != windowSize.X || System.Console.WindowHeight != windowSize.Y)
             {
                 SetupConsoleWindow();
                 forceFull = true;
@@ -544,48 +626,14 @@ namespace PiwotDrawingLib.Drawing
             
             try
             {
-                Console.SetCursorPosition(x, y);
-                Console.Write(text);
+                System.Console.SetCursorPosition(x, y);
+                System.Console.Write(text);
             }
             catch
             {
                 
             }
             nowWrittingRaw = false;
-        }
-
-        /// <summary>
-        /// Creates and enqueues new drawing request.
-        /// </summary>
-        /// <param name="text">String to be printed.</param>
-        /// <param name="fID">Id of the foreground color.</param>
-        /// <param name="bID">Id of the background color.</param>
-        /// <param name="x">Horizontal distance from the top left corner.</param>
-        /// <param name="y">Vertical distance from the top left corner.</param>
-        private static void Draw(string text, int fID, int bID, int x, int y)
-        {
-            if (text.Contains("\n"))
-            {
-                string[] split = text.Split('\n');
-                for (int i = 0; i < split.Length; i++)
-                {
-                    Draw(split[i], fID, bID, x, y + i);
-                }
-                return;
-            }
-            if (y >= canvasSize.Y || y < 0 || x > canvasSize.X || text.Length == 0)
-            {
-                return;
-            }
-            if (asyncDrawing)
-            {
-                drawingRequests.Enqueue(new DrawingRequest(text, fID, bID, x, y));
-            }
-            else
-            {
-                DrawOnCanvas(text, fID, bID, x, y);
-            }
-
         }
 
         #endregion
