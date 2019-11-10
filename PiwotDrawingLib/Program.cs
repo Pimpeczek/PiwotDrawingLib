@@ -18,12 +18,13 @@ namespace PiwotDrawingLib
 
         static void Main(string[] args)
         {
-            Renderer.WindowSize = new Int2(100, 50);
-            Renderer.FrameLenght = 1000;
+            Renderer.WindowSize = new Int2(200, 50);
+            Renderer.FrameLenght = 30;
+            Renderer.ColorCount = 10000;
             Bitmap b = new Bitmap("picture.png");
-            Bitmap b2 = new Bitmap("images.png");
+            Bitmap b2 = new Bitmap("image.png");
             int counter = 0;
-            UI.Containers.PictureBox pb = new UI.Containers.PictureBox(new Int2(0, 0), new Int2(100, 50), "", Misc.Boxes.BoxType.none, b);
+            UI.Containers.PictureBox pb = new UI.Containers.PictureBox(new Int2(0, 0), new Int2(200, 50), "", Misc.Boxes.BoxType.round, b);
 
             pb.Draw();
             while (true)

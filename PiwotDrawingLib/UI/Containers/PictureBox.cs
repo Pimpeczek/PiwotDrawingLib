@@ -92,10 +92,39 @@ namespace PiwotDrawingLib.UI.Containers
             }
             
         }
+        /*
+         11111111 FF 255
+         1000 0000 80 128
+         1100 0000 C0 192
+         1110 0000 E0 224
+         1111 0000 F0 240
+         1111 1000 F8 248
+         1111 1100 FC 252
+         1111 1110 FE 254
+         1111 1111 FF 255
+          
+         
+        */
+
+
+
+
+        static uint mod0 = 0xFFFFFFFF;
+        static uint mod24 = 0xFFFFFFFF;
+        static uint mod21 = 0xFFFEFEFE;
+        static uint mod18 = 0xFFFCFCFC;
+        static uint mod15 = 0xFFF8F8F8;
+        static uint mod12 = 0xFFF0F0F0;
+        static uint mod9 = 0xFFE0E0E0;
+        static uint mod6 = 0xFFC0C0C0;
+        static uint mod3 = 0xFF808080;
+        
 
         protected string GetHex(Color c)
         {
+            return (c.ToArgb() & mod18).ToString("X");
             return c.ToArgb().ToString("X").Substring(2);
+            //return $"{c.R.ToString("X").PadLeft(2, '0')}{c.G.ToString("X").PadLeft(2, '0')}{c.B.ToString("X").PadLeft(2, '0')}";
         }
 
         protected override void DrawWindow()
