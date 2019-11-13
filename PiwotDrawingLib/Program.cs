@@ -21,9 +21,11 @@ namespace PiwotDrawingLib
             Renderer.WindowSize = new Int2(200, 50);
             Renderer.FrameLenght = 30;
             Renderer.ColorCount = 10000;
-            Bitmap b = new Bitmap("picture.png");
-            Bitmap b2 = new Bitmap("image.png");
+            Bitmap b = new Bitmap("image.jpg");
+            Bitmap b2 = new Bitmap("picture.jpg");
+
             int counter = 0;
+
             UI.Containers.PictureBox pb = new UI.Containers.PictureBox(new Int2(0, 0), new Int2(200, 50), "", Misc.Boxes.BoxType.round, b);
 
             pb.Draw();
