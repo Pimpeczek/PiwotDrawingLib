@@ -9,7 +9,7 @@ namespace PiwotDrawingLib.Drawing
     class DrawingRequest
     {
         public string Text { get; }
-        public System.Drawing.color FID { get; }
+        public string FID { get; }
         public string BID { get; }
         public int X { get; }
         public int Y { get; }
