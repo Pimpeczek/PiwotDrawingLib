@@ -15,18 +15,20 @@ namespace PiwotDrawingLib
 {
     class Program
     {
-
+        [DllImport("kernel32.dll", SetLastError = true)]
+        private static extern IntPtr GetConsoleWindow();
         static void Main(string[] args)
         {
             Renderer.WindowSize = new Int2(200, 50);
             Renderer.FrameLenght = 30;
             Renderer.ColorCount = 10000;
-            Bitmap b = new Bitmap("image.jpg");
+            
             Bitmap b2 = new Bitmap("picture.jpg");
 
+            Bitmap b = new Bitmap("image.jpg");
             int counter = 0;
 
-            UI.Containers.PictureBox pb = new UI.Containers.PictureBox(new Int2(0, 0), new Int2(200, 50), "", Misc.Boxes.BoxType.round, b);
+            UI.Containers.PictureBox pb = new UI.Containers.PictureBox(new Int2(0, 0), new Int2(200, 50), "", Misc.Boxes.BoxType.none, b);
 
             pb.Draw();
             while (true)

@@ -69,13 +69,13 @@ namespace PiwotDrawingLib.UI.Containers
         {
             int yPos;
             int yDrawPos;
-            if(bitmap.Height % 2 == 1 )
+            if (bitmap.Height % 2 == 1 )
             {
                 yDrawPos = bitmap.Height / 2;
                 yPos = bitmap.Height - 1;
                 for (int x = bitmap.Width - 1; x >= 0; x--)
                 {
-                        Drawing.Renderer.Draw("▄", "000000", GetHex(bitmap.GetPixel(x, yPos)), contentPosition.X + x, contentPosition.Y + yDrawPos);
+                    Drawing.Renderer.Draw("▄", "000000", GetHex(bitmap.GetPixel(x, yPos)), contentPosition.X + x, contentPosition.Y + yDrawPos);
                 }
             }
             else
@@ -120,9 +120,21 @@ namespace PiwotDrawingLib.UI.Containers
         static uint mod3 = 0xFF808080;
         
 
+        protected void CutColorBits()
+        {
+            for (int y = 0; y < bitmap.Height; y++)
+            {
+                for (int x = 0; x < bitmap.Width; x++)
+                {
+                    bitmap.SetPixel(x, y, Color.FromArgb((int)((bitmap.GetPixel(x, y).ToArgb()) & mod12)));
+                }
+            }
+        }
+
         protected string GetHex(Color c)
         {
-            return (c.ToArgb() & mod18).ToString("X");
+            return c.ToArgb().ToString("X");
+            return (c.ToArgb() & mod24).ToString("X");
             return c.ToArgb().ToString("X").Substring(2);
             //return $"{c.R.ToString("X").PadLeft(2, '0')}{c.G.ToString("X").PadLeft(2, '0')}{c.B.ToString("X").PadLeft(2, '0')}";
         }
@@ -146,8 +158,8 @@ namespace PiwotDrawingLib.UI.Containers
             else
             {
                 bitmap = Bitmaper.ResizeBitmap(image, contentSize.X, contentSize.Y * 2);
-
             }
+            CutColorBits();
         }
     }
 }
