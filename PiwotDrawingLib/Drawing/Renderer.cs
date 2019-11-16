@@ -60,39 +60,6 @@ namespace PiwotDrawingLib.Drawing
         static char[][] canvasCharMap;
 
         static bool[,] refreshMap;
-        static int colorPoint;
-
-        static string[] colorDict;
-
-        static int colorDictLength;
-
-        /// <summary>
-        /// Tells the Renderer how many colors can he use. More colors means slower printing.
-        /// <para>If there are more colors used than avaliable IDs color artifacts might be created.</para>
-        /// </summary>
-        public static int ColorCount
-        {
-            get
-            {
-                return colorDictLength;
-            }
-            set
-            {
-                if (value < 4)
-                    throw new System.ArgumentOutOfRangeException();
-                if (value == colorDictLength)
-                    return;
-                if(value > colorDictLength)
-                {
-                    PiwotToolsLib.Data.Arrays.ExpandArray(ref colorDict, value, "");
-                }
-                else
-                {
-                    PiwotToolsLib.Data.Arrays.SubArray(ref colorDict, 0, value);
-                }
-                colorDictLength = value;
-            }
-        }
 
 
         static int frameLenght;
@@ -181,11 +148,6 @@ namespace PiwotDrawingLib.Drawing
             set
             {
                 useColor = value;
-                if(!useColor)
-                {
-                    colorDict[0] = defFHex;
-                    colorDict[1] = defBHex;
-                }
             }
         }
         #endregion
@@ -199,12 +161,7 @@ namespace PiwotDrawingLib.Drawing
             windowSize = new Int2(System.Console.WindowWidth, System.Console.WindowHeight);
             maxWindowSize = new Int2(System.Console.LargestWindowWidth, System.Console.LargestWindowHeight-1);
             CreateCanvas();
-            
-            colorDictLength = 1024;
-            colorDict = new string[colorDictLength];
-            colorDict[0] = defFHex;
-            colorDict[1] = defBHex;
-            colorPoint = 1;
+           
             nowWrittingRaw = false;
             nowDrawingFrame = false;
             frameLenght = 30;
@@ -899,30 +856,6 @@ namespace PiwotDrawingLib.Drawing
         }
 
 
-        #endregion
-
-        #region Colors
-        /// <summary>
-        /// Tries to add new hex representation of color to the dictionary. Returns id of this color.
-        /// </summary>
-        /// <param name="hex"></param>
-        /// <returns></returns>
-        private static int TryAddColor(string hex)
-        {
-            for (int i = 0; i < colorDict.Length; i++)
-            {
-                if (colorDict[i] == hex)
-                {
-                    return i;
-                }
-            }
-            colorPoint++;
-            if (colorPoint >= colorDict.Length)
-                colorPoint = 2;
-            colorDict[colorPoint] = hex;
-
-            return colorPoint;
-        }
         #endregion
 
         #region Pastel
