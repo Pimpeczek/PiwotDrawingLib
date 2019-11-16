@@ -295,11 +295,6 @@ namespace PiwotDrawingLib.Drawing
                     newCanvasBackColorMap[i, j] = canvasBackColorMap[i, j];
 
                     newRefreshMap[i, j] = refreshMap[i, j];
-
-                    if (newCanvasFrontColorMap[i, j] == null)
-                    {
-                        System.Console.WriteLine($"XDDD {i} {j}");
-                    }
                 }
                 for (int j = canvasSize.X; j < newSize.X; j++)
                 {
@@ -332,10 +327,6 @@ namespace PiwotDrawingLib.Drawing
                     newCanvasFrontColorMap[i, j] = defFHex;
                     newCanvasBackColorMap[i, j] = defBHex;
                     newRefreshMap[i, j] = false;
-                    if(j == 140)
-                    {
-                        string loool = defFHex;
-                    }
                 }
             }
             canvasSize = new Int2(newSize);
@@ -348,16 +339,6 @@ namespace PiwotDrawingLib.Drawing
             canvasCharMap = newCanvasCharMap;
 
             refreshMap = newRefreshMap;
-            for (int i = 0; i < canvasSize.Y; i++)
-            {
-                for (int j = 0; j < canvasSize.X; j++)
-                {
-                    if (newCanvasFrontColorMap[i, j] == null)
-                    {
-                        //System.Console.WriteLine($"XDDD {i} {j}" );
-                    }
-                }
-            }
         }
 
         private static void SetupConsoleWindow()
@@ -396,7 +377,7 @@ namespace PiwotDrawingLib.Drawing
                     if (time >= 1000)
                     {
                         time = 0;
-                        System.GC.Collect();
+                        //System.GC.Collect();
                     }
                     if (sleepTime > 0)
                         System.Threading.Thread.Sleep(sleepTime);
