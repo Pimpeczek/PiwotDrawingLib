@@ -7,6 +7,8 @@ namespace PiwotDrawingLib.Drawing
     {
 
         #region Variables
+
+
         private static Int2 maxWindowSize;
         private static Int2 windowSize;
         private static Int2 canvasSize;
