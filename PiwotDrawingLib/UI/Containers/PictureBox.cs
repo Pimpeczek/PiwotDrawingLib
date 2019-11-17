@@ -9,8 +9,46 @@ namespace PiwotDrawingLib.UI.Containers
 {
     class PictureBox : Container
     {
+        static uint usedMod = 0xFFFFFFFF;
+        static readonly uint mod24 = 0xFFFFFFFF;
+        static readonly uint mod21 = 0xFFFEFEFE;
+        static readonly uint mod18 = 0xFFFCFCFC;
+        static readonly uint mod15 = 0xFFF8F8F8;
+        static readonly uint mod12 = 0xFFF0F0F0;
+        static readonly uint mod9 = 0xFFE0E0E0;
+        static readonly uint mod6 = 0xFFC0C0C0;
+        static readonly uint mod3 = 0xFF808080;
+        static readonly uint[] mods = new uint[8] { mod24, mod21, mod18, mod15, mod12, mod9, mod6, mod3 };
+
+        public enum ColorEncoding { Bit24, Bit21, Bit18, Bit15, Bit12, Bit9, Bit6, Bit3 };
+
+        private ColorEncoding bitsPerColor;
+
+        /// <summary>
+        /// How many bits should be used to store information about color on single pixel. Each color(R, G, B) gests a third of given bit count.
+        /// </summary>
+        public ColorEncoding BitsPerColor
+        {
+            get
+            {
+                return bitsPerColor;
+            }
+            set
+            {
+                if (value == bitsPerColor)
+                    return;
+                bitsPerColor = value;
+                usedMod = mods[(int)bitsPerColor];
+                RefreshBitmap();
+            }
+        }
+
         protected Bitmap bitmap;
         protected Bitmap image;
+
+        /// <summary>
+        /// The image used as a base for this PictureBox.
+        /// </summary>
         public Bitmap Image
         {
             get
@@ -24,18 +62,22 @@ namespace PiwotDrawingLib.UI.Containers
             }
         }
 
-        protected ContentHandling overflowHandling;
-        public ContentHandling OverflowHandling
+        protected ContentHandling sizeDifferenceHandling;
+
+        /// <summary>
+        /// Determines how and if the PictureBox should resize the given source image.
+        /// </summary>
+        public ContentHandling SizeDifferenceHandling
         {
             get
             {
-                return overflowHandling;
+                return sizeDifferenceHandling;
             }
             set
             {
-                if (value == overflowHandling)
+                if (value == sizeDifferenceHandling)
                     return;
-                overflowHandling = value;
+                sizeDifferenceHandling = value;
                 RefreshBitmap();
                 DrawContent();
             }
@@ -54,7 +96,7 @@ namespace PiwotDrawingLib.UI.Containers
         void Setup(Bitmap image)
         {
             Image = image;
-            overflowHandling = ContentHandling.ResizeContent;
+            sizeDifferenceHandling = ContentHandling.ResizeContent;
         }
 
         /// <summary>
@@ -69,7 +111,7 @@ namespace PiwotDrawingLib.UI.Containers
         {
             int yPos;
             int yDrawPos;
-            if (bitmap.Height % 2 == 1 )
+            if (bitmap.Height % 2 == 1)
             {
                 yDrawPos = bitmap.Height / 2;
                 yPos = bitmap.Height - 1;
@@ -82,43 +124,15 @@ namespace PiwotDrawingLib.UI.Containers
             {
                 yPos = bitmap.Height - 2;
             }
-            
+
             for (int x = bitmap.Width - 1; x >= 0; x--)
             {
-                for (int y = yPos; y >= 0 ; y-=2)
+                for (int y = yPos; y >= 0; y -= 2)
                 {
-                    Drawing.Renderer.Draw("▄", GetHex(bitmap.GetPixel(x, y+1)), GetHex(bitmap.GetPixel(x, y)), contentPosition.X + x, contentPosition.Y + y /2);
-                } 
+                    Drawing.Renderer.Draw("▄", GetHex(bitmap.GetPixel(x, y + 1)), GetHex(bitmap.GetPixel(x, y)), contentPosition.X + x, contentPosition.Y + y / 2);
+                }
             }
-            
         }
-        /*
-         11111111 FF 255
-         1000 0000 80 128
-         1100 0000 C0 192
-         1110 0000 E0 224
-         1111 0000 F0 240
-         1111 1000 F8 248
-         1111 1100 FC 252
-         1111 1110 FE 254
-         1111 1111 FF 255
-          
-         
-        */
-
-
-
-
-        static uint mod0 = 0xFFFFFFFF;
-        static uint mod24 = 0xFFFFFFFF;
-        static uint mod21 = 0xFFFEFEFE;
-        static uint mod18 = 0xFFFCFCFC;
-        static uint mod15 = 0xFFF8F8F8;
-        static uint mod12 = 0xFFF0F0F0;
-        static uint mod9 = 0xFFE0E0E0;
-        static uint mod6 = 0xFFC0C0C0;
-        static uint mod3 = 0xFF808080;
-        
 
         protected void CutColorBits()
         {
@@ -134,9 +148,6 @@ namespace PiwotDrawingLib.UI.Containers
         protected string GetHex(Color c)
         {
             return c.ToArgb().ToString("X");
-            return (c.ToArgb() & mod24).ToString("X");
-            return c.ToArgb().ToString("X").Substring(2);
-            //return $"{c.R.ToString("X").PadLeft(2, '0')}{c.G.ToString("X").PadLeft(2, '0')}{c.B.ToString("X").PadLeft(2, '0')}";
         }
 
         protected override void DrawWindow()
@@ -146,18 +157,22 @@ namespace PiwotDrawingLib.UI.Containers
         }
         protected void RefreshBitmap()
         {
-            if(image == null)
+            if (image == null)
             {
                 bitmap = new Bitmap(contentSize.X, contentSize.Y * 2);
             }
 
-            if(overflowHandling == ContentHandling.CropContent)
+            if (sizeDifferenceHandling == ContentHandling.CropContent)
             {
-                bitmap = Bitmaper.CropBitmap(image, 0,0, contentSize.X, contentSize.Y * 2);
+                bitmap = Bitmaper.CropBitmap(image, 0, 0, contentSize.X, contentSize.Y * 2);
+            }
+            else if (sizeDifferenceHandling == ContentHandling.FitContent)
+            {
+                bitmap = Bitmaper.ResizeToFit(image, contentSize.X, contentSize.Y * 2, Color.Black);
             }
             else
             {
-                bitmap = Bitmaper.ResizeBitmap(image, contentSize.X, contentSize.Y * 2);
+                bitmap = Bitmaper.StreachToSize(image, contentSize.X, contentSize.Y * 2);
             }
             CutColorBits();
         }

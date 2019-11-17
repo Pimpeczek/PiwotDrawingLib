@@ -21,14 +21,16 @@ namespace PiwotDrawingLib
         {
             Renderer.WindowSize = new Int2(200, 50);
             Renderer.FrameLenght = 30;
-            Renderer.ColorCount = 10000;
             
             Bitmap b2 = new Bitmap("picture.jpg");
 
             Bitmap b = new Bitmap("image.jpg");
             int counter = 0;
 
-            UI.Containers.PictureBox pb = new UI.Containers.PictureBox(new Int2(0, 0), new Int2(200, 50), "", Misc.Boxes.BoxType.none, b);
+            UI.Containers.PictureBox pb = new UI.Containers.PictureBox(new Int2(0, 0), new Int2(200, 50), "", Misc.Boxes.BoxType.none, b)
+            {
+                SizeDifferenceHandling = UI.Containers.Container.ContentHandling.FitContent
+            };
 
             pb.Draw();
             while (true)

@@ -11,7 +11,7 @@ namespace PiwotDrawingLib.UI.Containers
     {
         #region Variables
 
-        public enum ContentHandling { ResizeContent, CropContent}
+        public enum ContentHandling { ResizeContent, FitContent, CropContent}
         /// <summary>
         /// Position of the container.
         /// </summary>
