@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PiwotDrawingLib.UI.Exceptions
 {
-    class InvalidContainerSizeException : Exception
+    public class InvalidContainerSizeException : Exception
     {
         public Containers.Container Container { get; protected set; }
         public InvalidContainerSizeException(Containers.Container container) : base() { Container = container; }

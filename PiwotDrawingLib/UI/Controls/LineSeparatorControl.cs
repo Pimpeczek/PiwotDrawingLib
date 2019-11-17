@@ -3,7 +3,7 @@
     /// <summary>
     /// Represents a control that is not accesable nor visable. Used to separate other controls.
     /// </summary>
-    class LineSeparatorControl : MenuControl
+    public class LineSeparatorControl : MenuControl
     {
 
         public override string Name

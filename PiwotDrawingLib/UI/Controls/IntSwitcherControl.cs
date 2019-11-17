@@ -1,6 +1,6 @@
 ﻿namespace PiwotDrawingLib.UI.Controls
 {
-    class IntSwitcherControl : SwitcherControl
+    public class IntSwitcherControl : SwitcherControl
     {
         private int value = 0;
 

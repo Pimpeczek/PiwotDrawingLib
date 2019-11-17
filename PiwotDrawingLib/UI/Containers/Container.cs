@@ -7,7 +7,7 @@ using PiwotToolsLib.Data;
 
 namespace PiwotDrawingLib.UI.Containers
 {
-    abstract class Container
+    public abstract class Container
     {
         #region Variables
 

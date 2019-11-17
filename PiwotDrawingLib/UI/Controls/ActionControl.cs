@@ -9,7 +9,7 @@ namespace PiwotDrawingLib.UI.Controls
     /// <summary>
     /// Abstract class representing a MenuControl that can invoke actions.
     /// </summary>
-    abstract class ActionControl: AccessableControl
+    public abstract class ActionControl: AccessableControl
     {
         /// <summary>
         /// List of actions performed when that control is selected.

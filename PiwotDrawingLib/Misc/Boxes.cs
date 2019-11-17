@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PiwotDrawingLib.Misc
 {
-    class Boxes
+    public static class Boxes
     {
         public enum BoxType { light, round, normal, doubled, dashed, dashedLight, none };
         public static readonly Char cor_b_lu = '╔';

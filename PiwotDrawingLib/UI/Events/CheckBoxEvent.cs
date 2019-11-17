@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PiwotDrawingLib.UI.Events
 {
-    class CheckBoxEvent: MenuControllEvent
+    public class CheckBoxEvent : MenuControllEvent
     {
         public bool Value { get; protected set; }
         public CheckBoxEvent(Containers.Menu menu, Controls.CheckBoxControl controll, bool value) : base(menu, controll)

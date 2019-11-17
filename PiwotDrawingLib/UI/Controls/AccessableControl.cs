@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PiwotDrawingLib.UI.Controls
 {
-    abstract class AccessableControl : MenuControl
+    public abstract class AccessableControl : MenuControl
     {
         public AccessableControl(string name, string identificator) : base(name, identificator)
         {

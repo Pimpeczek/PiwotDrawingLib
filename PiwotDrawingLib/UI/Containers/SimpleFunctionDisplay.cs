@@ -7,7 +7,7 @@ using PiwotToolsLib.PMath;
 
 namespace PiwotDrawingLib.UI.Containers
 {
-    class SimpleFunctionDisplay : Container
+    public class SimpleFunctionDisplay : Container
     {
         #region Variables
 

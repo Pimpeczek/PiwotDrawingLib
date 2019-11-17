@@ -7,7 +7,7 @@ using PiwotToolsLib.PGraphics;
 
 namespace PiwotDrawingLib.UI.Containers
 {
-    class PictureBox : Container
+    public class PictureBox : Container
     {
         static uint usedMod = 0xFFFFFFFF;
         static readonly uint mod24 = 0xFFFFFFFF;
@@ -140,7 +140,7 @@ namespace PiwotDrawingLib.UI.Containers
             {
                 for (int x = 0; x < bitmap.Width; x++)
                 {
-                    bitmap.SetPixel(x, y, Color.FromArgb((int)((bitmap.GetPixel(x, y).ToArgb()) & mod12)));
+                    bitmap.SetPixel(x, y, Color.FromArgb((int)((bitmap.GetPixel(x, y).ToArgb()) & usedMod)));
                 }
             }
         }

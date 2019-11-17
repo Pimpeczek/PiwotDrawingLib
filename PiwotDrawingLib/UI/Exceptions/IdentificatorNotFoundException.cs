@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PiwotDrawingLib.UI.Exceptions
 {
-    class IdentificatorNotFoundException : Exception
+    public class IdentificatorNotFoundException : Exception
     {
         public IdentificatorNotFoundException() : base()
         {

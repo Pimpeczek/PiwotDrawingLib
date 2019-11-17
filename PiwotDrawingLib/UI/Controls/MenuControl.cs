@@ -7,7 +7,7 @@ namespace PiwotDrawingLib.UI.Controls
     /// <summary>
     /// Represents a basic menu control used to display one line of text.
     /// </summary>
-    abstract class MenuControl
+    public abstract class MenuControl
     {
         #region Variables
         protected string name;

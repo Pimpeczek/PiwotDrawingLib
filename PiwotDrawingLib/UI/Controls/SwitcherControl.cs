@@ -2,7 +2,7 @@
 
 namespace PiwotDrawingLib.UI.Controls
 {
-    abstract class SwitcherControl : ActionControl, ISwitchable
+    public abstract class SwitcherControl : ActionControl, ISwitchable
     {
 
         protected string LAS;

@@ -9,7 +9,7 @@ namespace PiwotDrawingLib.UI.Containers
     /// <summary>
     /// Container that can store MenuControls and read inputs.
     /// </summary>
-    class Menu : Container
+    public class Menu : Container
     {
         #region Variables
         
@@ -248,12 +248,11 @@ namespace PiwotDrawingLib.UI.Containers
         /// </summary>
         override protected void DrawContent()
         {
-            int borderWidth = (boxType == Misc.Boxes.BoxType.none ? 0 : 1);
-            int startHeight = Arit.Clamp((size.Y - 2 - controls.Count) / 2, 1, size.Y - borderWidth * 2);
+            int startHeight = Arit.Clamp((contentSize.Y - controls.Count) / 2, 0, contentSize.Y / 2);
             string printText;
             Controls.MenuControl tControl;
             Int2 pos;
-            for (int i = 0; i < controls.Count && i < size.Y -  borderWidth; i++)
+            for (int i = 0; i < controls.Count && i < contentSize.Y; i++)
             {
                 tControl = controls[i + scrollPoint];
                 if (tControl.visable && tControl.NeedsRedraw)
@@ -264,11 +263,11 @@ namespace PiwotDrawingLib.UI.Containers
                     pos = new Int2(position.X + (size.X - printText.Length) / 2, position.Y + startHeight + i + 1);
                     if (hPoint == i)
                     {
-                        Drawing.Renderer.DrawFormated($"<cb808080>{printText}</cb>", pos.X, pos.Y);
+                        Drawing.Renderer.Draw(printText, "FFFFFF", "808080",  pos.X, pos.Y);
                     }
                     else
                     {
-                        Drawing.Renderer.DrawFormated(printText, pos.X, pos.Y);
+                        Drawing.Renderer.Draw(printText, pos.X, pos.Y);
                     }
                 }
             }

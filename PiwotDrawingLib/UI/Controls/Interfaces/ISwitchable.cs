@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PiwotDrawingLib.UI.Controls
 {
-    interface ISwitchable
+    public interface ISwitchable
     {
 
         /// <summary>

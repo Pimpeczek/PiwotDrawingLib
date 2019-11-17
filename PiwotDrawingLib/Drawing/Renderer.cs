@@ -3,7 +3,7 @@ using PiwotToolsLib.PMath;
 
 namespace PiwotDrawingLib.Drawing
 {
-    static class Renderer
+    public static class Renderer
     {
 
         #region Variables

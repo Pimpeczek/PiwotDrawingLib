@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{6F9DEA25-53FB-4D41-9EF3-2FCBC71D23B2}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
     <RootNamespace>PiwotDrawingLib</RootNamespace>
     <AssemblyName>PiwotDrawingLib</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
@@ -67,6 +67,7 @@
     <Compile Include="UI\Containers\Canvas.cs" />
     <Compile Include="UI\Containers\Container.cs" />
     <Compile Include="UI\Containers\PictureBox.cs" />
+    <Compile Include="UI\Containers\ScrollContainer.cs" />
     <Compile Include="UI\Containers\SimpleFunctionDisplay.cs" />
     <Compile Include="UI\Controls\AccessableControl.cs" />
     <Compile Include="UI\Controls\ActionControl.cs" />

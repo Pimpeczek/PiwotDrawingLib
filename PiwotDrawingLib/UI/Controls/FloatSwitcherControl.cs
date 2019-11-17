@@ -1,6 +1,6 @@
 ﻿namespace PiwotDrawingLib.UI.Controls
 {
-    class FloatSwitcherControl : SwitcherControl
+    public class FloatSwitcherControl : SwitcherControl
     {
         private float value = 0;
 

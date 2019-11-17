@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PiwotDrawingLib.UI.Exceptions
 {
-    class InvalidFormatException : Exception
+    public class InvalidFormatException : Exception
     {
         public InvalidFormatException()
         {

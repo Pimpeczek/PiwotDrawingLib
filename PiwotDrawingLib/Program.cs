@@ -19,17 +19,18 @@ namespace PiwotDrawingLib
         private static extern IntPtr GetConsoleWindow();
         static void Main(string[] args)
         {
-            Renderer.WindowSize = new Int2(200, 50);
-            Renderer.FrameLenght = 30;
-            
-            Bitmap b2 = new Bitmap("picture.jpg");
+            //Renderer.WindowSize = new Int2(200, 50);
+            //Renderer.FrameLenght = 30;
+            /*
+            Bitmap b2 = new Bitmap("picture.png");
 
-            Bitmap b = new Bitmap("image.jpg");
+            Bitmap b = new Bitmap("image.png");
             int counter = 0;
 
             UI.Containers.PictureBox pb = new UI.Containers.PictureBox(new Int2(0, 0), new Int2(200, 50), "", Misc.Boxes.BoxType.none, b)
             {
-                SizeDifferenceHandling = UI.Containers.Container.ContentHandling.FitContent
+                SizeDifferenceHandling = UI.Containers.Container.ContentHandling.FitContent,
+                BitsPerColor = UI.Containers.PictureBox.ColorEncoding.Bit6
             };
 
             pb.Draw();
@@ -41,7 +42,7 @@ namespace PiwotDrawingLib
                 counter++;
                 Console.ReadKey(true);
             }
-
+            */
             /*
             UI.Containers.SimpleFunctionDisplay fd = new UI.Containers.SimpleFunctionDisplay(new Int2(0, 0), new Int2(150, 50), "Main menu", Misc.Boxes.BoxType.round, (x) => x);
             fd.Draw();
@@ -78,20 +79,20 @@ namespace PiwotDrawingLib
                 Console.ReadKey(true);
             }
             */
-            
             /*
-            Int2 menuSize = new Int2(40, 20);
-            UI.Containers.Menu mainMenu = new UI.Containers.Menu(Int2.One, menuSize, "Main menu", Misc.Boxes.BoxType.light);
+            
+            Int2 menuSize = new Int2(20, 7);
+            UI.Containers.Menu mainMenu = new UI.Containers.Menu(Int2.One, menuSize, "Main menu", Misc.Boxes.BoxType.round);
             //mainMenu.VerticalTextWrapping = UI.Containers.Menu.Wrapping.scrolling;
 
             UI.Controls.ButtonControl bc = new UI.Controls.ButtonControl("b0", "b0");
-            bc.AddAction("b1", (x) => { Renderer.AddDissapearingText($"XDDD {DateTime.Now.Millisecond}", 1000, new Int2()); return true; });
+            
             mainMenu.AddControl(bc);
 
             mainMenu.AddControl(new UI.Controls.LineSeparatorControl("L0", "_label_0"));
 
             bc = new UI.Controls.ButtonControl("b1", "b1");
-            bc.AddAction("b1", (x) => { Renderer.AddDissapearingText($"DXXX {DateTime.Now.Millisecond}", 1000, new Int2(0, 1)); return true; });
+            
             mainMenu.AddControl(bc);
 
             UI.Controls.CheckBoxControl cb = new UI.Controls.CheckBoxControl("CB", "_CB", true)
@@ -129,9 +130,9 @@ namespace PiwotDrawingLib
             mainMenu.WaitForInput();
             
             //Renderer.AbortAsyncThread();
-            */
+            
             Console.ReadKey(true);
-
+            */
         }
     }
 }
