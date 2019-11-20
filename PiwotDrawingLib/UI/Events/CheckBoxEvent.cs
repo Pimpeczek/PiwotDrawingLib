@@ -9,7 +9,7 @@ namespace PiwotDrawingLib.UI.Events
     public class CheckBoxEvent : MenuControllEvent
     {
         public bool Value { get; protected set; }
-        public CheckBoxEvent(Containers.Menu menu, Controls.CheckBoxControl controll, bool value) : base(menu, controll)
+        public CheckBoxEvent(Containers.StaticMenu menu, Controls.CheckBoxControl controll, bool value) : base(menu, controll)
         {
             Value = value;
         }

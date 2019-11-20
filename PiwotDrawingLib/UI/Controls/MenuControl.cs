@@ -34,7 +34,7 @@ namespace PiwotDrawingLib.UI.Controls
         /// <summary>
         /// Menu that this control belongs to.
         /// </summary>
-        public Containers.Menu parentMenu { get; protected set; }
+        public Containers.StaticMenu parentMenu { get; protected set; }
 
         /// <summary>
         /// Tells if this control is shown on the menu.
@@ -60,7 +60,7 @@ namespace PiwotDrawingLib.UI.Controls
         /// 
         /// </summary>
         /// <param name="menu">The new parent</param>
-        public virtual void SetParent(Containers.Menu menu)
+        public virtual void SetParent(Containers.StaticMenu menu)
         {
             parentMenu = menu;
         }

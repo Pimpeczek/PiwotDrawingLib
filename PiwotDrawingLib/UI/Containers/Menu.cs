@@ -9,7 +9,7 @@ namespace PiwotDrawingLib.UI.Containers
     /// <summary>
     /// Container that can store MenuControls and read inputs.
     /// </summary>
-    public class Menu : Container
+    public class StaticMenu : Container
     {
         #region Variables
         
@@ -62,12 +62,12 @@ namespace PiwotDrawingLib.UI.Containers
 
         #region Setup
 
-        public Menu():base(new Int2(), new Int2(10, 10), "Menu", Misc.Boxes.BoxType.doubled)
+        public StaticMenu():base(new Int2(), new Int2(10, 10), "Menu", Misc.Boxes.BoxType.doubled)
         {
             Setup();
         }
 
-        public Menu(Int2 position, Int2 size, string name, Misc.Boxes.BoxType boxType):base(position, size, name, boxType)
+        public StaticMenu(Int2 position, Int2 size, string name, Misc.Boxes.BoxType boxType):base(position, size, name, boxType)
         {
             Setup();
         }

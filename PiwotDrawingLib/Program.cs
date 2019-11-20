@@ -19,6 +19,12 @@ namespace PiwotDrawingLib
         private static extern IntPtr GetConsoleWindow();
         static void Main(string[] args)
         {
+
+            Console.WriteLine("<cfA0BD67>XDDD</cf>");
+            Console.WriteLine(Renderer.StripFormating("<cfA0BD67><cfA0BD67>XDDD</cf></cf>"));
+            Console.WriteLine(Renderer.StripFormating("<cfA0BD67>XDDD</cf>"));
+
+            Console.ReadKey(true);
             //Renderer.WindowSize = new Int2(200, 50);
             //Renderer.FrameLenght = 30;
             /*

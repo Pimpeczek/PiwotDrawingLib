@@ -6,8 +6,44 @@ using PiwotToolsLib.PMath;
 
 namespace PiwotDrawingLib.UI.Containers
 {
-    public class ScrollContainer: Container
+    public class ScrollContainer : Container
     {
+        #region Variables
+
+        protected int scrollPoint;
+        public int ScrollPoint
+        {
+            get
+            {
+                return scrollPoint;
+            }
+            set
+            {
+                if (scrollPoint == value)
+                    return;
+
+                scrollPoint = value;
+            }
+        }
+
+        protected string rawText;
+        protected string formatedText;
+        public string Text
+        {
+            get
+            {
+                return formatedText;
+            }
+            set
+            {
+                if (value == formatedText)
+                    return;
+                formatedText = value;
+            }
+        }
+
+
+        #endregion
         public ScrollContainer() : base(new Int2(), new Int2(10, 10), "Menu", Misc.Boxes.BoxType.doubled)
         {
             Setup();
@@ -37,5 +73,7 @@ namespace PiwotDrawingLib.UI.Containers
         {
             throw new NotImplementedException();
         }
+
+
     }
 }

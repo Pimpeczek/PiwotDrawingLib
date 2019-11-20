@@ -173,7 +173,7 @@ namespace PiwotDrawingLib.Drawing
             dequeuingThread.Start();
             asyncDrawing = true;
             useColor = true;
-            System.Console.ReadKey(true);
+            
         }
 
         private static void CreateCanvas()
@@ -855,6 +855,17 @@ namespace PiwotDrawingLib.Drawing
             }
         }
 
+
+        #endregion
+
+        #region Colors
+
+        public static string StripFormating(string formattedString)
+        {
+            return System.Text.RegularExpressions.Regex.Replace(formattedString,
+                @"(\<c[fb][a-fA-F0-9]{6}\>)|(\</c[fb]\>)",
+                @"");
+        }
 
         #endregion
 
