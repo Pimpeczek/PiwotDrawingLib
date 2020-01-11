@@ -63,7 +63,7 @@ namespace PiwotDrawingLib.UI.Containers
             }
             
             float step = 1 / (float)contentSize.X;
-            vales = PiwotToolsLib.Data.Arrays.GetCustomArray(contentSize.X, (x) => func.Invoke(x * step));
+            vales = PiwotToolsLib.Data.Arrays.BuildArray(contentSize.X, (x) => func.Invoke(x * step));
             float maxval = 0;
             int maxvalid = 0;
             for (int x = 0; x < contentSize.X; x++)

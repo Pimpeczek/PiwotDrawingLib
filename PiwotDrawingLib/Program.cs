@@ -20,17 +20,14 @@ namespace PiwotDrawingLib
         static void Main(string[] args)
         {
 
-            Console.WriteLine("<cfA0BD67>XDDD</cf>");
-            Console.WriteLine(Renderer.StripFormating("<cfA0BD67><cfA0BD67>XDDD</cf></cf>"));
-            Console.WriteLine(Renderer.StripFormating("<cfA0BD67>XDDD</cf>"));
 
             Console.ReadKey(true);
-            //Renderer.WindowSize = new Int2(200, 50);
-            //Renderer.FrameLenght = 30;
-            /*
-            Bitmap b2 = new Bitmap("picture.png");
+            Renderer.WindowSize = new Int2(200, 50);
+            Renderer.FrameLenght = 30;
+            
+            Bitmap b2 = new Bitmap("picture.jpg");
 
-            Bitmap b = new Bitmap("image.png");
+            Bitmap b = new Bitmap("image.jpg");
             int counter = 0;
 
             UI.Containers.PictureBox pb = new UI.Containers.PictureBox(new Int2(0, 0), new Int2(200, 50), "", Misc.Boxes.BoxType.none, b)
@@ -48,7 +45,7 @@ namespace PiwotDrawingLib
                 counter++;
                 Console.ReadKey(true);
             }
-            */
+            
             /*
             UI.Containers.SimpleFunctionDisplay fd = new UI.Containers.SimpleFunctionDisplay(new Int2(0, 0), new Int2(150, 50), "Main menu", Misc.Boxes.BoxType.round, (x) => x);
             fd.Draw();
