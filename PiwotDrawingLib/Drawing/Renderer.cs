@@ -9,8 +9,9 @@ namespace PiwotDrawingLib.Drawing
         #region Variables
         private static Int2 maxWindowSize;
         private static Int2 windowSize;
-        private static Int2 canvasSize;
+        //private static Int2 canvasSize;
 
+        private static UI.Containers.Canvas canvas;
 
         public static string WindowTitle
         {
@@ -41,16 +42,17 @@ namespace PiwotDrawingLib.Drawing
                 if (value == windowSize)
                     return;
                 windowSize = value;
-                ResizeCanvas(new Int2(windowSize.X, windowSize.Y));
+                canvas.Size = value;
+                //ResizeCanvas(new Int2(windowSize.X, windowSize.Y));
                 SetupConsoleWindow();
             }
         }
 
-        static readonly string defFHex = "FFFFFF";
-        static readonly string defBHex = "000000";
+        public static readonly string defFHex = "FFFFFF";
+        public static readonly string defBHex = "000000";
         static readonly string defFHexTag = $"<cfFFFFFF>";
         static readonly string defBHexTag = $"<cb000000>";
-
+        /*
         static string[,] frameFrontColorMap;
         static string[,] frameBackColorMap;
         static char[][] frameCharMap;
@@ -60,7 +62,7 @@ namespace PiwotDrawingLib.Drawing
         static char[][] canvasCharMap;
 
         static bool[,] refreshMap;
-
+        */
 
         static int frameLenght;
 
@@ -160,6 +162,7 @@ namespace PiwotDrawingLib.Drawing
             System.Console.CursorVisible = false;
             windowSize = new Int2(System.Console.WindowWidth, System.Console.WindowHeight);
             maxWindowSize = new Int2(System.Console.LargestWindowWidth, System.Console.LargestWindowHeight-1);
+            canvas = new UI.Containers.Canvas(Int2.Zero, windowSize);
             CreateCanvas();
            
             nowWrittingRaw = false;

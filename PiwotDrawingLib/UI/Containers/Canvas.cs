@@ -4,7 +4,7 @@ using System;
 
 namespace PiwotDrawingLib.UI.Containers
 {
-    class Canvas : Container
+    public class Canvas : Container
     {
         protected string defFHex = "FFFFFF";
         protected string defBHex = "000000";

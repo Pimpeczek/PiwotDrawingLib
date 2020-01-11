@@ -93,6 +93,7 @@
     <Compile Include="UI\Events\StringSwitcherEvent.cs" />
     <Compile Include="UI\Exceptions\IdentificatorNotFoundException.cs" />
     <Compile Include="UI\Exceptions\InvalidContainerPositionException.cs" />
+    <Compile Include="UI\Exceptions\InvalidCanvasSizeException.cs" />
     <Compile Include="UI\Exceptions\InvalidContainerSizeException.cs" />
     <Compile Include="Drawing\Exceptions\InvalidFormatException.cs" />
     <Compile Include="UI\Exceptions\InvalidFormatException.cs" />
