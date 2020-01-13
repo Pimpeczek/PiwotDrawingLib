@@ -45,13 +45,6 @@ namespace PiwotDrawingLib.UI.Containers
             this.func = func;
         }
 
-        /// <summary>
-        /// Orders the Renderer to print visual representation of the function.
-        /// </summary>
-        public void RefreshContent()
-        {
-            DrawContent();
-        }
 
         protected override void DrawContent()
         {
@@ -63,7 +56,7 @@ namespace PiwotDrawingLib.UI.Containers
             }
             
             float step = 1 / (float)contentSize.X;
-            vales = PiwotToolsLib.Data.Arrays.GetCustomArray(contentSize.X, (x) => func.Invoke(x * step));
+            vales = PiwotToolsLib.Data.Arrays.BuildArray(contentSize.X, (x) => func.Invoke(x * step));
             float maxval = 0;
             int maxvalid = 0;
             for (int x = 0; x < contentSize.X; x++)
@@ -78,7 +71,7 @@ namespace PiwotDrawingLib.UI.Containers
             string forwardCol = "";
             for (int x = 0; x < contentSize.X; x++)
             {
-                height = vales[x] * contentSize.Y   ;
+                height = vales[x] * contentSize.Y;
                 iHeight = (int)height;
                 iHeight = Arit.Clamp(iHeight, contentSize.Y);
                 height -= iHeight;
@@ -86,28 +79,29 @@ namespace PiwotDrawingLib.UI.Containers
 
                 for (int y = 0; y < contentSize.Y - iHeight; y++)
                 {
-                    Drawing.Renderer.Draw(" ", forwardCol, "000000", x + contentPosition.X, y + contentPosition.Y);
+                    canvas.DrawOnCanvas(" ", forwardCol, "000000", 1 + x, 1 + y);
                 }
                 if(height >= 0.5f && iHeight != contentSize.Y)
                 {
-                    Drawing.Renderer.Draw("▄", forwardCol, "000000", x + contentPosition.X, contentSize.Y - iHeight - 1 + contentPosition.Y);//▬
+                    canvas.DrawOnCanvas("▄", forwardCol, "000000", 1 + x, 1 + contentSize.Y - iHeight - 1);//▬
                 }
                 else if (iHeight == 0 && height >= 0.1f)
                 {
-                    Drawing.Renderer.Draw("_", forwardCol, "000000", x + contentPosition.X, contentSize.Y - 1 + contentPosition.Y);
+                    canvas.DrawOnCanvas("_", forwardCol, "000000", 1 + x, 1 + contentSize.Y - 1);
                 }
 
                 for (int y = contentSize.Y - iHeight; y < contentSize.Y; y++)
                 {
-                    Drawing.Renderer.Draw("█", forwardCol, "000000", x + contentPosition.X, y + contentPosition.Y);
+                    canvas.DrawOnCanvas("█", forwardCol, "000000", 1 + x, 1 + y);
                 }
             }
+            
         }
 
         protected override void DrawWindow()
         {
             base.DrawWindow();
-            Drawing.Renderer.Draw(Name,"FFFFFF", "000000", position.X + (size.X - Name.Length) / 2, position.Y);
+            canvas.DrawOnCanvas(Name, (size.X - Name.Length) / 2, 0);
         }
 
     }

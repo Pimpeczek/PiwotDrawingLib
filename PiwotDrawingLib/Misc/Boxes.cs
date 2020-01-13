@@ -40,7 +40,6 @@ namespace PiwotDrawingLib.Misc
         public static readonly Char[] dashedLightBoxChars = { '┐', ' ', '┄', '┌', '┬', ' ', '┘', '┊', '┤', '└', '┴', '├', '┼' };
         public static readonly Char[] dashedBoxChars = { '┓', ' ', '┅', '┏', '┳', ' ', '┛', '┋', '┫', '┗', '┻', '┣', '╋' };
 
-
         public static Char GetBoxChar(int id)
         {
             id -= 3;
@@ -70,6 +69,10 @@ namespace PiwotDrawingLib.Misc
             return dashedBoxChars[id];
         }
 
+        public static int GetIdByneighbours(bool up, bool right, bool down, bool left)
+        {
+            return (up ? 1 : 0) + (right ? 2 : 0) + (down ? 4 : 0) + (left ? 8 : 0);
+        }
 
         /*
         protected char GetBorderChar(Int2 pos, char[] boxes)
@@ -137,7 +140,26 @@ namespace PiwotDrawingLib.Misc
             Drawing.Renderer.DrawFormated($"{bs[9]}{"".PadLeft(sx - 2, bs[2])}{bs[6]}", x, y + sy - 1);
 
         }
-    
+
+        public static void DrawBox(Drawing.Canvas canvas, BoxType boxType, int x, int y, int sx, int sy)
+        {
+            DrawBox(canvas, GetBoxArray(boxType), x, y, sx, sy);
+        }
+        public static void DrawBox(Drawing.Canvas canvas, Char[] bs, int x, int y, int sx, int sy)
+        {
+            if (bs == null)
+                throw new ArgumentNullException();
+            canvas.DrawOnCanvas($"{bs[3]}{"".PadLeft(sx - 2, bs[2])}{bs[0]}", x, y);
+            string midBorder = $"{bs[7]}{"".PadLeft(sx - 2)}{bs[7]}";
+            for (int i = 1; i < sy - 1; i++)
+            {
+                canvas.DrawOnCanvas(midBorder, x, y + i);
+
+            }
+            canvas.DrawOnCanvas($"{bs[9]}{"".PadLeft(sx - 2, bs[2])}{bs[6]}", x, y + sy - 1);
+
+        }
+
         public static string GetBoxName(string name, BoxType boxType)
         {
             return GetBoxName(name, GetBoxArray(boxType));

@@ -41,7 +41,7 @@ namespace PiwotDrawingLib.UI.Containers
         /// Size of the container.
         /// </summary>
         protected Int2 size;
-        public Int2 Size
+        public virtual Int2 Size
         {
             get
             {
@@ -59,14 +59,10 @@ namespace PiwotDrawingLib.UI.Containers
                 }
                 size = value ?? throw new ArgumentNullException();
                 contentSize = size - (boxType != Misc.Boxes.BoxType.none ? Int2.One * 2 : Int2.Zero);
-                emptyLine = Stringer.GetFilledString(contentSize.X, ' ');
-                emptyLine = $"<cb000000>{emptyLine}</cb>";
-                fullEmptyLine = Stringer.GetFilledString(size.X, ' ');
-                fullEmptyLine = $"<cb000000>{fullEmptyLine}</cb>";
+                canvas.ResizeCanvas(size);
                 Erase();
                 if (IsVIsable)
                     Draw();
-
             }
         }
 
@@ -99,11 +95,13 @@ namespace PiwotDrawingLib.UI.Containers
         protected Misc.Boxes.BoxType boxType;
         #endregion
 
+        protected Drawing.Canvas canvas;
 
         public Container(Int2 position, Int2 size, string name, Misc.Boxes.BoxType boxType)
         {
             this.boxType = boxType;
             Position = position;
+            canvas = new Drawing.Canvas(size);
             Size = size;
             Name = name;
             
@@ -115,8 +113,18 @@ namespace PiwotDrawingLib.UI.Containers
         /// </summary>
         public void Draw()
         {
+            IsVIsable = true;
             DrawWindow();
             DrawContent();
+            canvas.ApplyNewFrame();
+            Drawing.Renderer.Draw(canvas, position.X, position.Y);
+        }
+
+        public virtual void RefreshContent()
+        {
+            DrawContent();
+            canvas.ApplyNewFrame();
+            Drawing.Renderer.Draw(canvas, position.X, position.Y);
         }
 
         /// <summary>
@@ -131,21 +139,20 @@ namespace PiwotDrawingLib.UI.Containers
 
         protected void Erase()
         {
-            
-            for (int y = 0; y < size.Y; y++)
-            {
-                
-                Drawing.Renderer.DrawFormated(fullEmptyLine, position.X, position.Y + y);
-                
-            }
-            
+
+            canvas.Clear();
+            Drawing.Renderer.Draw(canvas, position.X, position.Y);
+
         }
 
         protected virtual void DrawWindow()
         {
-            IsVIsable = true;
+            
             if (boxType != Misc.Boxes.BoxType.none)
-                Misc.Boxes.DrawBox(boxType, position.X, position.Y, size.X, size.Y);
+            {
+                Misc.Boxes.DrawBox(canvas, boxType, position.X, position.Y, size.X, size.Y);
+                canvas.DrawOnCanvas(Name, (size.X - Name.Length) / 2, 0);
+            }
             //Rendering.Renderer.Write(Name, Position.X + (Size.X - Name.Length) / 2, Position.Y);
 
         }

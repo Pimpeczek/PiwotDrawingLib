@@ -20,6 +20,7 @@ namespace PiwotDrawingLib.UI.Containers
         static readonly uint mod3 = 0xFF808080;
         static readonly uint[] mods = new uint[8] { mod24, mod21, mod18, mod15, mod12, mod9, mod6, mod3 };
 
+        
         public enum ColorEncoding { Bit24, Bit21, Bit18, Bit15, Bit12, Bit9, Bit6, Bit3 };
 
         private ColorEncoding bitsPerColor;
@@ -97,14 +98,7 @@ namespace PiwotDrawingLib.UI.Containers
         {
             Image = image;
             sizeDifferenceHandling = ContentHandling.ResizeContent;
-        }
-
-        /// <summary>
-        /// Orders the Renderer to print visual representation of the function.
-        /// </summary>
-        public void RefreshContent()
-        {
-            DrawContent();
+            
         }
 
         protected override void DrawContent()
@@ -117,7 +111,7 @@ namespace PiwotDrawingLib.UI.Containers
                 yPos = bitmap.Height - 1;
                 for (int x = bitmap.Width - 1; x >= 0; x--)
                 {
-                    Drawing.Renderer.Draw("▄", "000000", GetHex(bitmap.GetPixel(x, yPos)), contentPosition.X + x, contentPosition.Y + yDrawPos);
+                    canvas.DrawOnCanvas("▄", "000000", GetHex(bitmap.GetPixel(x, yPos)), x, yDrawPos);
                 }
             }
             else
@@ -129,9 +123,10 @@ namespace PiwotDrawingLib.UI.Containers
             {
                 for (int y = yPos; y >= 0; y -= 2)
                 {
-                    Drawing.Renderer.Draw("▄", GetHex(bitmap.GetPixel(x, y + 1)), GetHex(bitmap.GetPixel(x, y)), contentPosition.X + x, contentPosition.Y + y / 2);
+                    canvas.DrawOnCanvas("▄", GetHex(bitmap.GetPixel(x, y + 1)), GetHex(bitmap.GetPixel(x, y)), x, y / 2);
                 }
             }
+
         }
 
         protected void CutColorBits()
@@ -153,7 +148,7 @@ namespace PiwotDrawingLib.UI.Containers
         protected override void DrawWindow()
         {
             base.DrawWindow();
-            Drawing.Renderer.Draw(Name, "FFFFFF", "000000", position.X + (size.X - Name.Length) / 2, position.Y);
+            canvas.DrawOnCanvas(Name, (size.X - Name.Length) / 2, 0);
         }
         protected void RefreshBitmap()
         {
@@ -175,6 +170,7 @@ namespace PiwotDrawingLib.UI.Containers
                 bitmap = Bitmaper.StreachToSize(image, contentSize.X, contentSize.Y * 2);
             }
             CutColorBits();
+            DrawContent(); 
         }
     }
 }

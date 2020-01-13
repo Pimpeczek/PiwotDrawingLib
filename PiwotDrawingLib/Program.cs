@@ -19,31 +19,51 @@ namespace PiwotDrawingLib
         private static extern IntPtr GetConsoleWindow();
         static void Main(string[] args)
         {
+            Renderer.WindowSize = new Int2(200, 50);
+            Renderer.FrameLenght = 30;
+            Renderer.AsyncMode = true;
 
+            UI.Containers.ScrollContainer sc = new UI.Containers.ScrollContainer(Int2.Zero, new Int2(20, 15), "ScrollView", Misc.Boxes.BoxType.doubled)
+            {
+                ScrollViewSize = 60
+            };
+            Console.ReadKey(true);
+            while (true)
+            {
+                sc.Draw();
+
+                if (Console.ReadKey(true).Key == ConsoleKey.DownArrow)
+                    sc.ScrollDown();
+                else
+                    sc.ScrollUp();
+            }
+            //s.RefreshContent();
+            /*
             Console.WriteLine("<cfA0BD67>XDDD</cf>");
             Console.WriteLine(Renderer.StripFormating("<cfA0BD67><cfA0BD67>XDDD</cf></cf>"));
             Console.WriteLine(Renderer.StripFormating("<cfA0BD67>XDDD</cf>"));
+            
+            
 
-            Console.ReadKey(true);
-            //Renderer.WindowSize = new Int2(200, 50);
-            //Renderer.FrameLenght = 30;
-            /*
-            Bitmap b2 = new Bitmap("picture.png");
+            
+            Bitmap b2 = new Bitmap("picture.jpg");
 
-            Bitmap b = new Bitmap("image.png");
+            Bitmap b = new Bitmap("image.jpg");
             int counter = 0;
 
-            UI.Containers.PictureBox pb = new UI.Containers.PictureBox(new Int2(0, 0), new Int2(200, 50), "", Misc.Boxes.BoxType.none, b)
+            UI.Containers.PictureBox pb = new UI.Containers.PictureBox(new Int2(0, 0), new Int2(200, 50), "", Misc.Boxes.BoxType.none, b2)
             {
                 SizeDifferenceHandling = UI.Containers.Container.ContentHandling.FitContent,
-                BitsPerColor = UI.Containers.PictureBox.ColorEncoding.Bit6
+                BitsPerColor = UI.Containers.PictureBox.ColorEncoding.Bit24
             };
 
             pb.Draw();
             while (true)
             {
-                
-                pb.Image = (counter % 2 == 0 ? b : b2);
+
+                //pb.Image = (counter % 2 == 0 ? b : b2);
+                //pb.RefreshContent();
+                pb.BitsPerColor =(UI.Containers.PictureBox.ColorEncoding) (counter % 8);
                 pb.RefreshContent();
                 counter++;
                 Console.ReadKey(true);

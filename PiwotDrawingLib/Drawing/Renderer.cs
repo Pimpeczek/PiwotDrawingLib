@@ -9,8 +9,9 @@ namespace PiwotDrawingLib.Drawing
         #region Variables
         private static Int2 maxWindowSize;
         private static Int2 windowSize;
-        private static Int2 canvasSize;
+        //private static Int2 canvasSize;
 
+        static Canvas canvas;
 
         public static string WindowTitle
         {
@@ -40,17 +41,18 @@ namespace PiwotDrawingLib.Drawing
                     throw new Exceptions.InvalidWindowSizeException();
                 if (value == windowSize)
                     return;
+                while (nowDrawingFrame) { }
                 windowSize = value;
-                ResizeCanvas(new Int2(windowSize.X, windowSize.Y));
+                canvas.ResizeCanvas(new Int2(windowSize));
                 SetupConsoleWindow();
             }
         }
 
-        static readonly string defFHex = "FFFFFF";
-        static readonly string defBHex = "000000";
+        public static readonly string defFHex = "FFFFFF";
+        public static readonly string defBHex = "000000";
         static readonly string defFHexTag = $"<cfFFFFFF>";
         static readonly string defBHexTag = $"<cb000000>";
-
+        /*
         static string[,] frameFrontColorMap;
         static string[,] frameBackColorMap;
         static char[][] frameCharMap;
@@ -60,7 +62,7 @@ namespace PiwotDrawingLib.Drawing
         static char[][] canvasCharMap;
 
         static bool[,] refreshMap;
-
+        */
 
         static int frameLenght;
 
@@ -148,6 +150,7 @@ namespace PiwotDrawingLib.Drawing
             set
             {
                 useColor = value;
+                canvas.UseColor = value;
             }
         }
         #endregion
@@ -160,8 +163,8 @@ namespace PiwotDrawingLib.Drawing
             System.Console.CursorVisible = false;
             windowSize = new Int2(System.Console.WindowWidth, System.Console.WindowHeight);
             maxWindowSize = new Int2(System.Console.LargestWindowWidth, System.Console.LargestWindowHeight-1);
-            CreateCanvas();
-           
+            canvas = new Canvas(windowSize);
+
             nowWrittingRaw = false;
             nowDrawingFrame = false;
             frameLenght = 30;
@@ -172,10 +175,10 @@ namespace PiwotDrawingLib.Drawing
             drawingThread.Start();
             dequeuingThread.Start();
             asyncDrawing = true;
-            useColor = true;
+            UseColor = true;
             
         }
-
+        /*
         private static void CreateCanvas()
         {
             canvasSize = new Int2(windowSize.X, windowSize.Y);
@@ -297,7 +300,7 @@ namespace PiwotDrawingLib.Drawing
 
             refreshMap = newRefreshMap;
         }
-
+        */
         private static void SetupConsoleWindow()
         {
             try
@@ -355,9 +358,7 @@ namespace PiwotDrawingLib.Drawing
                     while (nowDrawingFrame) { }
                     if (drawingRequests.TryDequeue(out DrawingRequest dr))
                     {
-                        DrawOnCanvas(dr.Text, dr.FID, dr.BID, dr.X, dr.Y);
-
-
+                        canvas.DrawOnCanvas(dr.Text, dr.FID, dr.BID, dr.X, dr.Y);
                     }
                 }
             }
@@ -400,6 +401,7 @@ namespace PiwotDrawingLib.Drawing
         #endregion
 
         #region Canvas Operations
+        /*
         static void DrawOnCanvas(string Text, string FID, string BID, int x, int y)
         {
 
@@ -419,7 +421,7 @@ namespace PiwotDrawingLib.Drawing
             }
             refreshMap[y, canvasSize.X] = true;
         }
-
+        
         /// <summary>
         /// Draws current frame on the canvas and updates difference map.
         /// </summary>
@@ -437,7 +439,7 @@ namespace PiwotDrawingLib.Drawing
                 }
             }
         }
-
+        
         /// <summary>
         /// Checks if the specified frame cell is different from canvas cell and if so updates the canvas as well as refresh map.
         /// </summary>
@@ -472,6 +474,7 @@ namespace PiwotDrawingLib.Drawing
                 refreshMap[y, canvasSize.X] = true;
             }
         }
+        */
         /// <summary>
         /// Creates and enqueues new drawing request.
         /// </summary>
@@ -491,7 +494,7 @@ namespace PiwotDrawingLib.Drawing
                 }
                 return;
             }
-            if (y >= canvasSize.Y || y < 0 || x > canvasSize.X || text.Length == 0)
+            if (y >= canvas.Size.Y || y < 0 || x > canvas.Size.X || text.Length == 0)
             {
                 return;
             }
@@ -501,7 +504,7 @@ namespace PiwotDrawingLib.Drawing
             }
             else
             {
-                DrawOnCanvas(text, fID, bID, x, y);
+                canvas.DrawOnCanvas(text, fID, bID, x, y);
             }
 
         }
@@ -518,13 +521,14 @@ namespace PiwotDrawingLib.Drawing
             int startpos;
             int endpos;
             int strPos;
-            string curBCol = defBHex;
-            string curFCol = defBHex;
-            string prevBCol = defBHex;
-            string prevFCol = defBHex;
+            Int2 canvasSize = canvas.Size;
+            string curBCol;
+            string curFCol;
+            string prevBCol;
+            string prevFCol;
             string retStr;
             bool forceFull = false;
-            ApplyNewFrame();
+            canvas.ApplyNewFrame();
             if (System.Console.WindowWidth != windowSize.X || System.Console.WindowHeight != windowSize.Y)
             {
                 SetupConsoleWindow();
@@ -533,24 +537,24 @@ namespace PiwotDrawingLib.Drawing
             
             for (int y = 0; y < canvasSize.Y; y++)
             {
-                if (refreshMap[y, canvasSize.X] || forceFull)
+                if (canvas.refreshMap[y, canvasSize.X] || forceFull)
                 {
                     startpos = -1;
                     endpos = -1;
                     retStr = "";
 
                     for (int x = 0; startpos < 0 && x < canvasSize.X; x++) 
-                        if (refreshMap[y, x] || forceFull)
+                        if (canvas.refreshMap[y, x] || forceFull)
                             startpos = x;
 
                     if (startpos >= 0)
                     {
                         for (int x = canvasSize.X - 1; endpos < 0 && x >= 0 && x >= startpos; x--)
-                            if (refreshMap[y, x] || forceFull)
+                            if (canvas.refreshMap[y, x] || forceFull)
                                 endpos = x;
 
-                        prevFCol = canvasFrontColorMap[y, startpos];
-                        prevBCol = canvasBackColorMap[y, startpos];
+                        prevFCol = canvas.canvasFrontColorMap[y, startpos];
+                        prevBCol = canvas.canvasBackColorMap[y, startpos];
 
                         curFCol = "";
                         curBCol = "";
@@ -561,8 +565,8 @@ namespace PiwotDrawingLib.Drawing
                             {
                                 if (x < endpos)
                                 {
-                                    curFCol = canvasFrontColorMap[y, x + 1];
-                                    curBCol = canvasBackColorMap[y, x + 1];
+                                    curFCol = canvas.canvasFrontColorMap[y, x + 1];
+                                    curBCol = canvas.canvasBackColorMap[y, x + 1];
                                 }
                                 if(curFCol == null || prevBCol==null)
                                 {
@@ -571,7 +575,7 @@ namespace PiwotDrawingLib.Drawing
                                 }
                                 else if (curFCol != prevFCol || prevBCol != curBCol || x == endpos)
                                 {
-                                    retStr += new string(canvasCharMap[y], strPos, x - strPos + 1).Pastel(prevFCol).PastelBg(prevBCol);
+                                    retStr += new string(canvas.canvasCharMap[y], strPos, x - strPos + 1).Pastel(prevFCol).PastelBg(prevBCol);
 
                                     strPos = x + 1;
                                     prevBCol = curBCol;
@@ -582,15 +586,15 @@ namespace PiwotDrawingLib.Drawing
 
                         else
                         {
-                            retStr = new string(canvasCharMap[y], strPos, canvasCharMap[y].Length + 1 - strPos - endpos).Pastel(defFHex).PastelBg(defBHex);
+                            retStr = new string(canvas.canvasCharMap[y], strPos, canvas.canvasCharMap[y].Length + 1 - strPos - endpos).Pastel(defFHex).PastelBg(defBHex);
                         }
 
                         while (nowWrittingRaw) { } 
 
                         RawPrint(retStr, startpos, y);
                         for (int i = startpos; i <= endpos; i++)
-                            refreshMap[y, i] = false;
-                        refreshMap[y, canvasSize.X] = false;
+                            canvas.refreshMap[y, i] = false;
+                        canvas.refreshMap[y, canvasSize.X] = false;
                     }
 
 
@@ -781,6 +785,11 @@ namespace PiwotDrawingLib.Drawing
         public static void Draw(object value, int x, int y)
         {
             Draw(value.ToString(), defFHex, defBHex, x, y);
+        }
+
+        public static void Draw(Canvas printedCanvas, int x, int y)
+        {
+            canvas.AddCanvas(printedCanvas, x, y);
         }
 
 
