@@ -92,10 +92,30 @@ namespace PiwotDrawingLib.UI.Containers
         public bool IsVIsable { get; protected set; }
         protected string emptyLine;
         protected string fullEmptyLine;
-        protected Misc.Boxes.BoxType boxType;
-        #endregion
+        protected Misc.Boxes.BoxType boxType = Misc.Boxes.BoxType.normal;
+        public Misc.Boxes.BoxType BoxType
+        {
+            get
+            {
+                return boxType;
+            }
+            set
+            {
+                if (value == boxType)
+                    return;
+
+                boxType = value;
+                boxCharacters = Misc.Boxes.GetBoxArray(boxType);
+            }
+        }
+        protected char[] boxCharacters = Misc.Boxes.GetBoxArray(Misc.Boxes.BoxType.normal);
 
         protected Drawing.Canvas canvas;
+        #endregion
+
+
+
+       
 
         public Container(Int2 position, Int2 size, string name, Misc.Boxes.BoxType boxType)
         {
@@ -104,8 +124,8 @@ namespace PiwotDrawingLib.UI.Containers
             canvas = new Drawing.Canvas(size);
             Size = size;
             Name = name;
-            
-            
+            boxCharacters = Misc.Boxes.GetBoxArray(boxType);
+
         }
 
         /// <summary>

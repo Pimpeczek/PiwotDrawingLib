@@ -39,7 +39,7 @@ namespace PiwotDrawingLib.Drawing
         public Int2 Size
         {
             get; protected set;
-        }
+        } 
 
         public Canvas(Int2 size)
         {
@@ -303,6 +303,7 @@ namespace PiwotDrawingLib.Drawing
             int otherX;
             int otherY = fromY;
             fromHeight = Arit.Clamp(fromHeight + fromY, 0, canvas.Size.Y);
+            fromWidth = Arit.Clamp(fromWidth + fromX, 0, canvas.Size.X);
             while (y < Size.Y && otherY < fromHeight)
             {
 

@@ -15,43 +15,51 @@ namespace PiwotDrawingLib
 {
     class Program
     {
-        [DllImport("kernel32.dll", SetLastError = true)]
-        private static extern IntPtr GetConsoleWindow();
+        //[DllImport("kernel32.dll", SetLastError = true)]
+        //private static extern IntPtr GetConsoleWindow();
         static void Main(string[] args)
         {
             Renderer.WindowSize = new Int2(200, 50);
             Renderer.FrameLenght = 30;
-            Renderer.AsyncMode = true;
-
-            UI.Containers.ScrollContainer sc = new UI.Containers.ScrollContainer(Int2.Zero, new Int2(20, 15), "ScrollView", Misc.Boxes.BoxType.doubled)
+            
+            UI.Containers.ScrollContainer sc = new UI.Containers.ScrollContainer(Int2.Zero, new Int2(200, 50), "SV", Misc.Boxes.BoxType.round)
             {
-                ScrollViewSize = 60
+                ScrollViewSize = new Int2(300, 100),
             };
             Console.ReadKey(true);
             while (true)
             {
-                sc.Draw();
+                
 
-                if (Console.ReadKey(true).Key == ConsoleKey.DownArrow)
-                    sc.ScrollDown();
-                else
-                    sc.ScrollUp();
+                switch (Console.ReadKey(true).Key)
+                {
+                    case ConsoleKey.UpArrow:
+                        sc.ScrollUp();
+                        break;
+                    case ConsoleKey.DownArrow:
+                        sc.ScrollDown();
+                        break;
+                    case ConsoleKey.LeftArrow:
+                        sc.ScrollLeft();
+                        break;
+                    case ConsoleKey.RightArrow:
+                        sc.ScrollRight();
+                        break;
+                }
+                sc.Draw();
             }
             //s.RefreshContent();
-            /*
-            Console.WriteLine("<cfA0BD67>XDDD</cf>");
-            Console.WriteLine(Renderer.StripFormating("<cfA0BD67><cfA0BD67>XDDD</cf></cf>"));
-            Console.WriteLine(Renderer.StripFormating("<cfA0BD67>XDDD</cf>"));
+            
             
             
 
             
-            Bitmap b2 = new Bitmap("picture.jpg");
+            Bitmap b2 = new Bitmap("lol2.jpg");
 
             Bitmap b = new Bitmap("image.jpg");
             int counter = 0;
 
-            UI.Containers.PictureBox pb = new UI.Containers.PictureBox(new Int2(0, 0), new Int2(200, 50), "", Misc.Boxes.BoxType.none, b2)
+            UI.Containers.PictureBox pb = new UI.Containers.PictureBox(new Int2(0, 0), new Int2(400, 100), "", Misc.Boxes.BoxType.none, b2)
             {
                 SizeDifferenceHandling = UI.Containers.Container.ContentHandling.FitContent,
                 BitsPerColor = UI.Containers.PictureBox.ColorEncoding.Bit24
@@ -68,7 +76,7 @@ namespace PiwotDrawingLib
                 counter++;
                 Console.ReadKey(true);
             }
-            */
+            
             /*
             UI.Containers.SimpleFunctionDisplay fd = new UI.Containers.SimpleFunctionDisplay(new Int2(0, 0), new Int2(150, 50), "Main menu", Misc.Boxes.BoxType.round, (x) => x);
             fd.Draw();

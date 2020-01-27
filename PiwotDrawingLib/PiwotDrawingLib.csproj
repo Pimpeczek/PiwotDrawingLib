@@ -75,12 +75,14 @@
     <Compile Include="UI\Containers\Menu.cs" />
     <Compile Include="UI\Controls\ButtonControl.cs" />
     <Compile Include="UI\Controls\CheckBoxControl.cs" />
+    <Compile Include="UI\Controls\ContainerControl.cs" />
     <Compile Include="UI\Controls\FloatSwitcherControl.cs" />
     <Compile Include="UI\Controls\IntSwitcherControl.cs" />
     <Compile Include="UI\Controls\LabelControl.cs" />
     <Compile Include="UI\Controls\LineSeparatorControl.cs" />
     <Compile Include="UI\Controls\MenuControl.cs" />
     <Compile Include="UI\Controls\Interfaces\IPressable.cs" />
+    <Compile Include="UI\Controls\Scroll.cs" />
     <Compile Include="UI\Controls\StringSwitcherControl.cs" />
     <Compile Include="UI\Controls\Interfaces\ISwitchable.cs" />
     <Compile Include="UI\Controls\SwitcherControl.cs" />
