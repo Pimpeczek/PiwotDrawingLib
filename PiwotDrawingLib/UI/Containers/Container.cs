@@ -4,19 +4,20 @@ using System.Linq;
 using System.Text;
 using PiwotToolsLib.PMath;
 using PiwotToolsLib.Data;
+using PiwotDrawingLib.Drawing;
 
 namespace PiwotDrawingLib.UI.Containers
 {
-    public abstract class Container
+    public abstract class Container: UIElement
     {
         #region Variables
 
         public enum ContentHandling { ResizeContent, FitContent, CropContent}
+
         /// <summary>
-        /// Position of the container.
+        /// Position of the UI element.
         /// </summary>
-        protected Int2 position;
-        public Int2 Position
+        override public Int2 Position
         {
             get
             {
@@ -27,12 +28,8 @@ namespace PiwotDrawingLib.UI.Containers
                 if (value < Int2.Zero)
                     throw new Exceptions.InvalidContainerPositionException(this);
 
-                if (IsVIsable)
-                    Erase();
                 position = value ?? throw new ArgumentNullException();
                 contentPosition = position + (boxType != Misc.Boxes.BoxType.none ? Int2.One : Int2.Zero);
-                if (IsVIsable)
-                    Draw();
 
             }
         }
@@ -40,8 +37,7 @@ namespace PiwotDrawingLib.UI.Containers
         /// <summary>
         /// Size of the container.
         /// </summary>
-        protected Int2 size;
-        public virtual Int2 Size
+        override public Int2 Size
         {
             get
             {
@@ -53,10 +49,6 @@ namespace PiwotDrawingLib.UI.Containers
                     throw new Exceptions.InvalidContainerSizeException(this);
                 
                 
-                if (IsVIsable)
-                {
-                    Erase();
-                }
                 size = value ?? throw new ArgumentNullException();
                 contentSize = size - (boxType != Misc.Boxes.BoxType.none ? Int2.One * 2 : Int2.Zero);
                 canvas.ResizeCanvas(size);
@@ -111,6 +103,10 @@ namespace PiwotDrawingLib.UI.Containers
         protected char[] boxCharacters = Misc.Boxes.GetBoxArray(Misc.Boxes.BoxType.normal);
 
         protected Drawing.Canvas canvas;
+
+        protected List<UIElement> children;
+
+
         #endregion
 
 
@@ -137,14 +133,20 @@ namespace PiwotDrawingLib.UI.Containers
             DrawWindow();
             DrawContent();
             canvas.ApplyNewFrame();
-            Drawing.Renderer.Draw(canvas, position.X, position.Y);
+            if (parent == null)
+            {
+                Drawing.Renderer.Draw(canvas, position.X, position.Y);
+            }
         }
 
         public virtual void RefreshContent()
         {
             DrawContent();
             canvas.ApplyNewFrame();
-            Drawing.Renderer.Draw(canvas, position.X, position.Y);
+            if (parent == null)
+            {
+                Drawing.Renderer.Draw(canvas, position.X, position.Y);
+            }
         }
 
         /// <summary>
@@ -157,11 +159,8 @@ namespace PiwotDrawingLib.UI.Containers
             Erase();
         }
 
-        protected void Erase()
+        override public void Erase()
         {
-
-            canvas.Clear();
-            Drawing.Renderer.Draw(canvas, position.X, position.Y);
 
         }
 
@@ -176,7 +175,51 @@ namespace PiwotDrawingLib.UI.Containers
             //Rendering.Renderer.Write(Name, Position.X + (Size.X - Name.Length) / 2, Position.Y);
 
         }
-        protected abstract void DrawContent();
+        protected virtual void DrawContent()
+        {
+            PrintChildren();
+        }
+
+        protected virtual void PrintChildren()
+        {
+            for(int i = 0; i < children.Count; i++)
+            {
+                if(children[i].Visable)
+                    children[i].PrintOnCanvas(canvas);
+            }
+        }
+
+        public override void PrintOnCanvas(Canvas canvas)
+        {
+            DrawWindow();
+            DrawContent();
+            canvas.ApplyNewFrame();
+            canvas.AddCanvas(this.canvas, position.X, position.Y);
+        }
+
+        public void AddChild(UIElement element)
+        {
+            if (children.Contains(element))
+                return;
+            children.Add(element);
+            if (element.Parent != this)
+                element.Parent = this;
+        }
+
+        public void RemoveChild(UIElement element)
+        {
+            if (!children.Contains(element))
+                return;
+            children.Remove(element);
+
+            if (element.Parent == this)
+                element.Parent = null;
+        }
+
+        public void EraseChild(UIElement element)
+        {
+            canvas.Clear(element.Position, element.Size);
+        }
 
     }
 }

@@ -70,22 +70,24 @@
     <Compile Include="UI\Containers\PictureBox.cs" />
     <Compile Include="UI\Containers\ScrollContainer.cs" />
     <Compile Include="UI\Containers\SimpleFunctionDisplay.cs" />
-    <Compile Include="UI\Controls\AccessableControl.cs" />
-    <Compile Include="UI\Controls\ActionControl.cs" />
+    <Compile Include="UI\Controls\TextDisplay.cs" />
+    <Compile Include="UI\Controls\UIControl.cs" />
+    <Compile Include="UI\Controls_OLD\AccessableControl.cs" />
+    <Compile Include="UI\Controls_OLD\ActionControl.cs" />
     <Compile Include="UI\Containers\Menu.cs" />
-    <Compile Include="UI\Controls\ButtonControl.cs" />
-    <Compile Include="UI\Controls\CheckBoxControl.cs" />
-    <Compile Include="UI\Controls\ContainerControl.cs" />
-    <Compile Include="UI\Controls\FloatSwitcherControl.cs" />
-    <Compile Include="UI\Controls\IntSwitcherControl.cs" />
-    <Compile Include="UI\Controls\LabelControl.cs" />
-    <Compile Include="UI\Controls\LineSeparatorControl.cs" />
-    <Compile Include="UI\Controls\MenuControl.cs" />
-    <Compile Include="UI\Controls\Interfaces\IPressable.cs" />
-    <Compile Include="UI\Controls\Scroll.cs" />
-    <Compile Include="UI\Controls\StringSwitcherControl.cs" />
-    <Compile Include="UI\Controls\Interfaces\ISwitchable.cs" />
-    <Compile Include="UI\Controls\SwitcherControl.cs" />
+    <Compile Include="UI\Controls_OLD\ButtonControl.cs" />
+    <Compile Include="UI\Controls_OLD\CheckBoxControl.cs" />
+    <Compile Include="UI\Controls_OLD\ContainerControl.cs" />
+    <Compile Include="UI\Controls_OLD\FloatSwitcherControl.cs" />
+    <Compile Include="UI\Controls_OLD\IntSwitcherControl.cs" />
+    <Compile Include="UI\Controls_OLD\LabelControl.cs" />
+    <Compile Include="UI\Controls_OLD\LineSeparatorControl.cs" />
+    <Compile Include="UI\Controls_OLD\MenuControl.cs" />
+    <Compile Include="UI\Controls_OLD\Interfaces\IPressable.cs" />
+    <Compile Include="UI\Controls_OLD\Scroll.cs" />
+    <Compile Include="UI\Controls_OLD\StringSwitcherControl.cs" />
+    <Compile Include="UI\Controls_OLD\Interfaces\ISwitchable.cs" />
+    <Compile Include="UI\Controls_OLD\SwitcherControl.cs" />
     <Compile Include="UI\Events\ButtonEvent.cs" />
     <Compile Include="UI\Events\CheckBoxEvent.cs" />
     <Compile Include="UI\Events\FloatSwitcherEvent.cs" />
@@ -99,6 +101,7 @@
     <Compile Include="UI\Exceptions\InvalidContainerSizeException.cs" />
     <Compile Include="Drawing\Exceptions\InvalidFormatException.cs" />
     <Compile Include="UI\Exceptions\InvalidFormatException.cs" />
+    <Compile Include="UI\UIElement.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

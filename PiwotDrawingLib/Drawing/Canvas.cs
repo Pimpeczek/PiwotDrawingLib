@@ -16,6 +16,8 @@ namespace PiwotDrawingLib.Drawing
 
         public bool[,] refreshMap;
 
+        bool canvasUpToDate;
+
         bool useColor;
 
         /// <summary>
@@ -74,6 +76,7 @@ namespace PiwotDrawingLib.Drawing
                     refreshMap[i, j] = false;
                 }
             }
+            canvasUpToDate = false;
         }
 
 
@@ -162,6 +165,7 @@ namespace PiwotDrawingLib.Drawing
             canvasCharMap = newCanvasCharMap;
 
             refreshMap = newRefreshMap;
+            canvasUpToDate = false;
         }
 
         public void DrawOnCanvas(string Text, int x, int y)
@@ -190,7 +194,7 @@ namespace PiwotDrawingLib.Drawing
                 }
                 refreshMap[y, Size.X] = true;
             }
-
+            canvasUpToDate = false;
         }
 
         public void DrawOnCanvas(char Char, int x, int y)
@@ -212,13 +216,13 @@ namespace PiwotDrawingLib.Drawing
                 }
                 refreshMap[y, Size.X] = true;
             }
-            
-            
-
+            canvasUpToDate = false;
         }
 
         public void ApplyNewFrame()
         {
+            if (canvasUpToDate)
+                return;
             for (int y = 0; y < Size.Y; y++)
             {
                 if (refreshMap[y, Size.X])
@@ -230,6 +234,7 @@ namespace PiwotDrawingLib.Drawing
                     }
                 }
             }
+            canvasUpToDate = true;
         }
 
         public void Clear()
@@ -250,6 +255,33 @@ namespace PiwotDrawingLib.Drawing
                     refreshMap[i, j] = false;
                 }
             }
+            canvasUpToDate = false;
+        }
+
+        public void Clear(Int2 position, Int2 size)
+        {
+            Clear(position.X, position.Y, size.X, size.Y);
+        }
+
+        public void Clear(int x, int y, int width, int height)
+        {
+            for (int i = y; i < Size.Y && i < height; i++)
+            {
+                refreshMap[i, Size.X] = false;
+                for (int j = x; j < Size.X && j < width; j++)
+                {
+                    frameCharMap[i][j] = ' ';
+                    frameFrontColorMap[i, j] = Renderer.defFHex;
+                    frameBackColorMap[i, j] = Renderer.defBHex;
+
+                    canvasCharMap[i][j] = ' ';
+                    canvasFrontColorMap[i, j] = Renderer.defFHex;
+                    canvasBackColorMap[i, j] = Renderer.defBHex;
+
+                    refreshMap[i, j] = false;
+                }
+            }
+            canvasUpToDate = false;
         }
 
         private void UpdateOneCell(int x, int y)
@@ -324,7 +356,7 @@ namespace PiwotDrawingLib.Drawing
                 y++;
             }
 
-
+            canvasUpToDate = false;
         }
 
     }

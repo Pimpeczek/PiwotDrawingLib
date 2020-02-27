@@ -294,7 +294,6 @@ namespace PiwotDrawingLib.UI.Containers
         protected override void DrawContent()
         {
             canvas.AddCanvas(scrollingCanvas, contentPosition.X, contentPosition.Y, scrollViewPoint.X, scrollViewPoint.Y, visableCanvasSize.X, visableCanvasSize.Y);
-            
         }
 
 
