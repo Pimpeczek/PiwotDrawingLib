@@ -64,7 +64,6 @@
     <Compile Include="Misc\Rend_test.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UI\Containers\Canvas_Legacy.cs" />
     <Compile Include="Drawing\Canvas.cs" />
     <Compile Include="UI\Containers\Container.cs" />
     <Compile Include="UI\Containers\PictureBox.cs" />
@@ -72,30 +71,6 @@
     <Compile Include="UI\Containers\SimpleFunctionDisplay.cs" />
     <Compile Include="UI\Controls\TextDisplay.cs" />
     <Compile Include="UI\Controls\UIControl.cs" />
-    <Compile Include="UI\Controls_OLD\AccessableControl.cs" />
-    <Compile Include="UI\Controls_OLD\ActionControl.cs" />
-    <Compile Include="UI\Containers\Menu.cs" />
-    <Compile Include="UI\Controls_OLD\ButtonControl.cs" />
-    <Compile Include="UI\Controls_OLD\CheckBoxControl.cs" />
-    <Compile Include="UI\Controls_OLD\ContainerControl.cs" />
-    <Compile Include="UI\Controls_OLD\FloatSwitcherControl.cs" />
-    <Compile Include="UI\Controls_OLD\IntSwitcherControl.cs" />
-    <Compile Include="UI\Controls_OLD\LabelControl.cs" />
-    <Compile Include="UI\Controls_OLD\LineSeparatorControl.cs" />
-    <Compile Include="UI\Controls_OLD\MenuControl.cs" />
-    <Compile Include="UI\Controls_OLD\Interfaces\IPressable.cs" />
-    <Compile Include="UI\Controls_OLD\Scroll.cs" />
-    <Compile Include="UI\Controls_OLD\StringSwitcherControl.cs" />
-    <Compile Include="UI\Controls_OLD\Interfaces\ISwitchable.cs" />
-    <Compile Include="UI\Controls_OLD\SwitcherControl.cs" />
-    <Compile Include="UI\Events\ButtonEvent.cs" />
-    <Compile Include="UI\Events\CheckBoxEvent.cs" />
-    <Compile Include="UI\Events\FloatSwitcherEvent.cs" />
-    <Compile Include="UI\Events\IntSwitcherEvent.cs" />
-    <Compile Include="UI\Events\MenuBindingEvent.cs" />
-    <Compile Include="UI\Events\MenuControllEvent.cs" />
-    <Compile Include="UI\Events\MenuEvent.cs" />
-    <Compile Include="UI\Events\StringSwitcherEvent.cs" />
     <Compile Include="UI\Exceptions\IdentificatorNotFoundException.cs" />
     <Compile Include="UI\Exceptions\InvalidContainerPositionException.cs" />
     <Compile Include="UI\Exceptions\InvalidContainerSizeException.cs" />
@@ -107,8 +82,6 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="UI\SubClasses\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

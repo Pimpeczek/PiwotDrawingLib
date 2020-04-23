@@ -268,7 +268,7 @@ namespace PiwotDrawingLib.UI.Containers
 
 
         /// <summary>
-        /// Registers this container in the <c>Renderer</c> drawing registry.
+        /// Registers this container in the <c>Renderer</c> async drawing registry.
         /// </summary>
         public void Register()
         {
@@ -276,6 +276,17 @@ namespace PiwotDrawingLib.UI.Containers
                 return;
             Registered = true;
             Renderer.RegisterContainer(this);
+        }
+
+        /// <summary>
+        /// Unregisters this container from the <c>Renderer</c> async drawing registry.
+        /// </summary>
+        public void Unregister()
+        {
+            if (!Registered)
+                return;
+            Registered = false;
+            Renderer.UnregisterContainer(this);
         }
 
     }

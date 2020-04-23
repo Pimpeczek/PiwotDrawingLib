@@ -9,8 +9,7 @@ namespace PiwotDrawingLib.UI.Controls
 {
     class UIControl : UIElement
     {
-        
-
+     
         public override void PrintOnCanvas(Canvas canvas)
         {
             throw new NotImplementedException();

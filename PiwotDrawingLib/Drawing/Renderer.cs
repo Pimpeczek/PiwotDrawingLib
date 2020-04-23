@@ -57,17 +57,7 @@ namespace PiwotDrawingLib.Drawing
         public static readonly string defBHex = "000000";
         static readonly string defFHexTag = $"<cfFFFFFF>";
         static readonly string defBHexTag = $"<cb000000>";
-        /*
-        static string[,] frameFrontColorMap;
-        static string[,] frameBackColorMap;
-        static char[][] frameCharMap;
 
-        static string[,] canvasFrontColorMap;
-        static string[,] canvasBackColorMap;
-        static char[][] canvasCharMap;
-
-        static bool[,] refreshMap;
-        */
 
         static int frameLenght;
 
@@ -188,129 +178,7 @@ namespace PiwotDrawingLib.Drawing
 
             containerRegistry = new List<UI.Containers.Container>();
         }
-        /*
-        private static void CreateCanvas()
-        {
-            canvasSize = new Int2(windowSize.X, windowSize.Y);
-            frameFrontColorMap = new string[canvasSize.Y, canvasSize.X];
-            frameBackColorMap = new string[canvasSize.Y, canvasSize.X];
-            frameCharMap = new char[canvasSize.Y][];
-
-            canvasFrontColorMap = new string[canvasSize.Y, canvasSize.X];
-            canvasBackColorMap = new string[canvasSize.Y, canvasSize.X];
-            canvasCharMap = new char[canvasSize.Y][];
-
-            refreshMap = new bool[canvasSize.Y, canvasSize.X + 1];
-
-            for (int i = 0; i < canvasSize.Y; i++)
-            {
-                frameCharMap[i] = new char[canvasSize.X];
-
-                canvasCharMap[i] = new char[canvasSize.X];
-                refreshMap[i, canvasSize.X] = false;
-                for (int j = 0; j < canvasSize.X; j++)
-                {
-                    frameCharMap[i][j] = ' ';
-                    frameFrontColorMap[i, j] = defFHex;
-                    frameBackColorMap[i, j] = defBHex;
-
-                    canvasCharMap[i][j] = ' ';
-                    canvasFrontColorMap[i, j] = defFHex;
-                    canvasBackColorMap[i, j] = defBHex;
-
-                    refreshMap[i, j] = false;
-                }
-            }
-        }
-
-        private static void ResizeCanvas(Int2 newSize)
-        {
-            while (nowDrawingFrame) { }
-            string[,] newFrameFrontColorMap;
-            string[,] newFrameBackColorMap;
-            char[][] newFrameCharMap;
-
-            string[,] newCanvasFrontColorMap;
-            string[,] newCanvasBackColorMap;
-            char[][] newCanvasCharMap;
-
-
-            bool[,] newRefreshMap;
-            newFrameFrontColorMap = new string[newSize.Y, newSize.X];
-            newFrameBackColorMap = new string[newSize.Y, newSize.X];
-            newFrameCharMap = new char[newSize.Y][];
-
-            newCanvasFrontColorMap = new string[newSize.Y, newSize.X];
-            newCanvasBackColorMap = new string[newSize.Y, newSize.X];
-            newCanvasCharMap = new char[newSize.Y][];
-
-            newRefreshMap = new bool[newSize.Y, newSize.X + 1];
-
-            for (int i = 0; i < newSize.Y && i < canvasSize.Y; i++)
-            {
-                newFrameCharMap[i] = new char[newSize.X + 1];
-                newFrameCharMap[i][newSize.X] = ' ';
-
-                newCanvasCharMap[i] = new char[newSize.X + 1];
-                newCanvasCharMap[i][newSize.X] = ' ';
-
-                for (int j = 0; j < newSize.X && j < canvasSize.X; j++)
-                {
-                    newFrameCharMap[i][j] = frameCharMap[i][j];
-                    newFrameFrontColorMap[i, j] = frameFrontColorMap[i, j];
-                    newFrameBackColorMap[i, j] = frameBackColorMap[i, j];
-
-                    newCanvasCharMap[i][j] = canvasCharMap[i][j];
-                    newCanvasFrontColorMap[i, j] = canvasFrontColorMap[i, j];
-                    newCanvasBackColorMap[i, j] = canvasBackColorMap[i, j];
-
-                    newRefreshMap[i, j] = refreshMap[i, j];
-                }
-                for (int j = canvasSize.X; j < newSize.X; j++)
-                {
-                    newFrameCharMap[i][j] = ' ';
-                    newFrameFrontColorMap[i, j] = defFHex;
-                    newFrameBackColorMap[i, j] = defBHex;
-
-                    newCanvasCharMap[i][j] = ' ';
-                    newCanvasFrontColorMap[i, j] = defFHex;
-                    newCanvasBackColorMap[i, j] = defBHex;
-                    newRefreshMap[i, j] = false;
-                }
-            }
-
-            for (int i = canvasSize.Y; i < newSize.Y; i++)
-            {
-                newFrameCharMap[i] = new char[newSize.X + 1];
-                newFrameCharMap[i][newSize.X] = ' ';
-
-                newCanvasCharMap[i] = new char[newSize.X + 1];
-                newCanvasCharMap[i][newSize.X] = ' ';
-
-                for (int j = 0; j < newSize.X; j++)
-                {
-                    newFrameCharMap[i][j] = ' ';
-                    newFrameFrontColorMap[i, j] = defFHex;
-                    newFrameBackColorMap[i, j] = defBHex;
-
-                    newCanvasCharMap[i][j] = ' ';
-                    newCanvasFrontColorMap[i, j] = defFHex;
-                    newCanvasBackColorMap[i, j] = defBHex;
-                    newRefreshMap[i, j] = false;
-                }
-            }
-            canvasSize = new Int2(newSize);
-            frameFrontColorMap = (string[,])newFrameFrontColorMap.Clone();
-            frameBackColorMap = (string[,])newFrameBackColorMap.Clone();
-            frameCharMap = newFrameCharMap;
-
-            canvasFrontColorMap = (string[,])newCanvasFrontColorMap.Clone();
-            canvasBackColorMap = (string[,])newCanvasBackColorMap.Clone();
-            canvasCharMap = newCanvasCharMap;
-
-            refreshMap = newRefreshMap;
-        }
-        */
+        
         private static void SetupConsoleWindow()
         {
             try
@@ -415,80 +283,7 @@ namespace PiwotDrawingLib.Drawing
         #endregion
 
         #region Canvas Operations
-        /*
-        static void DrawOnCanvas(string Text, string FID, string BID, int x, int y)
-        {
-
-            for (int i = 0; i < Text.Length && x < canvasSize.X; i++)
-            {
-                if (x >= 0)
-                {
-                    frameCharMap[y][x] = Text[i];
-                    if (useColor)
-                    {
-                        frameFrontColorMap[y, x] = FID;
-
-                        frameBackColorMap[y, x] = BID;
-                    }
-                }
-                x++;
-            }
-            refreshMap[y, canvasSize.X] = true;
-        }
         
-        /// <summary>
-        /// Draws current frame on the canvas and updates difference map.
-        /// </summary>
-        public static void ApplyNewFrame()
-        {
-            for (int y = 0; y < canvasSize.Y; y++)
-            {
-                if (refreshMap[y, canvasSize.X])
-                {
-                    refreshMap[y, canvasSize.X] = false;
-                    for (int x = 0; x < canvasSize.X; x++)
-                    {
-                        UpdateOneCell(x, y);
-                    }
-                }
-            }
-        }
-        
-        /// <summary>
-        /// Checks if the specified frame cell is different from canvas cell and if so updates the canvas as well as refresh map.
-        /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        private static void UpdateOneCell(int x, int y)
-        {
-            bool tFlag = false;
-            if (useColor)
-            {
-                if (frameFrontColorMap[y, x] != canvasFrontColorMap[y, x])
-                {
-                    canvasFrontColorMap[y, x] = frameFrontColorMap[y, x];
-                    tFlag = true;
-                }
-
-                if (frameBackColorMap[y, x] != canvasBackColorMap[y, x])
-                {
-                    canvasBackColorMap[y, x] = frameBackColorMap[y, x];
-                    tFlag = true;
-                }
-            }
-            if (frameCharMap[y][x] != canvasCharMap[y][x])
-            {
-                canvasCharMap[y][x] = frameCharMap[y][x];
-                tFlag = true;
-            }
-
-            if (tFlag)
-            {
-                refreshMap[y, x] = true;
-                refreshMap[y, canvasSize.X] = true;
-            }
-        }
-        */
         /// <summary>
         /// Creates and enqueues new drawing request.
         /// </summary>
@@ -799,9 +594,28 @@ namespace PiwotDrawingLib.Drawing
             Draw(value.ToString(), defFHex, defBHex, x, y);
         }
 
+        /// <summary>Draws a given canvas on a given position.</summary>
+        /// <para>For a string representation with '\n' character(s) Renderer will print all lines in a column.</para>
+        /// <param name="printedCanvas">Canvas to be printed.</param>
+        /// <param name="x">Horizontal distance from the top left corner.</param>
+        /// <param name="y">Vertical distance from the top left corner.</param>>
         public static void Draw(Canvas printedCanvas, int x, int y)
         {
             canvas.AddCanvas(printedCanvas, x, y);
+        }
+
+        /// <summary>Draws a part of a given canvas on a given position.</summary>
+        /// <para>For a string representation with '\n' character(s) Renderer will print all lines in a column.</para>
+        /// <param name="printedCanvas">Canvas to be printed.</param>
+        /// <param name="x">Horizontal distance from the top left corner.</param>
+        /// <param name="y">Vertical distance from the top left corner.</param>>
+        /// <param name="fromX">Horizontal distance from the top left corner of the printed canvas.</param>
+        /// <param name="fromY">Vertical distance from the top left corner of the printed canvas.</param>
+        /// <param name="width">The width of the drawn part of the given canvas.</param>
+        /// <param name="height">The height of the drawn part of the given canvas.</param>
+        public static void Draw(Canvas printedCanvas, int x, int y, int fromX, int fromY, int width, int height)
+        {
+            canvas.AddCanvas(printedCanvas, x, y, fromX, fromY, width, height);
         }
 
 
@@ -846,9 +660,6 @@ namespace PiwotDrawingLib.Drawing
 
                 if (pos > prevPos)
                 {
-
-                    //retStr += str.Substring(prevPos, pos - prevPos).Pastel(curFHex).PastelBg(curBHex);
-                    //Rendering.Renderer.Write(str.Substring(prevPos, str.Length - prevPos) + " ", 60, 1);
                     Draw(text.Substring(prevPos, pos - prevPos), curFHex, curBHex, x + xOffset, y);
                     xOffset += pos - prevPos;
                 }
@@ -869,9 +680,6 @@ namespace PiwotDrawingLib.Drawing
             }
             if (text.Length >= prevPos && pos != prevPos)
             {
-                //retStr += str.Substring(prevPos, str.Length - prevPos).Pastel(curFHex).PastelBg(curBHex);
-                //RawWrite(text.Substring(prevPos, text.Length - prevPos) + " ", 0, 49);
-                //Console.ReadKey(true);
                 Draw(text.Substring(prevPos, text.Length - prevPos), curFHex, curBHex, x + xOffset, y);
             }
         }
@@ -918,7 +726,13 @@ namespace PiwotDrawingLib.Drawing
         }
         #endregion
 
+        #region UI operations
 
+
+        /// <summary>
+        /// Registers a given container in a async printing registry to be printed every frame if the AsyncMode is turned on.
+        /// </summary>
+        /// <param name="container"></param>
         public static void RegisterContainer(UI.Containers.Container container)
         {
             if (containerRegistry.Contains(container))
@@ -926,6 +740,22 @@ namespace PiwotDrawingLib.Drawing
             containerRegistry.Add(container);
             container.Register();
         }
+
+        /// <summary>
+        /// Unregisters a given container from the async printing registry.
+        /// </summary>
+        /// <param name="container"></param>
+        public static void UnregisterContainer(UI.Containers.Container container)
+        {
+            if (!containerRegistry.Contains(container))
+                return;
+            containerRegistry.Remove(container);
+            container.Unregister();
+        }
+
+
+
+        #endregion
 
     }
 }
