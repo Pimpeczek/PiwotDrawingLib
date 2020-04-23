@@ -6,11 +6,19 @@ using PiwotToolsLib.PMath;
 
 namespace PiwotDrawingLib.UI
 {
+    /// <summary>
+    /// The base class for all UI elements.
+    /// </summary>
     public abstract class UIElement
     {
-
+        /// <summary>
+        /// Determines if a given element is visable.
+        /// </summary>
         protected bool visable;
 
+        /// <summary>
+        /// Determines if a given element is visable.
+        /// </summary>
         public bool Visable
         {
             get
@@ -30,8 +38,14 @@ namespace PiwotDrawingLib.UI
             }
         }
 
+        /// <summary>
+        /// The parent of this element.
+        /// </summary>
         protected Containers.Container parent;
 
+        /// <summary>
+        /// The parent of this element.
+        /// </summary>
         public Containers.Container Parent
         {
             get
@@ -43,10 +57,13 @@ namespace PiwotDrawingLib.UI
                 if(parent != null)
                 {
                     parent.RemoveChild(this);
-                    parent = value;
                 }
-                if (value != null)
-                    value.AddChild(this);
+                parent = value;
+                if (parent != null)
+                {
+                    parent.AddChild(this);
+                }
+                
             }
         }
         /// <summary>
@@ -93,6 +110,7 @@ namespace PiwotDrawingLib.UI
         {
             size = Int2.One;
             position = Int2.Zero;
+            visable = true;
         }
 
         /// <summary>
@@ -103,6 +121,21 @@ namespace PiwotDrawingLib.UI
             visable = true;
         }
 
+        /// <summary>
+        /// Clears the element.
+        /// </summary>
+        virtual public void Clear()
+        {
+            if (parent != null)
+            {
+                parent.EraseChild(this);
+            }
+            
+        }
+
+        /// <summary>
+        /// Erases the element from the screen.
+        /// </summary>
         virtual public void Erase()
         {
             if (!visable)
@@ -111,6 +144,8 @@ namespace PiwotDrawingLib.UI
             if (parent != null)
                 parent.EraseChild(this);
         }
+
+
 
 
     }

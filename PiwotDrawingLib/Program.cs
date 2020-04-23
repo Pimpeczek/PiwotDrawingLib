@@ -10,6 +10,7 @@ using PiwotToolsLib.PMath;
 using System.Text;
 using System.Activities;
 using System.Runtime.InteropServices;
+using PiwotDrawingLib.UI.Containers;
 
 namespace PiwotDrawingLib
 {
@@ -19,14 +20,15 @@ namespace PiwotDrawingLib
         //private static extern IntPtr GetConsoleWindow();
         static void Main(string[] args)
         {
-            Renderer.WindowSize = new Int2(200, 50);
+            
+
             Renderer.FrameLenght = 30;
             
-            UI.Containers.ScrollContainer sc = new UI.Containers.ScrollContainer(Int2.Zero, new Int2(200, 50), "SV", Misc.Boxes.BoxType.round)
-            {
-                ScrollViewSize = new Int2(300, 100),
-            };
+            UI.Containers.ScrollContainer sc = new UI.Containers.ScrollContainer(Int2.Zero, new Int2(20, 10), new Int2(19, 200), "SV", Misc.Boxes.BoxType.dashed);
+
+            sc.Register();
             Console.ReadKey(true);
+            bool pingpong = true;
             while (true)
             {
                 
@@ -45,8 +47,12 @@ namespace PiwotDrawingLib
                     case ConsoleKey.RightArrow:
                         sc.ScrollRight();
                         break;
+                    case ConsoleKey.P:
+                        pingpong = !pingpong;
+                        break;
+                     
                 }
-                sc.Draw();
+                //sc.Draw();
             }
             //s.RefreshContent();
             

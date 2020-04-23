@@ -8,7 +8,12 @@ using PiwotDrawingLib.Drawing;
 
 namespace PiwotDrawingLib.UI.Containers
 {
-    public abstract class Container: UIElement
+
+    /// <summary>
+    /// The basic UI container class.
+    /// Can display <c>UIElement</c>s.
+    /// </summary>
+    public class Container: UIElement
     {
         #region Variables
 
@@ -29,7 +34,8 @@ namespace PiwotDrawingLib.UI.Containers
                     throw new Exceptions.InvalidContainerPositionException(this);
 
                 position = value ?? throw new ArgumentNullException();
-                contentPosition = position + (boxType != Misc.Boxes.BoxType.none ? Int2.One : Int2.Zero);
+                contentLocalPosition = boxType != Misc.Boxes.BoxType.none ? Int2.One : Int2.Zero;
+                contentPosition = position + contentLocalPosition;
 
             }
         }
@@ -50,11 +56,14 @@ namespace PiwotDrawingLib.UI.Containers
                 
                 
                 size = value ?? throw new ArgumentNullException();
-                contentSize = size - (boxType != Misc.Boxes.BoxType.none ? Int2.One * 2 : Int2.Zero);
+                contentSize = size - contentLocalPosition * 2;
                 canvas.ResizeCanvas(size);
-                Erase();
+
                 if (IsVIsable)
+                {
+                    Clear();
                     Draw();
+                }
             }
         }
 
@@ -78,14 +87,23 @@ namespace PiwotDrawingLib.UI.Containers
         }
 
         protected Int2 contentSize;
+        public Int2 ContentSize
+        {
+            get
+            {
+                return new Int2(contentSize);
+            }
+        }
         protected Int2 contentPosition;
+        protected Int2 contentLocalPosition;
 
+        
 
         public bool IsVIsable { get; protected set; }
         protected string emptyLine;
         protected string fullEmptyLine;
         protected Misc.Boxes.BoxType boxType = Misc.Boxes.BoxType.normal;
-        public Misc.Boxes.BoxType BoxType
+        public virtual Misc.Boxes.BoxType BoxType
         {
             get
             {
@@ -98,6 +116,8 @@ namespace PiwotDrawingLib.UI.Containers
 
                 boxType = value;
                 boxCharacters = Misc.Boxes.GetBoxArray(boxType);
+                contentLocalPosition = boxType == Misc.Boxes.BoxType.none ? Int2.Zero : Int2.One;
+                Size = size;
             }
         }
         protected char[] boxCharacters = Misc.Boxes.GetBoxArray(Misc.Boxes.BoxType.normal);
@@ -106,13 +126,21 @@ namespace PiwotDrawingLib.UI.Containers
 
         protected List<UIElement> children;
 
+        public List<UIElement> Children { get{ return children; } }
+        public bool Registered { get; protected set; }
 
         #endregion
 
 
 
-       
 
+        /// <summary>
+        /// Creates and instance of Container class.
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="size"></param>
+        /// <param name="name"></param>
+        /// <param name="boxType"></param>
         public Container(Int2 position, Int2 size, string name, Misc.Boxes.BoxType boxType)
         {
             this.boxType = boxType;
@@ -121,13 +149,14 @@ namespace PiwotDrawingLib.UI.Containers
             Size = size;
             Name = name;
             boxCharacters = Misc.Boxes.GetBoxArray(boxType);
-
+            Registered = false;
+            children = new List<UIElement>();
         }
 
         /// <summary>
         /// Draws menu window and controls.
         /// </summary>
-        public void Draw()
+        public virtual void Draw()
         {
             IsVIsable = true;
             DrawWindow();
@@ -152,15 +181,19 @@ namespace PiwotDrawingLib.UI.Containers
         /// <summary>
         /// Erases menu window and its content.
         /// </summary>
-        public void Hide()
-        {
-            
-            IsVIsable = false;
-            Erase();
-        }
-
         override public void Erase()
         {
+            if (!visable)
+                return;
+            visable = false;
+            if (parent != null)
+            {
+                parent.EraseChild(this);
+            }
+            else
+            {
+                //let the renderer know
+            }
 
         }
 
@@ -169,17 +202,22 @@ namespace PiwotDrawingLib.UI.Containers
             
             if (boxType != Misc.Boxes.BoxType.none)
             {
-                Misc.Boxes.DrawBox(canvas, boxType, position.X, position.Y, size.X, size.Y);
+                Misc.Boxes.DrawBox(canvas, boxType, 0,0, size.X, size.Y, false);
                 canvas.DrawOnCanvas(Name, (size.X - Name.Length) / 2, 0);
             }
             //Rendering.Renderer.Write(Name, Position.X + (Size.X - Name.Length) / 2, Position.Y);
 
         }
+
+
         protected virtual void DrawContent()
         {
             PrintChildren();
         }
 
+        /// <summary>
+        /// Prints children on this Container's canvas.
+        /// </summary>
         protected virtual void PrintChildren()
         {
             for(int i = 0; i < children.Count; i++)
@@ -189,11 +227,15 @@ namespace PiwotDrawingLib.UI.Containers
             }
         }
 
+        /// <summary>
+        /// Prints this container on a given canvas.
+        /// </summary>
+        /// <param name="canvas"></param>
         public override void PrintOnCanvas(Canvas canvas)
         {
             DrawWindow();
             DrawContent();
-            canvas.ApplyNewFrame();
+            this.canvas.ApplyNewFrame();
             canvas.AddCanvas(this.canvas, position.X, position.Y);
         }
 
@@ -202,6 +244,7 @@ namespace PiwotDrawingLib.UI.Containers
             if (children.Contains(element))
                 return;
             children.Add(element);
+
             if (element.Parent != this)
                 element.Parent = this;
         }
@@ -218,7 +261,21 @@ namespace PiwotDrawingLib.UI.Containers
 
         public void EraseChild(UIElement element)
         {
+            Drawing.Renderer.Draw($"CLEAR {element.Size}", 0, 40);
+
             canvas.Clear(element.Position, element.Size);
+        }
+
+
+        /// <summary>
+        /// Registers this container in the <c>Renderer</c> drawing registry.
+        /// </summary>
+        public void Register()
+        {
+            if (Registered)
+                return;
+            Registered = true;
+            Renderer.RegisterContainer(this);
         }
 
     }

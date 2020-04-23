@@ -29,7 +29,7 @@ namespace PiwotDrawingLib.UI.Containers
             {
                 if (verticalTextWrapping == value)
                     return;
-                Hide();
+                Clear();
                 if (verticalTextWrapping == Wrapping.wrapping)
                 {
                     size = new Int2(size.X, controls.Count + 2);
@@ -184,7 +184,7 @@ namespace PiwotDrawingLib.UI.Containers
 
             } while (waitForInput);
 
-            Hide();
+            Clear();
         }
 
         /// <summary>

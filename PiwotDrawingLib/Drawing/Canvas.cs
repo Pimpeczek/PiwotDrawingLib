@@ -314,6 +314,12 @@ namespace PiwotDrawingLib.Drawing
             }
         }
 
+        /// <summary>
+        /// Prints a given canvas at a given position on this canvas' frame.
+        /// </summary>
+        /// <param name="canvas"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
         public void AddCanvas(Canvas canvas, int x, int y)
         {
             AddCanvas(canvas, x, y, 0, 0, canvas.Size.X, canvas.Size.Y);

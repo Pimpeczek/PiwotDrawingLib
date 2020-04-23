@@ -141,23 +141,38 @@ namespace PiwotDrawingLib.Misc
 
         }
 
+
         public static void DrawBox(Drawing.Canvas canvas, BoxType boxType, int x, int y, int sx, int sy)
         {
-            DrawBox(canvas, GetBoxArray(boxType), x, y, sx, sy);
+            DrawBox(canvas, GetBoxArray(boxType), x, y, sx, sy, true);
         }
-        public static void DrawBox(Drawing.Canvas canvas, Char[] bs, int x, int y, int sx, int sy)
+
+        public static void DrawBox(Drawing.Canvas canvas, BoxType boxType, int x, int y, int sx, int sy, bool fill)
+        {
+            DrawBox(canvas, GetBoxArray(boxType), x, y, sx, sy, fill);
+        }
+        public static void DrawBox(Drawing.Canvas canvas, Char[] bs, int x, int y, int sx, int sy, bool fill)
         {
             if (bs == null)
                 throw new ArgumentNullException();
             canvas.DrawOnCanvas($"{bs[3]}{"".PadLeft(sx - 2, bs[2])}{bs[0]}", x, y);
-            string midBorder = $"{bs[7]}{"".PadLeft(sx - 2)}{bs[7]}";
-            for (int i = 1; i < sy - 1; i++)
+            if (fill)
             {
-                canvas.DrawOnCanvas(midBorder, x, y + i);
-
+                string midBorder = $"{bs[7]}{"".PadLeft(sx - 2)}{bs[7]}";
+                for (int i = 1; i < sy - 1; i++)
+                {
+                    canvas.DrawOnCanvas(midBorder, x, y + i);
+                }
+            }
+            else
+            {
+                for (int i = 1; i < sy - 1; i++)
+                {
+                    canvas.DrawOnCanvas(bs[7], x, y + i);
+                    canvas.DrawOnCanvas(bs[7], x + sx - 1, y + i);
+                }
             }
             canvas.DrawOnCanvas($"{bs[9]}{"".PadLeft(sx - 2, bs[2])}{bs[6]}", x, y + sy - 1);
-
         }
 
         public static string GetBoxName(string name, BoxType boxType)

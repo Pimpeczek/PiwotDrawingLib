@@ -20,15 +20,13 @@ namespace PiwotDrawingLib.UI.Controls
             }
             set
             {
+                Clear();
                 text = value;
                 textLines = text.Split('\n');
+                Size = new PiwotToolsLib.PMath.Int2(PiwotToolsLib.Data.Arrays.FindBestElementScore(textLines, (x)=>x.Length), textLines.Length);
             }
         }
 
-        public override void Erase()
-        {
-            
-        }
 
         public override void PrintOnCanvas(Canvas canvas)
         {

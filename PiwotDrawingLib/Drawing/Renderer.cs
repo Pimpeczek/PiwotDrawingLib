@@ -1,5 +1,6 @@
 ﻿using Pastel;
 using PiwotToolsLib.PMath;
+using System.Collections.Generic;
 
 namespace PiwotDrawingLib.Drawing
 {
@@ -13,6 +14,9 @@ namespace PiwotDrawingLib.Drawing
 
         static Canvas canvas;
 
+        /// <summary>
+        /// Title of the console window.
+        /// </summary>
         public static string WindowTitle
         {
             get
@@ -24,6 +28,7 @@ namespace PiwotDrawingLib.Drawing
                 System.Console.Title = value;
             }
         }
+
         /// <summary>
         /// Size of the console window. 
         /// </summary>
@@ -153,6 +158,9 @@ namespace PiwotDrawingLib.Drawing
                 canvas.UseColor = value;
             }
         }
+
+        private static List<UI.Containers.Container> containerRegistry;
+
         #endregion
 
         #region Setup
@@ -176,7 +184,9 @@ namespace PiwotDrawingLib.Drawing
             dequeuingThread.Start();
             asyncDrawing = true;
             UseColor = true;
-            
+
+
+            containerRegistry = new List<UI.Containers.Container>();
         }
         /*
         private static void CreateCanvas()
@@ -331,6 +341,10 @@ namespace PiwotDrawingLib.Drawing
                 while (true)
                 {
                     stopwatch.Restart();
+                    for(int i = 0; i < containerRegistry.Count; i++)
+                    {
+                        containerRegistry[i].PrintOnCanvas(canvas);
+                    }
                     ForcePrint();
                     sleepTime = frameLenght - (int)stopwatch.ElapsedMilliseconds;
                     time += stopwatch.ElapsedMilliseconds;
@@ -570,8 +584,6 @@ namespace PiwotDrawingLib.Drawing
                                 }
                                 if(curFCol == null || prevBCol==null)
                                 {
-                                    System.Console.WriteLine($"{x}, {y}");
-                                    System.Console.ReadKey(true);
                                 }
                                 else if (curFCol != prevFCol || prevBCol != curBCol || x == endpos)
                                 {
@@ -905,5 +917,15 @@ namespace PiwotDrawingLib.Drawing
             return str.Substring(mPos, str.Length - mPos - 4 * wrapps);
         }
         #endregion
+
+
+        public static void RegisterContainer(UI.Containers.Container container)
+        {
+            if (containerRegistry.Contains(container))
+                return;
+            containerRegistry.Add(container);
+            container.Register();
+        }
+
     }
 }
