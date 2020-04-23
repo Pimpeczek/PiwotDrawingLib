@@ -109,7 +109,7 @@ namespace PiwotDrawingLib.UI.Containers
                 
                 scrollingCanvas.ResizeCanvas(value);
                 CalculateVisableCanvasSize();
-                Rand.SetSeed(0);
+                /*Rand.SetSeed(0);
                 for (int y = 0; y < scrollingCanvas.Size.Y; y++)
                 {
                     for (int x = 0; x < scrollingCanvas.Size.X; x++)
@@ -118,7 +118,7 @@ namespace PiwotDrawingLib.UI.Containers
                     }
                 }
                 scrollingCanvas.ApplyNewFrame();
-
+                */
             }
         }
 

@@ -116,10 +116,7 @@ namespace PiwotDrawingLib.UI
         /// <summary>
         /// Prints this UI element on a given canvas.
         /// </summary>
-        virtual public void PrintOnCanvas(Drawing.Canvas canvas)
-        {
-            visable = true;
-        }
+        abstract public void PrintOnCanvas(Drawing.Canvas canvas);
 
         /// <summary>
         /// Clears the element.
@@ -144,9 +141,5 @@ namespace PiwotDrawingLib.UI
             if (parent != null)
                 parent.EraseChild(this);
         }
-
-
-
-
     }
 }

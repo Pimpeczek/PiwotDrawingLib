@@ -20,12 +20,18 @@ namespace PiwotDrawingLib
         //private static extern IntPtr GetConsoleWindow();
         static void Main(string[] args)
         {
-            
 
+            Renderer.WindowSize = new Int2(200, 50);
             Renderer.FrameLenght = 30;
             
-            UI.Containers.ScrollContainer sc = new UI.Containers.ScrollContainer(Int2.Zero, new Int2(20, 10), new Int2(19, 200), "SV", Misc.Boxes.BoxType.dashed);
+            UI.Containers.ScrollContainer sc = new UI.Containers.ScrollContainer(Int2.Zero, new Int2(100, 50), new Int2(400, 100), "SV", Misc.Boxes.BoxType.dashed);
+            UI.Controls.PictureBox pictureBox = new UI.Controls.PictureBox(Int2.Zero, new Int2(400, 100), new Bitmap("picture.jpg"))
+            {
+                BitsPerColor = UI.Controls.PictureBox.ColorEncoding.Bit3,
+                SizeDifferenceHandling = Container.ContentHandling.ResizeContent
+            };
 
+            sc.AddChild(pictureBox);
             sc.Register();
             Console.ReadKey(true);
             bool pingpong = true;

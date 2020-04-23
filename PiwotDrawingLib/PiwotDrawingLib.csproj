@@ -32,6 +32,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
@@ -69,6 +70,8 @@
     <Compile Include="UI\Containers\PictureBox.cs" />
     <Compile Include="UI\Containers\ScrollContainer.cs" />
     <Compile Include="UI\Containers\SimpleFunctionDisplay.cs" />
+    <Compile Include="UI\Controls\PictureBox.cs" />
+    <Compile Include="UI\Controls\SimpleFunctionDisplay.cs" />
     <Compile Include="UI\Controls\TextDisplay.cs" />
     <Compile Include="UI\Controls\UIControl.cs" />
     <Compile Include="UI\Exceptions\IdentificatorNotFoundException.cs" />
