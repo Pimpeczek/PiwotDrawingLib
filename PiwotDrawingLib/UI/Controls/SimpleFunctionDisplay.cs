@@ -51,7 +51,7 @@ namespace PiwotDrawingLib.UI.Controls
         {
             float height;
             int iHeight;
-            if (values == null)
+            if (values == null || values.Length != size.X)
             {
                 values = new float[size.X];
             }
@@ -80,20 +80,20 @@ namespace PiwotDrawingLib.UI.Controls
 
                 for (int y = 0; y < size.Y - iHeight; y++)
                 {
-                    canvas.DrawOnCanvas(" ", forwardCol, "000000", 1 + x, 1 + y);
+                    canvas.DrawOnCanvas(" ", forwardCol, "000000", position.X + x, position.Y + y);
                 }
                 if (height >= 0.5f && iHeight != size.Y)
                 {
-                    canvas.DrawOnCanvas("▄", forwardCol, "000000", 1 + x, 1 + size.Y - iHeight - 1);//▬
+                    canvas.DrawOnCanvas("▄", forwardCol, "000000", position.X + x, position.Y + size.Y - iHeight - 1);
                 }
                 else if (iHeight == 0 && height >= 0.1f)
                 {
-                    canvas.DrawOnCanvas("_", forwardCol, "000000", 1 + x, 1 + size.Y - 1);
+                    canvas.DrawOnCanvas("_", forwardCol, "000000", position.X + x, position.Y + size.Y - 1);
                 }
 
                 for (int y = size.Y - iHeight; y < size.Y; y++)
                 {
-                    canvas.DrawOnCanvas("█", forwardCol, "000000", 1 + x, 1 + y);
+                    canvas.DrawOnCanvas("█", forwardCol, "000000", position.X + x, position.Y + y);
                 }
             }
         }

@@ -11,6 +11,22 @@ namespace PiwotDrawingLib.UI
     /// </summary>
     public abstract class UIElement
     {
+
+        protected bool contentRedrawNeeded;
+
+        public bool ContentRedrawNeeded
+        {
+            get
+            {
+                return contentRedrawNeeded;
+            }
+
+            set
+            {
+                contentRedrawNeeded = value;
+            }
+        }
+
         /// <summary>
         /// Determines if a given element is visable.
         /// </summary>

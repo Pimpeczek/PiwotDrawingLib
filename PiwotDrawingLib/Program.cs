@@ -23,13 +23,13 @@ namespace PiwotDrawingLib
 
             Renderer.WindowSize = new Int2(200, 50);
             Renderer.FrameLenght = 30;
-            
-            UI.Containers.ScrollContainer sc = new UI.Containers.ScrollContainer(Int2.Zero, new Int2(100, 50), new Int2(400, 100), "SV", Misc.Boxes.BoxType.dashed);
-            UI.Controls.PictureBox pictureBox = new UI.Controls.PictureBox(Int2.Zero, new Int2(400, 100), new Bitmap("picture.jpg"))
+            double t = 1;
+            UI.Containers.ScrollContainer sc = new UI.Containers.ScrollContainer(Int2.Zero, new Int2(100, 50), new Int2(1000, 500), "SV", Misc.Boxes.BoxType.none);
+            UI.Controls.PictureBox pictureBox = new UI.Controls.PictureBox(Int2.Zero, new Int2(1000, 500), new Bitmap("image.jpg"))
             {
-                BitsPerColor = UI.Controls.PictureBox.ColorEncoding.Bit3,
-                SizeDifferenceHandling = Container.ContentHandling.ResizeContent
+                BitsPerColor = UI.Controls.PictureBox.ColorEncoding.Bit12
             };
+
 
             sc.AddChild(pictureBox);
             sc.Register();
@@ -49,15 +49,18 @@ namespace PiwotDrawingLib
                         break;
                     case ConsoleKey.LeftArrow:
                         sc.ScrollLeft();
+                        t++;
                         break;
                     case ConsoleKey.RightArrow:
                         sc.ScrollRight();
+                        t--;
                         break;
                     case ConsoleKey.P:
                         pingpong = !pingpong;
                         break;
                      
                 }
+                //pictureBox.Function = (x) => (float)Math.Sin(x + t/100);
                 //sc.Draw();
             }
             //s.RefreshContent();

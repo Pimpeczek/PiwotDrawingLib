@@ -104,8 +104,8 @@ namespace PiwotDrawingLib.UI.Containers
             }
             set
             {
-                //if (scrollingCanvas.Size == value)
-                    //return;
+                if (scrollingCanvas.Size == value)
+                    return;
                 
                 scrollingCanvas.ResizeCanvas(value);
                 CalculateVisableCanvasSize();

@@ -83,7 +83,7 @@ namespace PiwotDrawingLib.UI.Containers
                 }
                 if(height >= 0.5f && iHeight != contentSize.Y)
                 {
-                    canvas.DrawOnCanvas("▄", forwardCol, "000000", 1 + x, 1 + contentSize.Y - iHeight - 1);//▬
+                    canvas.DrawOnCanvas("▄", forwardCol, "000000", 1 + x, 1 + contentSize.Y - iHeight - 1);
                 }
                 else if (iHeight == 0 && height >= 0.1f)
                 {

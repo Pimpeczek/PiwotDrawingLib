@@ -46,6 +46,9 @@ namespace PiwotDrawingLib.UI.Controls
         }
 
         protected Bitmap bitmap;
+
+        protected string[,] colorMap;
+
         protected Bitmap image;
 
         /// <summary>
@@ -99,6 +102,7 @@ namespace PiwotDrawingLib.UI.Controls
             Position = position;
             Size = size;
             Image = image;
+            contentRedrawNeeded = true;
             sizeDifferenceHandling = ContentHandling.ResizeContent;
         }
 
@@ -108,7 +112,7 @@ namespace PiwotDrawingLib.UI.Controls
             {
                 for (int x = 0; x < bitmap.Width; x++)
                 {
-                    bitmap.SetPixel(x, y, Color.FromArgb((int)((bitmap.GetPixel(x, y).ToArgb()) & usedMod)));
+                    colorMap[x, y] = GetHex(Color.FromArgb((int)((bitmap.GetPixel(x, y).ToArgb()) & usedMod)));
                 }
             }
         }
@@ -123,6 +127,7 @@ namespace PiwotDrawingLib.UI.Controls
             if (image == null)
             {
                 bitmap = new Bitmap(size.X, size.Y * 2);
+                colorMap = new string[size.X, size.Y * 2];
             }
 
             if (sizeDifferenceHandling == ContentHandling.CropContent)
@@ -137,11 +142,15 @@ namespace PiwotDrawingLib.UI.Controls
             {
                 bitmap = PiwotToolsLib.PGraphics.Bitmaper.StreachToSize(image, size.X, size.Y * 2);
             }
+            colorMap = new string[bitmap.Width, bitmap.Height];
             CutColorBits();
+            contentRedrawNeeded = true;
         }
 
         public override void PrintOnCanvas(Canvas canvas)
         {
+            if (!contentRedrawNeeded)
+                return;
             int yPos;
             int yDrawPos;
             if (bitmap.Height % 2 == 1)
@@ -150,7 +159,7 @@ namespace PiwotDrawingLib.UI.Controls
                 yPos = bitmap.Height - 1;
                 for (int x = bitmap.Width - 1; x >= 0; x--)
                 {
-                    canvas.DrawOnCanvas("▄", "000000", GetHex(bitmap.GetPixel(x, yPos)), position.X + x, position.Y + yDrawPos);
+                    canvas.DrawOnCanvas("▄", "000000", colorMap[x, yPos], position.X + x, position.Y + yDrawPos);
                 }
             }
             else
@@ -162,7 +171,7 @@ namespace PiwotDrawingLib.UI.Controls
             {
                 for (int y = yPos; y >= 0; y -= 2)
                 {
-                    canvas.DrawOnCanvas("▄", GetHex(bitmap.GetPixel(x, y + 1)), GetHex(bitmap.GetPixel(x, y)), position.X + x, position.Y + y / 2);
+                    canvas.DrawOnCanvas("▄", colorMap[x, y + 1], colorMap[x, y], position.X + x, position.Y + y / 2);
                 }
             }
         }
