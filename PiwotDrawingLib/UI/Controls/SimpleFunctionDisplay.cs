@@ -57,20 +57,28 @@ namespace PiwotDrawingLib.UI.Controls
             }
 
             float step = 1 / (float)size.X;
+
+            float tempVal;
+
             values = PiwotToolsLib.Data.Arrays.BuildArray(size.X, (x) => func.Invoke(x * step));
             float maxval = 0;
             int maxvalid = 0;
-            for (int x = 0; x < size.X; x++)
+            for (int x = size.X - 1; x  >= 0; x--)
             {
-                if (values[x] > maxval)
+                if((tempVal = func.Invoke(x * step)) != values[x])
                 {
-                    maxval = values[x];
+                    values[x] = tempVal;
+                    
+                }
+                if (tempVal > maxval)
+                {
+                    maxval = tempVal;
                     maxvalid = x;
                 }
             }
             float halfStep = step / 2;
             string forwardCol = "";
-            for (int x = 0; x < size.X; x++)
+            for (int x = size.X - 1; x >= 0 ; x--)
             {
                 height = values[x] * size.Y;
                 iHeight = (int)height;

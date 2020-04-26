@@ -261,8 +261,6 @@ namespace PiwotDrawingLib.UI.Containers
 
         public void EraseChild(UIElement element)
         {
-            Drawing.Renderer.Draw($"CLEAR {element.Size}", 0, 40);
-
             canvas.Clear(element.Position, element.Size);
         }
 

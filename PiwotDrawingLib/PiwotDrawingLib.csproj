@@ -67,9 +67,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Drawing\Canvas.cs" />
     <Compile Include="UI\Containers\Container.cs" />
-    <Compile Include="UI\Containers\PictureBox.cs" />
     <Compile Include="UI\Containers\ScrollContainer.cs" />
-    <Compile Include="UI\Containers\SimpleFunctionDisplay.cs" />
     <Compile Include="UI\Controls\PictureBox.cs" />
     <Compile Include="UI\Controls\SimpleFunctionDisplay.cs" />
     <Compile Include="UI\Controls\TextDisplay.cs" />

@@ -146,14 +146,8 @@ namespace PiwotDrawingLib.UI.Containers
             //visableCanvasSize = new Int2(contentSize);
 
             ScrollViewSize = scrollViewSize;
-            Renderer.Draw($"ScrollViewSize {ScrollViewSize}", 151, 2);
             scrollViewPoint = Int2.Zero;
             CalculateVisableCanvasSize();
-            Renderer.Draw($"scrollsSizes {scrollsSizes}", 101, 0);
-            Renderer.Draw($"visableCanvasSize {visableCanvasSize}", 101, 1);
-            Renderer.Draw($"ScrollViewSize {ScrollViewSize}", 101, 2);
-            Renderer.Draw($"contentSize {contentSize}", 101, 3);
-            Renderer.Draw($"scrollsSizes {scrollsSizes}", 101, 4);
 
         }
 
@@ -388,13 +382,10 @@ namespace PiwotDrawingLib.UI.Containers
         /// </summary>
         protected override void PrintChildren()
         {
-            Renderer.Draw(name, 100, 1);
             for (int i = 0; i < children.Count; i++)
             {
-                Renderer.Draw(name, 100, 2 + i);
                 if (children[i].Visable)
                 {
-                    Drawing.Renderer.Draw(children[i].Parent.Name, 120, 1);
                     children[i].PrintOnCanvas(scrollingCanvas);
                 }
             }
@@ -402,7 +393,6 @@ namespace PiwotDrawingLib.UI.Containers
 
         public override void PrintOnCanvas(Canvas canvas)
         {
-            Renderer.Draw(name + position, 100, position.X == 0? 20 : 0);
             DrawWindow();
             DrawContent();
             this.canvas.ApplyNewFrame();
