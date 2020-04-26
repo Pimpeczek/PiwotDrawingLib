@@ -11,6 +11,20 @@ namespace PiwotDrawingLib.UI
     /// </summary>
     public abstract class UIElement
     {
+        protected bool isBeingDrawn;
+
+        public bool IsBeingDrawn
+        {
+            get
+            {
+                return isBeingDrawn;
+            }
+
+            protected set
+            {
+                isBeingDrawn = value;
+            }
+        }
 
         protected bool contentRedrawNeeded;
 
@@ -43,12 +57,14 @@ namespace PiwotDrawingLib.UI
             }
             set
             {
+                
                 if (value)
                 {
                     visable = true;
                 }
                 else
                 {
+                    WaitForDrawingEnd();
                     Erase();
                 }
             }
@@ -70,7 +86,8 @@ namespace PiwotDrawingLib.UI
             }
             set
             {
-                if(parent != null)
+                WaitForDrawingEnd();
+                if (parent != null)
                 {
                     parent.RemoveChild(this);
                 }
@@ -98,6 +115,7 @@ namespace PiwotDrawingLib.UI
             }
             set
             {
+                WaitForDrawingEnd();
                 position = value;
             }
         }
@@ -118,6 +136,7 @@ namespace PiwotDrawingLib.UI
             }
             set
             {
+                WaitForDrawingEnd();
                 size = value;
             }
         }
@@ -151,11 +170,20 @@ namespace PiwotDrawingLib.UI
         /// </summary>
         virtual public void Erase()
         {
+            WaitForDrawingEnd();
             if (!visable)
                 return;
             visable = false;
             if (parent != null)
                 parent.EraseChild(this);
+        }
+
+        /// <summary>
+        /// Stops the thread until drawing of this UIElement is finished.
+        /// </summary>
+        protected void WaitForDrawingEnd()
+        {
+            while (isBeingDrawn) { }
         }
     }
 }

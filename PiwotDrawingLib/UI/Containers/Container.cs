@@ -33,6 +33,8 @@ namespace PiwotDrawingLib.UI.Containers
                 if (value < Int2.Zero)
                     throw new Exceptions.InvalidContainerPositionException(this);
 
+                WaitForDrawingEnd();
+
                 position = value ?? throw new ArgumentNullException();
                 contentLocalPosition = boxType != Misc.Boxes.BoxType.none ? Int2.One : Int2.Zero;
                 contentPosition = position + contentLocalPosition;
@@ -53,8 +55,9 @@ namespace PiwotDrawingLib.UI.Containers
             {
                 if (value < Int2.One * 2)
                     throw new Exceptions.InvalidContainerSizeException(this);
-                
-                
+
+                WaitForDrawingEnd();
+
                 size = value ?? throw new ArgumentNullException();
                 contentSize = size - contentLocalPosition * 2;
                 canvas.ResizeCanvas(size);
@@ -76,13 +79,8 @@ namespace PiwotDrawingLib.UI.Containers
             }
             set
             {
+                WaitForDrawingEnd();
                 name = value;
-
-                if (IsVIsable)
-                {
-                    Draw();
-                }
-
             }
         }
 
@@ -113,6 +111,8 @@ namespace PiwotDrawingLib.UI.Containers
             {
                 if (value == boxType)
                     return;
+
+                WaitForDrawingEnd();
 
                 boxType = value;
                 boxCharacters = Misc.Boxes.GetBoxArray(boxType);
@@ -185,6 +185,7 @@ namespace PiwotDrawingLib.UI.Containers
         {
             if (!visable)
                 return;
+            WaitForDrawingEnd();
             visable = false;
             if (parent != null)
             {
@@ -233,16 +234,19 @@ namespace PiwotDrawingLib.UI.Containers
         /// <param name="canvas"></param>
         public override void PrintOnCanvas(Canvas canvas)
         {
+            isBeingDrawn = true;
             DrawWindow();
             DrawContent();
             this.canvas.ApplyNewFrame();
             canvas.AddCanvas(this.canvas, position.X, position.Y);
+            isBeingDrawn = false;
         }
 
         public void AddChild(UIElement element)
         {
             if (children.Contains(element))
                 return;
+            WaitForDrawingEnd();
             children.Add(element);
 
             if (element.Parent != this)
@@ -253,6 +257,7 @@ namespace PiwotDrawingLib.UI.Containers
         {
             if (!children.Contains(element))
                 return;
+            WaitForDrawingEnd();
             children.Remove(element);
 
             if (element.Parent == this)
@@ -261,6 +266,7 @@ namespace PiwotDrawingLib.UI.Containers
 
         public void EraseChild(UIElement element)
         {
+            WaitForDrawingEnd();
             canvas.Clear(element.Position, element.Size);
         }
 

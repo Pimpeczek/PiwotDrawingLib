@@ -25,6 +25,8 @@ namespace PiwotDrawingLib.UI.Containers
                 if (showScrolls == value)
                     return;
 
+                WaitForDrawingEnd();
+
                 showScrolls = value;
                 CalculateVisableCanvasSize();
             }
@@ -42,6 +44,8 @@ namespace PiwotDrawingLib.UI.Containers
                 if (scrollViewPoint == value)
                     return;
 
+                WaitForDrawingEnd();
+
                 scrollViewPoint = value;
             }
         }
@@ -56,6 +60,8 @@ namespace PiwotDrawingLib.UI.Containers
             {
                 if (value < Int2.One * 2)
                     throw new Exceptions.InvalidContainerSizeException(this);
+
+                WaitForDrawingEnd();
 
                 size = value ?? throw new ArgumentNullException();
                 contentSize = size - (boxType != Misc.Boxes.BoxType.none ? Int2.One * 2 : Int2.Zero);
@@ -106,7 +112,7 @@ namespace PiwotDrawingLib.UI.Containers
             {
                 if (scrollingCanvas.Size == value)
                     return;
-                
+                WaitForDrawingEnd();
                 scrollingCanvas.ResizeCanvas(value);
                 CalculateVisableCanvasSize();
                 /*Rand.SetSeed(0);
@@ -204,6 +210,7 @@ namespace PiwotDrawingLib.UI.Containers
             }
             else if (hasVerticalScroll)
             {
+                
                 if (BoxType != Misc.Boxes.BoxType.none)
                 {
                     canvas.DrawOnCanvas(boxCharacters[4], size.X - scrollsSizes.X, 0);
@@ -223,7 +230,7 @@ namespace PiwotDrawingLib.UI.Containers
                 }
 
             }
-            else
+            else if (hasHorizontalScroll)
             {
                 if (BoxType != Misc.Boxes.BoxType.none)
                 {
@@ -319,6 +326,7 @@ namespace PiwotDrawingLib.UI.Containers
                 return;
             hasVerticalScroll = hasHorizontalScroll = false;
             int bordersAddWidth = BoxType == Misc.Boxes.BoxType.none ? 0 : 2;
+            
             if (visableCanvasSize.Y < ScrollViewSize.Y)
             {
                 visableCanvasSize.X -= bordersAddWidth;
@@ -326,6 +334,7 @@ namespace PiwotDrawingLib.UI.Containers
                 if (visableCanvasSize.X < ScrollViewSize.X)
                 {
                     hasHorizontalScroll = true;
+                    
                     visableCanvasSize.Y -= bordersAddWidth;
                 }
                 return;
@@ -335,6 +344,7 @@ namespace PiwotDrawingLib.UI.Containers
             {
                 visableCanvasSize.Y -= bordersAddWidth;
                 hasHorizontalScroll = true;
+                
                 if (visableCanvasSize.Y < ScrollViewSize.Y)
                 {
                     hasVerticalScroll = true;
@@ -346,26 +356,31 @@ namespace PiwotDrawingLib.UI.Containers
 
         public void ScrollUp()
         {
+            WaitForDrawingEnd();
             ScrollBy(Int2.Down);
         }
 
         public void ScrollDown()
         {
+            WaitForDrawingEnd();
             ScrollBy(Int2.Up);
         }
 
         public void ScrollLeft()
         {
+            WaitForDrawingEnd();
             ScrollBy(Int2.Left);
         }
 
         public void ScrollRight()
         {
+            WaitForDrawingEnd();
             ScrollBy(Int2.Right);
         }
 
         public void ScrollBy(Int2 delta)
         {
+            WaitForDrawingEnd();
             scrollViewPoint = Int2.Clamp(scrollViewPoint + delta, Int2.Clamp(scrollingCanvas.Size - visableCanvasSize, Int2.Zero, Int2.MaxValue));
         }
 
@@ -393,10 +408,12 @@ namespace PiwotDrawingLib.UI.Containers
 
         public override void PrintOnCanvas(Canvas canvas)
         {
+            isBeingDrawn = true;
             DrawWindow();
             DrawContent();
             this.canvas.ApplyNewFrame();
             canvas.AddCanvas(this.canvas, position.X, position.Y);
+            isBeingDrawn = false;
         }
 
 
