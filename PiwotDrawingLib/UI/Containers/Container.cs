@@ -17,7 +17,7 @@ namespace PiwotDrawingLib.UI.Containers
     {
         #region Variables
 
-        public enum ContentHandling { ResizeContent, FitContent, CropContent}
+        
 
         /// <summary>
         /// Position of the UI element.
@@ -242,7 +242,7 @@ namespace PiwotDrawingLib.UI.Containers
             isBeingDrawn = false;
         }
 
-        public void AddChild(UIElement element)
+        public virtual void AddChild(UIElement element)
         {
             if (children.Contains(element))
                 return;
@@ -253,7 +253,7 @@ namespace PiwotDrawingLib.UI.Containers
                 element.Parent = this;
         }
 
-        public void RemoveChild(UIElement element)
+        public virtual void RemoveChild(UIElement element)
         {
             if (!children.Contains(element))
                 return;

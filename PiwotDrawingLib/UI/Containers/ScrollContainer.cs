@@ -12,6 +12,55 @@ namespace PiwotDrawingLib.UI.Containers
     {
         #region Variables
 
+        public enum ContentHandling
+        {
+            /// <summary>
+            /// 
+            /// </summary>
+            FitScrollViewToContainer,
+
+            /// <summary>
+            /// Resizes ScrollView to fit all children and keeps it that way for new children.
+            /// </summary>
+            FitScrollViewToChildren,
+
+            /// <summary>
+            /// Resizes container to fit the scrollview.
+            /// </summary>
+            FitContainerViewToScrollView
+        }
+
+        protected ContentHandling contentFittingMode;
+
+
+        public ContentHandling ContentFittingMode
+        {
+            get
+            {
+                return contentFittingMode;
+            }
+            set
+            {
+                if (contentFittingMode == value)
+                    return;
+
+                WaitForDrawingEnd();
+
+                contentFittingMode = value;
+                switch(contentFittingMode)
+                {
+                    case ContentHandling.FitScrollViewToContainer:
+                        scrollingCanvas.ResizeCanvas(scrollingCanvas.Size);
+                        break;
+                    case ContentHandling.FitScrollViewToChildren:
+                        ResizeScrollviewToChildren();
+                        break;
+
+                }
+
+            }
+        }
+
         protected bool showScrolls = true;
 
         public bool ShowScrolls
@@ -31,6 +80,8 @@ namespace PiwotDrawingLib.UI.Containers
                 CalculateVisableCanvasSize();
             }
         }
+
+
 
         protected Int2 scrollViewPoint;
         public Int2 ScrollPoint
@@ -416,6 +467,28 @@ namespace PiwotDrawingLib.UI.Containers
             isBeingDrawn = false;
         }
 
+        public override void AddChild(UIElement element)
+        {
+            base.AddChild(element);
+            if (ContentFittingMode == ContentHandling.FitScrollViewToChildren)
+            {
+                ResizeScrollviewToChildren();
+            }
+        }
+
+        public override void RemoveChild(UIElement element)
+        {
+            base.RemoveChild(element);
+            if(ContentFittingMode == ContentHandling.FitScrollViewToChildren)
+            {
+                ResizeScrollviewToChildren();
+            }
+        }
+
+        protected void ResizeScrollviewToChildren()
+        {
+            //TODO!!!!!!!!!!!!!!!!!!!!!
+        }
 
     }
 }

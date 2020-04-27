@@ -67,12 +67,35 @@ namespace PiwotDrawingLib.UI.Controls
             }
         }
 
-        protected ContentHandling sizeDifferenceHandling;
+
+        /// <summary>
+        /// Enum for different image size handling modes.
+        /// </summary>
+        public enum ImageSizeHandling
+        {
+            /// <summary>
+            /// Streaches the image to fit container dimentions.
+            /// </summary>
+            ResizeImage,
+            /// <summary>
+            /// Resizes image to fit conflicting container dimentions.
+            /// </summary>
+            FitImage,
+            /// <summary>
+            /// Crops image if it does not fit.
+            /// </summary>
+            CropImage
+        }
 
         /// <summary>
         /// Determines how and if the PictureBox should resize the given source image.
         /// </summary>
-        public ContentHandling SizeDifferenceHandling
+        protected ImageSizeHandling sizeDifferenceHandling;
+
+        /// <summary>
+        /// Determines how and if the PictureBox should resize the given source image.
+        /// </summary>
+        public ImageSizeHandling SizeDifferenceHandling
         {
             get
             {
@@ -103,7 +126,7 @@ namespace PiwotDrawingLib.UI.Controls
             Size = size;
             Image = image;
             contentRedrawNeeded = true;
-            sizeDifferenceHandling = ContentHandling.ResizeContent;
+            sizeDifferenceHandling = ImageSizeHandling.ResizeImage;
         }
 
         protected void CutColorBits()
@@ -130,11 +153,11 @@ namespace PiwotDrawingLib.UI.Controls
                 colorMap = new string[size.X, size.Y * 2];
             }
 
-            if (sizeDifferenceHandling == ContentHandling.CropContent)
+            if (sizeDifferenceHandling == ImageSizeHandling.CropImage)
             {
                 bitmap = PiwotToolsLib.PGraphics.Bitmaper.CropBitmap(image, 0, 0, size.X, size.Y * 2);
             }
-            else if (sizeDifferenceHandling == ContentHandling.FitContent)
+            else if (sizeDifferenceHandling == ImageSizeHandling.FitImage)
             {
                 bitmap = PiwotToolsLib.PGraphics.Bitmaper.ResizeToFit(image, size.X, size.Y * 2, Color.Black);
             }
