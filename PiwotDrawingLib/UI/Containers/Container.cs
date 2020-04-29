@@ -56,17 +56,17 @@ namespace PiwotDrawingLib.UI.Containers
                 if (value < Int2.One * 2)
                     throw new Exceptions.InvalidContainerSizeException(this);
 
+                if (value == null)
+                    throw new ArgumentNullException();
                 WaitForDrawingEnd();
-
-                size = value ?? throw new ArgumentNullException();
+                if (IsVIsable)
+                {
+                    Erase();
+                }
+                size = value;
                 contentSize = size - contentLocalPosition * 2;
                 canvas.ResizeCanvas(size);
 
-                if (IsVIsable)
-                {
-                    Clear();
-                    Draw();
-                }
             }
         }
 
@@ -186,13 +186,15 @@ namespace PiwotDrawingLib.UI.Containers
             if (!visable)
                 return;
             WaitForDrawingEnd();
-            visable = false;
+            //visable = false;
             if (parent != null)
             {
                 parent.EraseChild(this);
             }
             else
             {
+                Renderer.Draw(">=<", size.X + 10, 1);
+                Renderer.RegisterForErase(this);
                 //let the renderer know
             }
 

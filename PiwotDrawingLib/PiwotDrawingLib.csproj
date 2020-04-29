@@ -59,6 +59,7 @@
   <ItemGroup>
     <Compile Include="Drawing\DrawingRequest.cs" />
     <Compile Include="Drawing\Exceptions\InvalidCanvasSizeException.cs" />
+    <Compile Include="Drawing\Region.cs" />
     <Compile Include="Drawing\Renderer.cs" />
     <Compile Include="Drawing\Exceptions\InvalidWindowSizeException.cs" />
     <Compile Include="Misc\Boxes.cs" />

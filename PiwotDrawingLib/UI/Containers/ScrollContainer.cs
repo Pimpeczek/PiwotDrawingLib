@@ -111,10 +111,13 @@ namespace PiwotDrawingLib.UI.Containers
             {
                 if (value < Int2.One * 2)
                     throw new Exceptions.InvalidContainerSizeException(this);
-
+                if(value == null)
+                    throw new ArgumentNullException();
+                if (IsVIsable)
+                    Erase();
                 WaitForDrawingEnd();
 
-                size = value ?? throw new ArgumentNullException();
+                size = value;
                 contentSize = size - (boxType != Misc.Boxes.BoxType.none ? Int2.One * 2 : Int2.Zero);
                 canvas.ResizeCanvas(size);
                 
@@ -136,13 +139,6 @@ namespace PiwotDrawingLib.UI.Containers
                 if (scrollingCanvas != null)
                 {
                     CalculateVisableCanvasSize();
-                }
-
-
-                if (IsVIsable)
-                {
-                    Clear();
-                    Draw();
                 }
 
             }
@@ -360,6 +356,7 @@ namespace PiwotDrawingLib.UI.Containers
 
         public override void Draw()
         {
+            IsBeingDrawn = true;
             IsVIsable = true;
             DrawWindow();
             DrawContent();
@@ -368,6 +365,7 @@ namespace PiwotDrawingLib.UI.Containers
             {
                 Drawing.Renderer.Draw(canvas, position.X, position.Y);
             }
+            IsBeingDrawn = false;
         }
 
         protected void CalculateVisableCanvasSize()

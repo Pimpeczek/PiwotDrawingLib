@@ -265,10 +265,12 @@ namespace PiwotDrawingLib.Drawing
 
         public void Clear(int x, int y, int width, int height)
         {
-            for (int i = y; i < Size.Y && i < height; i++)
+            int endY = x + width;
+            int endX = y + height;
+            for (int i = y; i < Size.Y && i < endX; i++)
             {
                 refreshMap[i, Size.X] = false;
-                for (int j = x; j < Size.X && j < width; j++)
+                for (int j = x; j < Size.X && j < endY; j++)
                 {
                     frameCharMap[i][j] = ' ';
                     frameFrontColorMap[i, j] = Renderer.defFHex;
@@ -279,6 +281,34 @@ namespace PiwotDrawingLib.Drawing
                     canvasBackColorMap[i, j] = Renderer.defBHex;
 
                     refreshMap[i, j] = false;
+                }
+            }
+            canvasUpToDate = false;
+        }
+
+        public void Erase(Int2 position, Int2 size)
+        {
+            Erase(position.X, position.Y, size.X, size.Y);
+        }
+
+        public void Erase(int x, int y, int width, int height)
+        {
+            int endY = x + width;
+            int endX = y + height;
+            for (int i = y; i < Size.Y && i < endX; i++)
+            {
+                refreshMap[i, Size.X] = true;
+                for (int j = x; j < Size.X && j < endY; j++)
+                {
+                    frameCharMap[i][j] = ' ';
+                    frameFrontColorMap[i, j] = Renderer.defFHex;
+                    frameBackColorMap[i, j] = Renderer.defBHex;
+
+                    canvasCharMap[i][j] = ' ';
+                    canvasFrontColorMap[i, j] = Renderer.defFHex;
+                    canvasBackColorMap[i, j] = Renderer.defBHex;
+
+                    refreshMap[i, j] = true;
                 }
             }
             canvasUpToDate = false;

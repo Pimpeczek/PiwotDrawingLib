@@ -151,6 +151,7 @@ namespace PiwotDrawingLib.Drawing
 
         private static List<UI.Containers.Container> containerRegistry;
 
+        private static Queue<Region> eraseRegistry;
         #endregion
 
         #region Setup
@@ -177,6 +178,7 @@ namespace PiwotDrawingLib.Drawing
 
 
             containerRegistry = new List<UI.Containers.Container>();
+            eraseRegistry = new Queue<Region>();
         }
         
         private static void SetupConsoleWindow()
@@ -209,7 +211,12 @@ namespace PiwotDrawingLib.Drawing
                 while (true)
                 {
                     stopwatch.Restart();
-                    for(int i = 0; i < containerRegistry.Count; i++)
+                    while(eraseRegistry.Count > 0)
+                    {
+                        Draw(",=.", 140, 2 + eraseRegistry.Count);
+                        EraseRegion(eraseRegistry.Dequeue());
+                    }
+                    for (int i = 0; i < containerRegistry.Count; i++)
                     {
                         containerRegistry[i].PrintOnCanvas(canvas);
                     }
@@ -753,7 +760,34 @@ namespace PiwotDrawingLib.Drawing
             container.Unregister();
         }
 
+        /// <summary>
+        /// Registers a given container for erasing before drawing phase.
+        /// </summary>
+        /// <param name="container"></param>
+        public static void RegisterForErase(UI.Containers.Container container)
+        {
+            if(containerRegistry.Contains(container))
+            {
+                Renderer.Draw(container.Size, 130, 30);
+                eraseRegistry.Enqueue(new Region(container.Position, container.Size));
+            }
+        }
 
+        public static void EraseRegion(Int2 position, Int2 size)
+        {
+            canvas.Erase(position, size);
+        }
+
+        public static void EraseRegion(Region region)
+        {
+            Draw(",=.", region.Width, 2 + eraseRegistry.Count);
+            canvas.Erase(region.X, region.Y, region.Width, region.Height);
+        }
+
+        public static void EraseContainer(UI.Containers.Container container)
+        {
+            canvas.Erase(container.Position, container.Size);
+        }
 
         #endregion
 

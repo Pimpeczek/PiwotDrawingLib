@@ -30,7 +30,7 @@ namespace PiwotDrawingLib
 
             //sc.AddChild(pictureBox);
             sc.Register();
-            Console.ReadKey(true);
+            //Console.ReadKey(true);
             bool pingpong = true;
             while (true)
             {
