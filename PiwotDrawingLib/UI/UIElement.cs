@@ -55,18 +55,10 @@ namespace PiwotDrawingLib.UI
             {
                 return visable;
             }
-            set
+            protected set
             {
-                
-                if (value)
-                {
-                    visable = true;
-                }
-                else
-                {
-                    WaitForDrawingEnd();
-                    Erase();
-                }
+
+                visable = value;
             }
         }
 

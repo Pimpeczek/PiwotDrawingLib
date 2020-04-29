@@ -109,11 +109,12 @@ namespace PiwotDrawingLib.UI.Containers
             }
             set
             {
+                
                 if (value < Int2.One * 2)
                     throw new Exceptions.InvalidContainerSizeException(this);
                 if(value == null)
                     throw new ArgumentNullException();
-                if (IsVIsable)
+                if (visable)
                     Erase();
                 WaitForDrawingEnd();
 
@@ -201,6 +202,7 @@ namespace PiwotDrawingLib.UI.Containers
             ScrollViewSize = scrollViewSize;
             scrollViewPoint = Int2.Zero;
             CalculateVisableCanvasSize();
+            visable = true;
 
         }
 
@@ -357,13 +359,13 @@ namespace PiwotDrawingLib.UI.Containers
         public override void Draw()
         {
             IsBeingDrawn = true;
-            IsVIsable = true;
+            visable = true;
             DrawWindow();
             DrawContent();
             canvas.ApplyNewFrame();
             if (parent == null)
             {
-                Drawing.Renderer.Draw(canvas, position.X, position.Y);
+                //Drawing.Renderer.Draw(canvas, position.X, position.Y);
             }
             IsBeingDrawn = false;
         }

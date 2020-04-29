@@ -213,7 +213,6 @@ namespace PiwotDrawingLib.Drawing
                     stopwatch.Restart();
                     while(eraseRegistry.Count > 0)
                     {
-                        Draw(",=.", 140, 2 + eraseRegistry.Count);
                         EraseRegion(eraseRegistry.Dequeue());
                     }
                     for (int i = 0; i < containerRegistry.Count; i++)
@@ -768,7 +767,6 @@ namespace PiwotDrawingLib.Drawing
         {
             if(containerRegistry.Contains(container))
             {
-                Renderer.Draw(container.Size, 130, 30);
                 eraseRegistry.Enqueue(new Region(container.Position, container.Size));
             }
         }
@@ -780,7 +778,6 @@ namespace PiwotDrawingLib.Drawing
 
         public static void EraseRegion(Region region)
         {
-            Draw(",=.", region.Width, 2 + eraseRegistry.Count);
             canvas.Erase(region.X, region.Y, region.Width, region.Height);
         }
 

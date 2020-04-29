@@ -59,7 +59,7 @@ namespace PiwotDrawingLib.UI.Containers
                 if (value == null)
                     throw new ArgumentNullException();
                 WaitForDrawingEnd();
-                if (IsVIsable)
+                if (visable)
                 {
                     Erase();
                 }
@@ -97,7 +97,7 @@ namespace PiwotDrawingLib.UI.Containers
 
         
 
-        public bool IsVIsable { get; protected set; }
+        //public bool IsVIsable { get; protected set; }
         protected string emptyLine;
         protected string fullEmptyLine;
         protected Misc.Boxes.BoxType boxType = Misc.Boxes.BoxType.normal;
@@ -143,6 +143,7 @@ namespace PiwotDrawingLib.UI.Containers
         /// <param name="boxType"></param>
         public Container(Int2 position, Int2 size, string name, Misc.Boxes.BoxType boxType)
         {
+            
             this.boxType = boxType;
             Position = position;
             canvas = new Drawing.Canvas(size);
@@ -151,6 +152,7 @@ namespace PiwotDrawingLib.UI.Containers
             boxCharacters = Misc.Boxes.GetBoxArray(boxType);
             Registered = false;
             children = new List<UIElement>();
+            visable = true;
         }
 
         /// <summary>
@@ -158,13 +160,13 @@ namespace PiwotDrawingLib.UI.Containers
         /// </summary>
         public virtual void Draw()
         {
-            IsVIsable = true;
+            visable = true;
             DrawWindow();
             DrawContent();
             canvas.ApplyNewFrame();
             if (parent == null)
             {
-                Drawing.Renderer.Draw(canvas, position.X, position.Y);
+                //Drawing.Renderer.Draw(canvas, position.X, position.Y);
             }
         }
 
@@ -174,7 +176,7 @@ namespace PiwotDrawingLib.UI.Containers
             canvas.ApplyNewFrame();
             if (parent == null)
             {
-                Drawing.Renderer.Draw(canvas, position.X, position.Y);
+                //Drawing.Renderer.Draw(canvas, position.X, position.Y);
             }
         }
 
@@ -193,7 +195,6 @@ namespace PiwotDrawingLib.UI.Containers
             }
             else
             {
-                Renderer.Draw(">=<", size.X + 10, 1);
                 Renderer.RegisterForErase(this);
                 //let the renderer know
             }
