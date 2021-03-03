@@ -1,5 +1,4 @@
-﻿using Pastel;
-using PiwotToolsLib.PMath;
+﻿using PiwotToolsLib.PMath;
 using System.Collections.Generic;
 
 namespace PiwotDrawingLib.Drawing
@@ -388,7 +387,7 @@ namespace PiwotDrawingLib.Drawing
                                 }
                                 else if (curFCol != prevFCol || prevBCol != curBCol || x == endpos)
                                 {
-                                    retStr += new string(canvas.canvasCharMap[y], strPos, x - strPos + 1).Pastel(prevFCol).PastelBg(prevBCol);
+                                    retStr += new string(canvas.canvasCharMap[y], strPos, x - strPos + 1).Colors(prevFCol, prevBCol);
 
                                     strPos = x + 1;
                                     prevBCol = curBCol;
@@ -399,7 +398,7 @@ namespace PiwotDrawingLib.Drawing
 
                         else
                         {
-                            retStr = new string(canvas.canvasCharMap[y], strPos, canvas.canvasCharMap[y].Length + 1 - strPos - endpos).Pastel(defFHex).PastelBg(defBHex);
+                            retStr = new string(canvas.canvasCharMap[y], strPos, canvas.canvasCharMap[y].Length + 1 - strPos - endpos).Colors(defFHex, defBHex);
                         }
 
                         while (nowWrittingRaw) { } 

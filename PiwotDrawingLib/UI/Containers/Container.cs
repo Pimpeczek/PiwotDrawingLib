@@ -166,7 +166,7 @@ namespace PiwotDrawingLib.UI.Containers
             canvas.ApplyNewFrame();
             if (parent == null)
             {
-                //Drawing.Renderer.Draw(canvas, position.X, position.Y);
+                Drawing.Renderer.Draw(canvas, position.X, position.Y);
             }
         }
 

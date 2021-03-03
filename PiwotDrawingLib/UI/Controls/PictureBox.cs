@@ -131,6 +131,7 @@ namespace PiwotDrawingLib.UI.Controls
 
         protected void CutColorBits()
         {
+            WaitForDrawingEnd();
             for (int y = 0; y < bitmap.Height; y++)
             {
                 for (int x = 0; x < bitmap.Width; x++)
@@ -147,6 +148,7 @@ namespace PiwotDrawingLib.UI.Controls
 
         protected void RefreshBitmap()
         {
+            WaitForDrawingEnd();
             if (image == null)
             {
                 bitmap = new Bitmap(size.X, size.Y * 2);
@@ -172,6 +174,7 @@ namespace PiwotDrawingLib.UI.Controls
 
         public override void PrintOnCanvas(Canvas canvas)
         {
+            isBeingDrawn = true;
             if (!contentRedrawNeeded)
                 return;
             int yPos;
@@ -197,6 +200,7 @@ namespace PiwotDrawingLib.UI.Controls
                     canvas.DrawOnCanvas("▄", colorMap[x, y + 1], colorMap[x, y], position.X + x, position.Y + y / 2);
                 }
             }
+            isBeingDrawn = false;
         }
     }
 

@@ -1,5 +1,4 @@
-﻿using Pastel;
-using PiwotToolsLib.PMath;
+﻿using PiwotToolsLib.PMath;
 using System;
 
 namespace PiwotDrawingLib.Drawing

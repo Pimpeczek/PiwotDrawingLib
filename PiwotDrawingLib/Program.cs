@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using Pastel;
 using System.IO;
 using System.Drawing;
 using System.Threading;
@@ -25,10 +24,11 @@ namespace PiwotDrawingLib
             Renderer.FrameLenght = 30;
             double t = 1;
             UI.Containers.ScrollContainer sc = new UI.Containers.ScrollContainer(Int2.Zero, new Int2(100, 50), new Int2(98, 48), "SVXD", Misc.Boxes.BoxType.round);
-            UI.Controls.SimpleFunctionDisplay pictureBox = new UI.Controls.SimpleFunctionDisplay(Int2.Zero, new Int2(98, 48), (x) => 0.01f / x);
+            Bitmap bitmap = new Bitmap("image.jpg");
+            UI.Controls.PictureBox pictureBox = new UI.Controls.PictureBox(Int2.Zero, new Int2(98, 48), bitmap);
 
 
-            //sc.AddChild(pictureBox);
+            sc.AddChild(pictureBox);
             sc.Register();
             //Console.ReadKey(true);
             bool pingpong = true;
@@ -39,10 +39,10 @@ namespace PiwotDrawingLib
                 switch (Console.ReadKey(true).Key)
                 {
                     case ConsoleKey.UpArrow:
-                        //sc.ScrollUp();
+                        sc.ScrollUp();
                         break;
                     case ConsoleKey.DownArrow:
-                        //sc.ScrollDown();
+                        sc.ScrollDown();
                         break;
                     case ConsoleKey.LeftArrow:
                         //sc.ScrollLeft();
@@ -59,7 +59,7 @@ namespace PiwotDrawingLib
                         break;
                      
                 }
-                pictureBox.Function = (x) => (float)Math.Sin(x + t/100);
+                //pictureBox.Function = (x) => (float)Math.Sin(x + t/100);
                 sc.Draw();
             }
         }

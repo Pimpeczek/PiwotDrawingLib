@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Pastel;
 using System.Threading.Tasks;
-
+using PiwotDrawingLib.Drawing;
 namespace PiwotDrawingLib.Misc
 {
     class Renderer
@@ -185,7 +184,7 @@ namespace PiwotDrawingLib.Misc
                 if (pos >= prevPos && pos != prevPos)
                 {
 
-                    retStr += str.Substring(prevPos, pos - prevPos).Pastel(curFHex).PastelBg(curBHex);
+                    retStr += str.Substring(prevPos, pos - prevPos).Colors(curFHex, curBHex);
                     //Console.WriteLine(str.Substring(prevPos, str.Length - prevPos));
                     WriteOnCanvas(str.Substring(prevPos, pos - prevPos), curFHex, curBHex, x + xOffset, y);
                     xOffset += pos - prevPos;
@@ -207,7 +206,7 @@ namespace PiwotDrawingLib.Misc
             }
             if (str.Length >= prevPos && pos != prevPos)
             {
-                retStr += str.Substring(prevPos, str.Length - prevPos).Pastel(curFHex).PastelBg(curBHex);
+                retStr += str.Substring(prevPos, str.Length - prevPos).Colors(curFHex, curBHex);
                 //Console.WriteLine(str.Substring(prevPos, str.Length - prevPos));
                 WriteOnCanvas(str.Substring(prevPos, str.Length - prevPos), curFHex, curBHex, x + xOffset, y);
             }
