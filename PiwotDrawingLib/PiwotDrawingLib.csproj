@@ -58,9 +58,11 @@
     <Compile Include="Drawing\Coloring.cs" />
     <Compile Include="Drawing\DrawingRequest.cs" />
     <Compile Include="Drawing\Exceptions\InvalidCanvasSizeException.cs" />
+    <Compile Include="Drawing\Syncable.cs" />
     <Compile Include="Drawing\Region.cs" />
     <Compile Include="Drawing\Renderer.cs" />
     <Compile Include="Drawing\Exceptions\InvalidWindowSizeException.cs" />
+    <Compile Include="Drawing\Synchronizer.cs" />
     <Compile Include="Misc\Boxes.cs" />
     <Compile Include="Misc\Rend_test.cs" />
     <Compile Include="Program.cs" />
